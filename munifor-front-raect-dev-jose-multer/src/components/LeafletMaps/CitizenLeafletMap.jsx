@@ -62,37 +62,56 @@ const CitizenLeafletMap = ({ onMarkerChange }) => {
   }, [position, onMarkerChange]);
 
   return (
-    <div className="w-96 h-96 mt-4 border rounded-lg overflow-hidden">
-      {/* //? CASO 1: Mapa cargado con posición */}
-      {position && (
-        <MapContainer
-          center={position}
-          zoom={15}
-          scrollWheelZoom={true} // Permitir scroll para zoom
-          className="w-full h-full"
-        >
-          <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
-          {/* //? Marcador en la posición actual/seleccionada */}
-          <Marker position={position}>
-            <Popup>
-              📍 {position[0].toFixed(5)}, {position[1].toFixed(5)} <br />
-              Ubicación seleccionada
-            </Popup>
-          </Marker>
-          {/* //! MapClickHandler: Permite cambiar posición haciendo click */}
-          <MapClickHandler onClickPosition={positionUpdate} />
-        </MapContainer>
-      )}
-
-      {/* //? CASO 2: Cargando (mientras obtiene geolocalización) */}
-      {!position && (
-        <p className="text-center mt-4 text-gray-500">
-          Obteniendo ubicación...
-        </p>
-      )}
+    <div className="flex flex-col items-center justify-center min-h-[40vh]">
+      <div className="w-full max-w-lg bg-white rounded-2xl shadow-2xl p-8 flex flex-col items-center border border-blue-100">
+        <h2 className="text-2xl font-extrabold text-blue-700 mb-4 text-center tracking-tight">
+          Selecciona la ubicación en el mapa
+        </h2>
+        <div className="w-full h-96 rounded-xl overflow-hidden mt-2 border-2 border-blue-200 shadow">
+          {position ? (
+            <MapContainer
+              center={position}
+              zoom={16}
+              scrollWheelZoom={true}
+              className="w-full h-full"
+            >
+              <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+              <Marker position={position}>
+                <Popup>
+                  <span className="font-semibold text-blue-700">
+                    📍 {position[0].toFixed(5)}, {position[1].toFixed(5)}
+                  </span>
+                  <br />
+                  <span className="text-gray-600">Ubicación seleccionada</span>
+                </Popup>
+              </Marker>
+              <MapClickHandler onClickPosition={positionUpdate} />
+            </MapContainer>
+          ) : (
+            <div className="flex items-center justify-center h-96">
+              <p className="text-center text-gray-400 animate-pulse">
+                Obteniendo ubicación...
+              </p>
+            </div>
+          )}
+        </div>
+        <div className="mt-6 text-sm text-gray-600 text-center bg-blue-50 rounded-lg p-3 shadow-inner w-full">
+          <span className="font-medium text-blue-600">Tip:</span> Puedes mover el
+          marcador haciendo click en el mapa.
+          <br />
+          Si la geolocalización falla, se usará Formosa, Argentina por defecto.
+          <br />
+          <span className="inline-block mt-2 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-semibold">
+            Precisión:{" "}
+            {position
+              ? `${position[0].toFixed(5)}, ${position[1].toFixed(5)}`
+              : "-"}
+          </span>
+        </div>
+      </div>
     </div>
   );
 };

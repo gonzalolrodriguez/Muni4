@@ -52,6 +52,7 @@ export const createReport = async (req, res) => {
     });
   } catch (error) {
     //! Error del servidor
+    console.log(error);
     return res.status(500).json({
       ok: false,
       msg: "Error interno del servidor",

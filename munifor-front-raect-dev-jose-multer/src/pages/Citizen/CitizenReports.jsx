@@ -133,19 +133,28 @@ const CitizenReports = () => {
   return (
     //* handleSubmit wrapper de React Hook Form
     //* Ejecuta validaciones antes de llamar a onSubmit
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <h1>Hace un Reporte</h1>
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="w-full max-w-2xl mx-auto bg-white rounded-2xl shadow-2xl p-10 flex flex-col gap-8 border border-blue-100"
+    >
+      <h1 className="text-3xl font-extrabold text-blue-700 mb-2 text-center tracking-tight">
+        Haz un Reporte
+      </h1>
 
       {/* CAMPO 1: Título del reporte */}
       <div>
-        <label htmlFor="title">Titulo</label>
+        <label
+          htmlFor="title"
+          className="block text-sm font-medium text-gray-700 mb-1"
+        >
+          Título
+        </label>
         <input
           type="text"
           {...register("title")} // Registrar campo en React Hook Form
           id="title"
-          className="border"
+          className="input input-bordered w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
-        {/* Mostrar error de validación si existe */}
         {errors.title && (
           <p className="text-red-500 text-sm mt-1">{errors.title.message}</p>
         )}
@@ -153,12 +162,17 @@ const CitizenReports = () => {
 
       {/* CAMPO 2: Descripción del reporte */}
       <div>
-        <label htmlFor="description">Descripcion</label>
+        <label
+          htmlFor="description"
+          className="block text-sm font-medium text-gray-700 mb-1"
+        >
+          Descripción
+        </label>
         <input
           type="text"
           {...register("description")}
           id="description"
-          className="border"
+          className="input input-bordered w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         {errors.description && (
           <p className="text-red-500 text-sm mt-1">
@@ -169,11 +183,16 @@ const CitizenReports = () => {
 
       {/* CAMPO 3: Tipo de reporte */}
       <div>
-        <label htmlFor="type_report">Tipo de reporte</label>
+        <label
+          htmlFor="type_report"
+          className="block text-sm font-medium text-gray-700 mb-1"
+        >
+          Tipo de reporte
+        </label>
         <select
           id="type_report"
           {...register("type_report")}
-          className="border"
+          className="input input-bordered w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option value="">Seleccione</option>
           <option value="Bache">Bache</option>
@@ -187,16 +206,18 @@ const CitizenReports = () => {
             {errors.type_report.message}
           </p>
         )}
-
-        {/* CAMPO DINÁMICO: Especificación si se selecciona "Otro" */}
-        {/* watch("type_report") observa el valor actual del campo */}
         {watch("type_report") === "Otro" && (
           <div>
-            <label htmlFor="other_type_detail">Especifique</label>
+            <label
+              htmlFor="other_type_detail"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Especifique
+            </label>
             <input
               type="text"
               {...register("other_type_detail")}
-              className="border"
+              className="input input-bordered w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             {errors.other_type_detail && (
               <p className="text-red-500 text-sm mt-1">
@@ -209,6 +230,9 @@ const CitizenReports = () => {
 
       {/* CAMPO 4: Subir imágenes (opcional) */}
       <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Imágenes (opcional, máx. 5)
+        </label>
         <ImageUploader
           onFilesChange={handleImagesChange} // Callback cuando cambian las imágenes
           maxFiles={5} // Máximo 5 imágenes
@@ -219,13 +243,19 @@ const CitizenReports = () => {
       {/* CAMPO 5: Selección de ubicación en mapa */}
       <div>
         <CitizenLeafletMap onMarkerChange={handleMarkerChange} />
-        {/* Mostrar coordenadas seleccionadas */}
-        <p> {markerPosition?.join(", ")}</p>
+        {markerPosition && (
+          <div className="mt-2 text-xs text-blue-700 text-center font-semibold">
+            Coordenadas seleccionadas: {markerPosition.join(", ")}
+          </div>
+        )}
       </div>
 
       {/* BOTÓN: Enviar formulario */}
-      <div>
-        <button type="submit" className="border">
+      <div className="flex justify-center mt-4">
+        <button
+          type="submit"
+          className="bg-blue-600 text-white font-semibold py-2 px-8 rounded-lg hover:bg-blue-700 transition shadow"
+        >
           Enviar
         </button>
       </div>

@@ -14,7 +14,14 @@ import FormRegister from "../../components/FormRegister";
 
 const CitizenRegister = () => {
   //! Componente wrapper que usa FormRegister con role="Ciudadano"
-  return <FormRegister role={"Ciudadano"} />;
+  return (
+    <div className="w-full max-w-lg mx-auto bg-white rounded-xl shadow-lg p-8 flex flex-col gap-6">
+      <h1 className="text-2xl font-bold text-blue-700 mb-2">
+        Regístrate como Ciudadano
+      </h1>
+      <FormRegister role={"Ciudadano"} />
+    </div>
+  );
 };
 
 export default CitizenRegister;
