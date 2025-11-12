@@ -50,7 +50,7 @@ const ReportStatus = () => {
       }
     };
     fetchReports();
-  }, [user]);
+  }, [user, getFetchData]);
 
   //* ========================================
   //* HANDLERS
@@ -85,86 +85,81 @@ const ReportStatus = () => {
   //* RENDER
   //* ========================================
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 flex flex-col">
+    <div className="min-h-screen bg-[#eaf4fe] flex flex-col py-8 px-2">
       <div className="relative w-full flex-1">
-        <div className="max-w-4xl mx-auto px-4 py-8 flex flex-col gap-4 text-center">
-          <h2 className="text-4xl font-bold text-blue-700 mb-2">Tus Reportes</h2>
+        <div className="max-w-4xl mx-auto flex flex-col gap-6 text-center bg-white/70 backdrop-blur-md rounded-2xl shadow-2xl p-8 border border-cyan-300">
+          <h2 className="text-5xl font-extrabold text-cyan-700 mb-2 tracking-tight drop-shadow">Tus Reportes</h2>
           <input
             type="text"
             placeholder="Buscar por nombre..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="input input-bordered w-full max-w-md mx-auto px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full max-w-md mx-auto px-4 py-3 rounded-xl border border-cyan-200 shadow focus:outline-none focus:ring-2 focus:ring-cyan-400 bg-white text-lg"
           />
-        </div>
-
-        {/* //? ======================================== */}
-        {/* //? BOTONES DE FILTRO POR ESTADO */}
-        {/* //? ======================================== */}
-        <div className="max-w-4xl mx-auto px-4 pb-4 flex gap-2">
-          {statusOptions.map((option) => (
-            <button
-              key={option}
-              className={`px-4 py-2 rounded border font-medium transition-colors duration-150
-                ${filter === option
-                  ? "bg-blue-600 text-white"
-                  : "bg-white text-blue-600 border-blue-600"
-                }`}
-              onClick={() => setFilter(option)}
-            >
-              {option}
-            </button>
-          ))}
-        </div>
-
-        {/* //? ======================================== */}
-        {/* //? LISTA DE REPORTES */}
-        {/* //? ======================================== */}
-        <div className="space-y-4">
-          {filteredReports.length === 0 ? (
-            //! Si no hay reportes, mostrar mensaje y enlace
-            <div className="flex flex-col items-center justify-center py-16">
-              <h3>¡Haz tu primer reporte!</h3>
-              <Link to="/citizen/reports" className="border">
-                Hacer reporte
-              </Link>
-            </div>
-          ) : (
-            //? Renderizar cada reporte como tarjeta clickeable
-            filteredReports.map((reporte, idx) => (
-              <div
-                key={idx}
-                className="bg-white rounded-lg shadow p-3 flex justify-between items-center border border-gray-200 w-full max-w-2xl mx-auto min-h-14 hover:cursor-pointer"
-                onClick={() => setSelectedReport(reporte)}
+          {/* //? BOTONES DE FILTRO POR ESTADO */}
+          <div className="flex flex-wrap justify-center gap-3 py-4 bg-white/60 backdrop-blur-md rounded-xl shadow border border-cyan-100">
+            {statusOptions.map((option) => (
+              <button
+                key={option}
+                className={`px-5 py-2 rounded-xl font-semibold border transition-colors duration-150 shadow-sm text-base
+                  ${filter === option
+                    ? "bg-cyan-600 text-white border-cyan-700"
+                    : "bg-white text-cyan-600 border-cyan-400 hover:bg-cyan-50"
+                  }`}
+                onClick={() => setFilter(option)}
               >
-                <div>
-                  <span className="block text-xl font-semibold text-gray-800">
-                    {reporte.title}
+                {option}
+              </button>
+            ))}
+          </div>
+          {/* //? LISTA DE REPORTES */}
+          <div className="space-y-6 mt-6">
+            {filteredReports.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-20">
+                <h3 className="text-2xl font-semibold text-cyan-700 mb-4">¡Haz tu primer reporte!</h3>
+                <Link to="/citizen/reports" className="bg-cyan-600 text-white px-6 py-3 rounded-xl font-bold shadow hover:bg-cyan-700 transition">
+                  Hacer reporte
+                </Link>
+              </div>
+            ) : (
+              filteredReports.map((reporte, idx) => (
+                <div
+                  key={idx}
+                  className="bg-white/80 backdrop-blur rounded-2xl shadow-lg p-6 flex justify-between items-center border border-cyan-200 w-full max-w-3xl mx-auto min-h-16 hover:scale-[1.02] transition-transform cursor-pointer"
+                  onClick={() => setSelectedReport(reporte)}
+                >
+                  <div>
+                    <span className="block text-2xl font-bold text-cyan-700 mb-1">
+                      {reporte.title}
+                    </span>
+                  </div>
+                  {/* //? Badge de estado con colores según status */}
+                  <span
+                    className={`px-6 py-2 rounded-full text-lg font-bold shadow-sm
+                      ${reporte.status === "Pendiente"
+                        ? "bg-yellow-100 text-yellow-700"
+                        : reporte.status === "Revisado"
+                          ? "bg-cyan-100 text-cyan-700"
+                          : reporte.status === "Aceptado"
+                            ? "bg-green-100 text-green-700"
+                            : reporte.status === "Completado"
+                              ? "bg-emerald-100 text-emerald-700"
+                              : reporte.status === "Rechazado"
+                                ? "bg-red-100 text-red-700"
+                                : "bg-gray-100 text-gray-700"
+                      }
+                    `}
+                  >
+                    {reporte.status}
                   </span>
                 </div>
-                {/* //? Badge de estado con colores según status */}
-                <span
-                  className={`px-5 py-2 rounded-full text-base font-medium 
-                    ${reporte.status === "Resuelto"
-                      ? "bg-green-100 text-green-700"
-                      : reporte.status === "En proceso"
-                        ? "bg-yellow-100 text-yellow-700"
-                        : "bg-red-100 text-red-700"
-                    }
-                  `}
-                >
-                  {reporte.status}
-                </span>
-              </div>
-            ))
-          )}
-
-          {/* //? ======================================== */}
-          {/* //? PANEL DE DETALLES (MODAL) */}
-          {/* //? ======================================== */}
-          {selectedReport && (
-            <ReportDetails report={selectedReport} onClose={closeModal} />
-          )}
+              ))
+            )}
+            {/* //? PANEL DE DETALLES (MODAL) */}
+            {selectedReport && (
+              <ReportDetails report={selectedReport} onClose={closeModal} />
+            )}
+          </div>
         </div>
       </div>
     </div>

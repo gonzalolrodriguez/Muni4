@@ -18,46 +18,58 @@ import NavBarMenu from "./NavBarMenu";
 const WorkerNavBar = () => {
   return (
     //* Navbar: Links a la izquierda, menú de usuario a la derecha
-    <nav className="flex items-center justify-between border p-1 mb-4">
-      {/* //? Links de funcionalidad de trabajador */}
-      <ul className="flex gap-4">
+    <nav className="flex items-center justify-between px-8 py-4 bg-white/70 backdrop-blur-md shadow-lg rounded-b-2xl border-b-4 border-orange-500">
+      <div className="flex items-center gap-3">
+        <span className="text-2xl font-extrabold text-orange-600 tracking-tight">MuniFor</span>
+        <span className="px-2 py-1 rounded bg-orange-100 text-orange-700 text-xs font-semibold">Trabajador</span>
+      </div>
+      <ul className="flex gap-6 text-base font-semibold">
         <li>
-          <Link to="/worker/dashboard" className="border rounded">
-            Dashboard
+          <Link
+            to="/worker/dashboard"
+            className="hover:text-orange-600 transition"
+          >
+            Inicio
           </Link>
         </li>
         <li>
-          <Link to="/worker/tasks" className="border rounded">
-            Tareas
-          </Link>
-        </li>
-        {/* //! Link crítico: Crear avances con imágenes */}
-        <li>
-          <Link to="/worker/progress" className="border rounded">
-            Crea un nuevo avance
-          </Link>
-        </li>
-
-        <li>
-          <Link to="/worker/progress-history" className="border rounded">
-            Historial de avances
-          </Link>
-        </li>
-
-        <li>
-          <Link to="/worker/team" className="border rounded">
-            Equipo
+          <Link
+            to="/worker/tasks"
+            className="hover:text-orange-600 transition"
+          >
+            Mis Tareas
           </Link>
         </li>
         <li>
-          <Link to="/worker/history" className="border rounded">
+          <Link
+            to="/worker/progress"
+            className="hover:text-orange-600 transition"
+          >
+            Nuevo Avance
+          </Link>
+        </li>
+        <li>
+          <Link
+            to="/worker/progress-history"
+            className="hover:text-orange-600 transition"
+          >
             Historial
           </Link>
         </li>
+        <li>
+          <Link
+            to="/worker/team"
+            className="hover:text-orange-600 transition"
+          >
+            Equipo
+          </Link>
+        </li>
       </ul>
-
-      {/* //! Menú desplegable: Perfil y Sign out */}
-      <NavBarMenu profileType="worker" />
+      <div className="flex items-center gap-4">
+        <span className="bg-orange-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold">
+          T
+        </span>
+      </div>
     </nav>
   );
 };

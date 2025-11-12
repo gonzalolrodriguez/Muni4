@@ -25,14 +25,7 @@ const AdminMap = () => {
   const { user } = useContext(UserContext);
 
   return (
-    <div className="w-full h-full">
-      {/*
-       * GlobalLeafletMap renderiza mapa con:
-       * - Marcadores de reportes con colores según estado
-       * - Filtros laterales (AsideFilterMap)
-       * - Panel de detalles (AsideDetailsPanel)
-       * - Vista completa para administradores
-       */}
+    <div className="w-full h-full relative">
       <GlobalLeafletMap role={user?.role} />
     </div>
   );

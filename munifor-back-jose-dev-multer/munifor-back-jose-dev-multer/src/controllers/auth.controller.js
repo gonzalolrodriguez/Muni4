@@ -86,12 +86,12 @@ export const login = async (req, res) => {
     }
 
     //! Verificar que el usuario esté activado
-    if (!user.is_active) {
-      return res.status(403).json({
-        ok: false,
-        msg: "Tu cuenta aún no ha sido activada por un administrador.",
-      });
-    }
+    // if (!user.is_active) {
+    //   return res.status(403).json({
+    //     ok: false,
+    //     msg: "Tu cuenta aún no ha sido activada por un administrador.",
+    //   });
+    // }
 
     //? Generar token JWT con información del usuario
     // El token contiene: _id y role (encriptados)

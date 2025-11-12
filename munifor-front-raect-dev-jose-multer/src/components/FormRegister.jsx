@@ -54,252 +54,100 @@ const FormRegister = ({ role }) => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="w-full max-w-lg mx-auto bg-white rounded-xl shadow-lg p-8 flex flex-col gap-6"
+      className="w-full max-w-xl mx-auto bg-white/70 backdrop-blur-md rounded-2xl shadow-2xl p-10 flex flex-col gap-8 border-t-8 border-cyan-500 border border-cyan-200"
     >
-      <h1 className="text-2xl font-bold text-blue-700 mb-2">
-        Regístrate como {role}
+      <h1 className="text-4xl font-extrabold text-cyan-700 mb-4 text-center tracking-tight drop-shadow">
+        {role === "Ciudadano" ? "Regístrate como Ciudadano" : role === "Operador" ? "Registro de Operador" : role === "Trabajador" ? "Registro de Trabajador" : "Registro"}
       </h1>
 
       {/* //? ======================================== */}
       {/* //? SECCIÓN 1: Credenciales */}
       {/* //? ======================================== */}
 
-      <div>
-        <label
-          htmlFor="username"
-          className="block text-sm font-medium text-gray-700 mb-1"
-        >
-          Usuario
-        </label>
-        <input
-          type="text"
-          {...register("username")}
-          id="username"
-          className="input input-bordered w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        {errors.username && (
-          <span className="text-red-500 text-sm">
-            {errors.username.message}
-          </span>
-        )}
+      <div className="flex flex-col gap-2">
+        <label htmlFor="username" className="block text-base font-semibold text-cyan-700 mb-1">Usuario</label>
+        <input type="text" {...register("username")} id="username" className="w-full px-5 py-3 rounded-xl border border-cyan-200 shadow focus:outline-none focus:ring-2 focus:ring-cyan-400 bg-cyan-50 text-lg" />
+        {errors.username && <span className="text-red-500 text-sm mt-1">{errors.username.message}</span>}
       </div>
 
-      <div>
-        <label
-          htmlFor="email"
-          className="block text-sm font-medium text-gray-700 mb-1"
-        >
-          Email
-        </label>
-        <input
-          type="email"
-          {...register("email")}
-          id="email"
-          className="input input-bordered w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        {errors.email && (
-          <span className="text-red-500 text-sm">{errors.email.message}</span>
-        )}
+      <div className="flex flex-col gap-2">
+        <label htmlFor="email" className="block text-base font-semibold text-cyan-700 mb-1">Email</label>
+        <input type="email" {...register("email")} id="email" className="w-full px-5 py-3 rounded-xl border border-cyan-200 shadow focus:outline-none focus:ring-2 focus:ring-cyan-400 bg-cyan-50 text-lg" />
+        {errors.email && <span className="text-red-500 text-sm mt-1">{errors.email.message}</span>}
       </div>
 
-      <div>
-        <label
-          htmlFor="password"
-          className="block text-sm font-medium text-gray-700 mb-1"
-        >
-          Contraseña
-        </label>
-        <input
-          type="password"
-          {...register("password")}
-          id="password"
-          className="input input-bordered w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        {errors.password && (
-          <span className="text-red-500 text-sm">
-            {errors.password.message}
-          </span>
-        )}
+      <div className="flex flex-col gap-2">
+        <label htmlFor="password" className="block text-base font-semibold text-cyan-700 mb-1">Contraseña</label>
+        <input type="password" {...register("password")} id="password" className="w-full px-5 py-3 rounded-xl border border-cyan-200 shadow focus:outline-none focus:ring-2 focus:ring-cyan-400 bg-cyan-50 text-lg" />
+        {errors.password && <span className="text-red-500 text-sm mt-1">{errors.password.message}</span>}
       </div>
 
-      <div>
-        <label
-          htmlFor="confirmpassword"
-          className="block text-sm font-medium text-gray-700 mb-1"
-        >
-          Confirmar contraseña
-        </label>
-        <input
-          type="password"
-          {...register("confirmpassword")}
-          id="confirmpassword"
-          className="input input-bordered w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        {errors.confirmpassword && (
-          <span className="text-red-500 text-sm">
-            {errors.confirmpassword.message}
-          </span>
-        )}
+      <div className="flex flex-col gap-2">
+        <label htmlFor="confirmpassword" className="block text-base font-semibold text-cyan-700 mb-1">Confirmar contraseña</label>
+        <input type="password" {...register("confirmpassword")} id="confirmpassword" className="w-full px-5 py-3 rounded-xl border border-cyan-200 shadow focus:outline-none focus:ring-2 focus:ring-cyan-400 bg-cyan-50 text-lg" />
+        {errors.confirmpassword && <span className="text-red-500 text-sm mt-1">{errors.confirmpassword.message}</span>}
       </div>
 
       {/* //? ======================================== */}
       {/* //? SECCIÓN 2: Datos personales (profile) */}
       {/* //? ======================================== */}
-      <h2 className="text-xl font-semibold text-blue-600 mt-4 mb-2">
-        Datos personales
-      </h2>
+      <h2 className="text-2xl font-bold text-cyan-600 mt-6 mb-4 text-center">Datos personales</h2>
 
-      <div>
-        <label
-          htmlFor="firstname"
-          className="block text-sm font-medium text-gray-700 mb-1"
-        >
-          Nombre
-        </label>
-        <input
-          type="text"
-          {...register("first_name")}
-          id="firstname"
-          className="input input-bordered w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        {errors.first_name && (
-          <span className="text-red-500 text-sm">
-            {errors.first_name.message}
-          </span>
-        )}
+      <div className="flex flex-col gap-2">
+        <label htmlFor="firstname" className="block text-base font-semibold text-cyan-700 mb-1">Nombre</label>
+        <input type="text" {...register("first_name")} id="firstname" className="w-full px-5 py-3 rounded-xl border border-cyan-200 shadow focus:outline-none focus:ring-2 focus:ring-cyan-400 bg-cyan-50 text-lg" />
+        {errors.first_name && <span className="text-red-500 text-sm mt-1">{errors.first_name.message}</span>}
       </div>
 
-      <div>
-        <label
-          htmlFor="lastname"
-          className="block text-sm font-medium text-gray-700 mb-1"
-        >
-          Apellido
-        </label>
-        <input
-          type="text"
-          {...register("last_name")}
-          id="lastname"
-          className="input input-bordered w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        {errors.last_name && (
-          <span className="text-red-500 text-sm">
-            {errors.last_name.message}
-          </span>
-        )}
+      <div className="flex flex-col gap-2">
+        <label htmlFor="lastname" className="block text-base font-semibold text-cyan-700 mb-1">Apellido</label>
+        <input type="text" {...register("last_name")} id="lastname" className="w-full px-5 py-3 rounded-xl border border-cyan-200 shadow focus:outline-none focus:ring-2 focus:ring-cyan-400 bg-cyan-50 text-lg" />
+        {errors.last_name && <span className="text-red-500 text-sm mt-1">{errors.last_name.message}</span>}
       </div>
 
-      <div>
-        <label
-          htmlFor="age"
-          className="block text-sm font-medium text-gray-700 mb-1"
-        >
-          Edad
-        </label>
-        <input
-          type="text"
-          {...register("age")}
-          id="age"
-          className="input input-bordered w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        {errors.age && (
-          <span className="text-red-500 text-sm">{errors.age.message}</span>
-        )}
+      <div className="flex flex-col gap-2">
+        <label htmlFor="age" className="block text-base font-semibold text-cyan-700 mb-1">Edad</label>
+        <input type="text" {...register("age")} id="age" className="w-full px-5 py-3 rounded-xl border border-cyan-200 shadow focus:outline-none focus:ring-2 focus:ring-cyan-400 bg-cyan-50 text-lg" />
+        {errors.age && <span className="text-red-500 text-sm mt-1">{errors.age.message}</span>}
       </div>
 
-      <div>
-        <label
-          htmlFor="dni"
-          className="block text-sm font-medium text-gray-700 mb-1"
-        >
-          DNI
-        </label>
-        <input
-          type="text"
-          {...register("dni")}
-          id="dni"
-          className="input input-bordered w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        {errors.dni && (
-          <span className="text-red-500 text-sm">{errors.dni.message}</span>
-        )}
+      <div className="flex flex-col gap-2">
+        <label htmlFor="dni" className="block text-base font-semibold text-cyan-700 mb-1">DNI</label>
+        <input type="text" {...register("dni")} id="dni" className="w-full px-5 py-3 rounded-xl border border-cyan-200 shadow focus:outline-none focus:ring-2 focus:ring-cyan-400 bg-cyan-50 text-lg" />
+        {errors.dni && <span className="text-red-500 text-sm mt-1">{errors.dni.message}</span>}
       </div>
 
-      <div>
-        <label
-          htmlFor="phone"
-          className="block text-sm font-medium text-gray-700 mb-1"
-        >
-          Teléfono
-        </label>
-        <input
-          type="text"
-          {...register("phone")}
-          id="phone"
-          className="input input-bordered w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        {errors.phone && (
-          <span className="text-red-500 text-sm">{errors.phone.message}</span>
-        )}
+      <div className="flex flex-col gap-2">
+        <label htmlFor="phone" className="block text-base font-semibold text-cyan-700 mb-1">Teléfono</label>
+        <input type="text" {...register("phone")} id="phone" className="w-full px-5 py-3 rounded-xl border border-cyan-200 shadow focus:outline-none focus:ring-2 focus:ring-cyan-400 bg-cyan-50 text-lg" />
+        {errors.phone && <span className="text-red-500 text-sm mt-1">{errors.phone.message}</span>}
       </div>
 
-      <div>
-        <label
-          htmlFor="address"
-          className="block text-sm font-medium text-gray-700 mb-1"
-        >
-          Dirección
-        </label>
-        <input
-          type="text"
-          {...register("address")}
-          id="address"
-          className="input input-bordered w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        {errors.address && (
-          <span className="text-red-500 text-sm">{errors.address.message}</span>
-        )}
+      <div className="flex flex-col gap-2">
+        <label htmlFor="address" className="block text-base font-semibold text-cyan-700 mb-1">Dirección</label>
+        <input type="text" {...register("address")} id="address" className="w-full px-5 py-3 rounded-xl border border-cyan-200 shadow focus:outline-none focus:ring-2 focus:ring-cyan-400 bg-cyan-50 text-lg" />
+        {errors.address && <span className="text-red-500 text-sm mt-1">{errors.address.message}</span>}
       </div>
 
-      <div>
-        <label
-          htmlFor="sex"
-          className="block text-sm font-medium text-gray-700 mb-1"
-        >
-          Sexo
-        </label>
-        <select
-          {...register("sex")}
-          defaultValue=""
-          className="input input-bordered w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          <option value="" disabled>
-            Seleccione
-          </option>
+      <div className="flex flex-col gap-2">
+        <label htmlFor="sex" className="block text-base font-semibold text-cyan-700 mb-1">Sexo</label>
+        <select {...register("sex")} defaultValue="" className="w-full px-5 py-3 rounded-xl border border-cyan-200 shadow focus:outline-none focus:ring-2 focus:ring-cyan-400 bg-cyan-50 text-lg">
+          <option value="" disabled>Seleccione</option>
           <option value="Hombre">Hombre</option>
           <option value="Mujer">Mujer</option>
           <option value="Otro">Otro</option>
         </select>
-        {errors.sex && (
-          <span className="text-red-500 text-sm">{errors.sex.message}</span>
-        )}
+        {errors.sex && <span className="text-red-500 text-sm mt-1">{errors.sex.message}</span>}
       </div>
 
       {/* //? ======================================== */}
       {/* //? BOTONES Y NAVEGACIÓN */}
       {/* //? ======================================== */}
-      <div className="flex flex-col sm:flex-row sm:justify-between items-center gap-2 mt-4">
-        <button
-          type="submit"
-          className="bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg hover:bg-blue-700 transition"
-        >
-          Registrar
-        </button>
-        <p className="text-sm mt-2">
-          ¿Ya tienes una cuenta?{" "}
-          <Link to="/login" className="text-blue-600 hover:underline">
-            Inicia sesión
-          </Link>
+      <div className="flex flex-col sm:flex-row sm:justify-between items-center gap-4 mt-6">
+        <button type="submit" className="bg-cyan-600 text-white font-bold py-3 px-8 rounded-xl shadow hover:bg-cyan-700 transition text-lg">Registrar</button>
+        <p className="text-base mt-2">
+          ¿Ya tienes una cuenta?{' '}
+          <Link to="/login" className="text-cyan-600 hover:underline font-semibold">Inicia sesión</Link>
         </p>
       </div>
     </form>

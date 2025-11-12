@@ -67,38 +67,33 @@ const AsideFilterMap = ({ onFilters }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <h2>Filtros del Mapa</h2>
-
-      {/* //? ======================================== */}
-      {/* //? CAMPO PRINCIPAL: Tipo de Dato */}
-      {/* //? ======================================== */}
-      <div>
-        <label htmlFor="dataType">Tipo de Dato:</label>
-        <select id="dataType" {...register("dataType")}>
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-xl p-6 flex flex-col gap-6 border border-cyan-200"
+    >
+      <h2 className="text-2xl font-extrabold text-cyan-700 mb-2 text-center tracking-tight drop-shadow">Filtros del Mapa</h2>
+      <div className="flex flex-col gap-4">
+        <label htmlFor="dataType" className="font-semibold text-cyan-700">Tipo de Dato:</label>
+        <select id="dataType" {...register("dataType")} className="rounded-lg border border-cyan-300 p-2 focus:outline-none focus:ring-2 focus:ring-cyan-400">
           <option value="">Seleccione un tipo de dato</option>
           <option value="report">Reportes</option>
           <option value="task">Tareas</option>
           <option value="progress">Avance del trabajador</option>
         </select>
 
-        {/* //! ======================================== */}
-        {/* //! CAMPOS CONDICIONALES SEGÚN dataType */}
-        {/* //! ======================================== */}
-
-        {/* //? CASO 1: dataType = "report" */}
+        {/* CAMPOS CONDICIONALES SEGÚN dataType */}
         {dataType === "report" && (
-          <div>
-            <label htmlFor="type">Tipo de Reporte:</label>
-            <select id="type" {...register("type")}>
+          <div className="flex flex-col gap-2">
+            <label htmlFor="type" className="font-semibold text-cyan-700">Tipo de Reporte:</label>
+            <select id="type" {...register("type")} className="rounded-lg border border-cyan-300 p-2">
               <option value="">Seleccione un tipo de reporte</option>
               <option value="Bache">Bache</option>
               <option value="Alumbrado">Alumbrado</option>
               <option value="Basura">Basura</option>
               <option value="Otro">Otro</option>
             </select>
-            <label htmlFor="status">Estado:</label>
-            <select id="status" {...register("status")}>
+            <label htmlFor="status" className="font-semibold text-cyan-700">Estado:</label>
+            <select id="status" {...register("status")} className="rounded-lg border border-cyan-300 p-2">
               <option value="">Seleccione un estado</option>
               <option value="Pendiente">Pendiente</option>
               <option value="Revisado">Revisado</option>
@@ -108,27 +103,25 @@ const AsideFilterMap = ({ onFilters }) => {
             </select>
           </div>
         )}
-
-        {/* //? CASO 2: dataType = "task" */}
         {dataType === "task" && (
-          <div>
-            <label htmlFor="type">Tipo de Tarea:</label>
-            <select id="type" {...register("type")}>
+          <div className="flex flex-col gap-2">
+            <label htmlFor="type" className="font-semibold text-cyan-700">Tipo de Tarea:</label>
+            <select id="type" {...register("type")} className="rounded-lg border border-cyan-300 p-2">
               <option value="">Seleccione un tipo de tarea</option>
               <option value="Reparación">Reparación</option>
               <option value="Mantenimiento">Mantenimiento</option>
               <option value="Recolección">Recolección</option>
               <option value="Supervisión">Supervisión</option>
             </select>
-            <label htmlFor="priority">Prioridad:</label>
-            <select id="priority" {...register("priority")}>
+            <label htmlFor="priority" className="font-semibold text-cyan-700">Prioridad:</label>
+            <select id="priority" {...register("priority")} className="rounded-lg border border-cyan-300 p-2">
               <option value="">Seleccione una prioridad</option>
               <option value="Alta">Alta</option>
               <option value="Media">Media</option>
               <option value="Baja">Baja</option>
             </select>
-            <label htmlFor="status">Estado:</label>
-            <select id="status" {...register("status")}>
+            <label htmlFor="status" className="font-semibold text-cyan-700">Estado:</label>
+            <select id="status" {...register("status")} className="rounded-lg border border-cyan-300 p-2">
               <option value="">Seleccione un estado</option>
               <option value="Pendiente">Pendiente</option>
               <option value="En Progreso">En Progreso</option>
@@ -136,13 +129,10 @@ const AsideFilterMap = ({ onFilters }) => {
             </select>
           </div>
         )}
-
-        {/* //? CASO 3: dataType = "progress" */}
         {dataType === "progress" && (
-          <div>
-            <label htmlFor="status">Avances del Trabajador:</label>
-            {/* //! Nota: usa progressStatus en el form, se mapea a status en onSubmit */}
-            <select id="status" {...register("progressStatus")}>
+          <div className="flex flex-col gap-2">
+            <label htmlFor="status" className="font-semibold text-cyan-700">Avances del Trabajador:</label>
+            <select id="status" {...register("progressStatus")} className="rounded-lg border border-cyan-300 p-2">
               <option value="">Seleccione un avance</option>
               <option value="pendiente">Pendiente</option>
               <option value="en-progreso">En Progreso</option>
@@ -150,12 +140,8 @@ const AsideFilterMap = ({ onFilters }) => {
             </select>
           </div>
         )}
-
-        {/* //? ======================================== */}
-        {/* //? CAMPO GENERAL: Rango de Tiempo */}
-        {/* //? ======================================== */}
-        <label htmlFor="timeRange">Tiempo:</label>
-        <select id="timeRange" {...register("timeRange")}>
+        <label htmlFor="timeRange" className="font-semibold text-cyan-700">Tiempo:</label>
+        <select id="timeRange" {...register("timeRange")} className="rounded-lg border border-cyan-300 p-2">
           <option value="">Seleccione un rango de tiempo</option>
           <option value="1h">Última hora</option>
           <option value="6h">Últimas 6 horas</option>
@@ -169,10 +155,13 @@ const AsideFilterMap = ({ onFilters }) => {
           <option value="all">Sin límite</option>
         </select>
       </div>
-
-      {/* //? Botón de submit */}
-      <div>
-        <button type="submit">Aplicar Filtros</button>
+      <div className="flex justify-center mt-4">
+        <button
+          type="submit"
+          className="px-6 py-2 rounded-xl bg-cyan-600 text-white font-bold shadow hover:bg-cyan-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+        >
+          Aplicar Filtros
+        </button>
       </div>
     </form>
   );

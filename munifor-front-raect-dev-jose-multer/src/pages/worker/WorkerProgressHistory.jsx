@@ -40,7 +40,7 @@ const WorkerProgressHistory = () => {
       }
     };
     fetchProgressReports();
-  }, []);
+  }, [getFetchData]);
 
   //* ========================================
   //* FILTRADO: Buscar avances por título
@@ -51,12 +51,12 @@ const WorkerProgressHistory = () => {
   //* RENDER
   //* ========================================
   return (
-    <div className="min-h-screen bg-gray-50 max-w-5xl mx-auto w-full py-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div className="min-h-screen bg-gradient-to-br from-cyan-50 to-blue-100 max-w-5xl mx-auto w-full py-8 grid grid-cols-1 md:grid-cols-2 gap-8">
       {/* //? ======================================== */}
       {/* //? COLUMNA IZQUIERDA: LISTA DE AVANCES */}
       {/* //? ======================================== */}
       <div className="flex flex-col gap-4">
-        <h2 className="text-xl font-bold text-gray-700 mb-2">
+        <h2 className="text-2xl font-bold text-cyan-700 mb-2 tracking-tight drop-shadow">
           Historial de avances
         </h2>
 
@@ -67,14 +67,14 @@ const WorkerProgressHistory = () => {
             placeholder="Buscar por título..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            className="w-full border border-cyan-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-500 bg-white shadow-sm text-gray-700"
           />
         </div>
 
         {/* //? Lista de reportes de progreso */}
         {filteredReports.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-8">
-            <span className="text-gray-500">
+            <span className="text-gray-400">
               {searchTerm
                 ? "No se encontraron avances con ese término"
                 : "No tienes reportes de avance registrados"}
@@ -85,31 +85,31 @@ const WorkerProgressHistory = () => {
             {filteredReports.map((progress, idx) => (
               <div
                 key={idx}
-                className={`bg-white rounded-lg shadow p-4 border border-gray-200 w-full hover:cursor-pointer transition ${
-                  selectedProgress?._id === progress._id
-                    ? "ring-2 ring-indigo-400"
-                    : ""
-                }`}
+                className={`bg-white rounded-xl shadow-md p-4 border w-full hover:cursor-pointer transition-all duration-200
+                  ${selectedProgress?._id === progress._id
+                    ? "border-cyan-400 ring-2 ring-cyan-300"
+                    : "border-gray-200 hover:border-cyan-300 hover:shadow-lg"}
+                `}
                 onClick={() => setSelectedProgress(progress)}
               >
-                <h3 className="text-base font-semibold text-gray-800 mb-2">
+                <h3 className="text-base font-semibold text-cyan-700 mb-2">
                   {progress.title}
                 </h3>
                 <div className="flex items-center justify-between">
                   {/* //? Badge de estado con colores */}
                   <span
-                    className={`px-3 py-1 rounded-full text-xs font-medium ${
-                      progress.status === "Finalizado"
+                    className={`px-3 py-1 rounded-full text-xs font-medium drop-shadow
+                      ${progress.status === "Finalizado"
                         ? "bg-green-100 text-green-700"
                         : progress.status === "En Progreso"
-                        ? "bg-yellow-100 text-yellow-700"
-                        : "bg-gray-100 text-gray-700"
-                    }`}
+                          ? "bg-cyan-100 text-cyan-700"
+                          : "bg-gray-100 text-gray-700"}
+                    `}
                   >
                     {progress.status}
                   </span>
                   {/* //? Fecha de creación */}
-                  <span className="text-xs text-gray-500">
+                  <span className="text-xs text-gray-400">
                     {new Date(progress.created_at).toLocaleDateString("es-ES")}
                   </span>
                 </div>
@@ -123,24 +123,24 @@ const WorkerProgressHistory = () => {
       {/* //? COLUMNA DERECHA: DETALLES DEL AVANCE */}
       {/* //? ======================================== */}
       <div>
-        <h2 className="text-xl font-bold text-gray-700 mb-4">
+        <h2 className="text-2xl font-bold text-cyan-700 mb-4 tracking-tight drop-shadow">
           Detalle del avance
         </h2>
         {!selectedProgress ? (
           <div className="flex flex-col items-center justify-center py-8">
-            <span className="text-gray-500">
+            <span className="text-gray-400">
               Selecciona un avance para ver detalles
             </span>
           </div>
         ) : (
-          <div className="bg-white rounded-lg shadow p-6 border border-gray-200 w-full">
-            <h3 className="text-lg font-semibold text-indigo-700 mb-4">
+          <div className="bg-white rounded-xl shadow-md p-6 border border-cyan-200 w-full">
+            <h3 className="text-lg font-semibold text-cyan-700 mb-4">
               {selectedProgress.title}
             </h3>
 
             {/* //? Descripción */}
             <div className="mb-4">
-              <span className="font-semibold text-gray-700 block mb-1">
+              <span className="font-semibold text-cyan-700 block mb-1">
                 Descripción:
               </span>
               <p className="text-gray-600">{selectedProgress.description}</p>
@@ -148,15 +148,15 @@ const WorkerProgressHistory = () => {
 
             {/* //? Estado */}
             <div className="mb-4">
-              <span className="font-semibold text-gray-700">Estado:</span>
+              <span className="font-semibold text-cyan-700">Estado:</span>
               <span
-                className={`ml-2 px-3 py-1 rounded-full text-white text-xs font-bold ${
-                  selectedProgress.status === "Finalizado"
+                className={`ml-2 px-3 py-1 rounded-full text-white text-xs font-bold drop-shadow
+                  ${selectedProgress.status === "Finalizado"
                     ? "bg-green-500"
                     : selectedProgress.status === "En Progreso"
-                    ? "bg-yellow-500"
-                    : "bg-gray-500"
-                }`}
+                      ? "bg-cyan-500"
+                      : "bg-gray-500"}
+                `}
               >
                 {selectedProgress.status}
               </span>
@@ -164,11 +164,11 @@ const WorkerProgressHistory = () => {
 
             {/* //? Tarea asociada */}
             <div className="mb-4">
-              <span className="font-semibold text-gray-700 block mb-1">
+              <span className="font-semibold text-cyan-700 block mb-1">
                 Tarea asociada:
               </span>
-              <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-3">
-                <p className="text-gray-800 font-medium">
+              <div className="bg-cyan-50 border border-cyan-200 rounded-lg p-3">
+                <p className="text-cyan-800 font-medium">
                   {selectedProgress.task?.title || "Sin título"}
                 </p>
                 <p className="text-sm text-gray-600">
@@ -179,11 +179,11 @@ const WorkerProgressHistory = () => {
 
             {/* //? Equipo */}
             <div className="mb-4">
-              <span className="font-semibold text-gray-700 block mb-1">
+              <span className="font-semibold text-cyan-700 block mb-1">
                 Equipo:
               </span>
-              <div className="bg-gray-50 border border-gray-200 rounded-lg p-3">
-                <p className="text-gray-800">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                <p className="text-blue-800">
                   {selectedProgress.crew?.name || "Sin nombre"}
                 </p>
                 <p className="text-sm text-gray-600">
@@ -196,10 +196,10 @@ const WorkerProgressHistory = () => {
             {selectedProgress.location?.lat &&
               selectedProgress.location?.lng && (
                 <div className="mb-4">
-                  <span className="font-semibold text-gray-700 block mb-1">
+                  <span className="font-semibold text-cyan-700 block mb-1">
                     Ubicación:
                   </span>
-                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-3">
+                  <div className="bg-cyan-50 border border-cyan-200 rounded-lg p-3">
                     <p className="text-sm text-gray-600">
                       Lat: {selectedProgress.location.lat.toFixed(4)}
                     </p>
@@ -212,7 +212,7 @@ const WorkerProgressHistory = () => {
 
             {/* //? Fecha de creación */}
             <div className="mb-2">
-              <span className="font-semibold text-gray-700 block mb-1">
+              <span className="font-semibold text-cyan-700 block mb-1">
                 Fecha de creación:
               </span>
               <p className="text-gray-600 text-sm">
@@ -230,7 +230,7 @@ const WorkerProgressHistory = () => {
             {selectedProgress.updated_at &&
               selectedProgress.updated_at !== selectedProgress.created_at && (
                 <div className="mb-2">
-                  <span className="font-semibold text-gray-700 block mb-1">
+                  <span className="font-semibold text-cyan-700 block mb-1">
                     Última actualización:
                   </span>
                   <p className="text-gray-600 text-sm">
@@ -250,8 +250,8 @@ const WorkerProgressHistory = () => {
 
             {/* //? ID del avance */}
             <div className="mb-2 mt-4">
-              <span className="font-semibold text-gray-700">ID:</span>
-              <span className="ml-2 text-gray-700 font-mono text-sm">
+              <span className="font-semibold text-cyan-700">ID:</span>
+              <span className="ml-2 text-cyan-700 font-mono text-sm">
                 {selectedProgress._id}
               </span>
             </div>

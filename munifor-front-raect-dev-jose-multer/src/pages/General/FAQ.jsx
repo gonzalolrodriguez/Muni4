@@ -12,15 +12,13 @@
 
 const FAQ = () => {
   return (
-    <div className="min-h-[70vh] flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100">
-      <div className="w-full max-w-2xl bg-white rounded-xl shadow-lg p-8">
-        <h1 className="text-3xl font-bold text-blue-700 mb-6 text-center">
-          Preguntas Frecuentes
-        </h1>
+    <div className="min-h-[70vh] flex items-center justify-center bg-[#eaf4fe]">
+      <div className="w-full max-w-2xl bg-white/70 backdrop-blur-md rounded-2xl shadow-2xl p-10 border border-cyan-200">
+        <h1 className="text-3xl font-extrabold text-cyan-700 mb-6 text-center">Preguntas Frecuentes</h1>
         {/* //? Lista de preguntas frecuentes */}
         <ul className="space-y-6">
-          <li className="bg-blue-50 rounded-lg p-4 shadow">
-            <strong className="text-blue-700">
+          <li className="bg-cyan-50 rounded-xl p-4 shadow">
+            <strong className="text-cyan-700">
               ¿Cuál es el propósito de esta aplicación?
             </strong>
             <p className="text-gray-700 mt-2">
@@ -28,15 +26,15 @@ const FAQ = () => {
               gestionar y visualizar tareas y avances en tiempo real.
             </p>
           </li>
-          <li className="bg-blue-50 rounded-lg p-4 shadow">
-            <strong className="text-blue-700">¿Cómo creo una cuenta?</strong>
+          <li className="bg-cyan-50 rounded-xl p-4 shadow">
+            <strong className="text-cyan-700">¿Cómo creo una cuenta?</strong>
             <p className="text-gray-700 mt-2">
               Haz clic en "Regístrate" en la página principal y completa el
               formulario con tus datos personales y credenciales.
             </p>
           </li>
-          <li className="bg-blue-50 rounded-lg p-4 shadow">
-            <strong className="text-blue-700">
+          <li className="bg-cyan-50 rounded-xl p-4 shadow">
+            <strong className="text-cyan-700">
               ¿Cómo puedo recuperar mi contraseña?
             </strong>
             <p className="text-gray-700 mt-2">

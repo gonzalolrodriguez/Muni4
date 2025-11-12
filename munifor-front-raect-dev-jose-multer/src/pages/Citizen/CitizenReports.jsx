@@ -131,135 +131,135 @@ const CitizenReports = () => {
   //* RENDERIZADO: Formulario de reporte
   //* ========================================
   return (
-    //* handleSubmit wrapper de React Hook Form
-    //* Ejecuta validaciones antes de llamar a onSubmit
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="w-full max-w-2xl mx-auto bg-white rounded-2xl shadow-2xl p-10 flex flex-col gap-8 border border-blue-100"
-    >
-      <h1 className="text-3xl font-extrabold text-blue-700 mb-2 text-center tracking-tight">
-        Haz un Reporte
-      </h1>
+    <div className="min-h-screen bg-[#eaf4fe] py-8 px-2 flex flex-col items-center justify-center">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="w-full max-w-2xl mx-auto bg-white/70 backdrop-blur-md rounded-2xl shadow-2xl p-10 flex flex-col gap-8 border border-cyan-200"
+      >
+        <h1 className="text-3xl font-extrabold text-cyan-700 mb-2 text-center tracking-tight drop-shadow">
+          Haz un Reporte
+        </h1>
 
-      {/* CAMPO 1: Título del reporte */}
-      <div>
-        <label
-          htmlFor="title"
-          className="block text-sm font-medium text-gray-700 mb-1"
-        >
-          Título
-        </label>
-        <input
-          type="text"
-          {...register("title")} // Registrar campo en React Hook Form
-          id="title"
-          className="input input-bordered w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        {errors.title && (
-          <p className="text-red-500 text-sm mt-1">{errors.title.message}</p>
-        )}
-      </div>
+        {/* CAMPO 1: Título del reporte */}
+        <div>
+          <label
+            htmlFor="title"
+            className="block text-sm font-semibold text-cyan-700 mb-1"
+          >
+            Título
+          </label>
+          <input
+            type="text"
+            {...register("title")}
+            id="title"
+            className="w-full px-4 py-3 rounded-xl border border-cyan-200 shadow focus:outline-none focus:ring-2 focus:ring-cyan-400 bg-cyan-50 text-lg"
+          />
+          {errors.title && (
+            <p className="text-red-500 text-sm mt-1">{errors.title.message}</p>
+          )}
+        </div>
 
-      {/* CAMPO 2: Descripción del reporte */}
-      <div>
-        <label
-          htmlFor="description"
-          className="block text-sm font-medium text-gray-700 mb-1"
-        >
-          Descripción
-        </label>
-        <input
-          type="text"
-          {...register("description")}
-          id="description"
-          className="input input-bordered w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        {errors.description && (
-          <p className="text-red-500 text-sm mt-1">
-            {errors.description.message}
-          </p>
-        )}
-      </div>
+        {/* CAMPO 2: Descripción del reporte */}
+        <div>
+          <label
+            htmlFor="description"
+            className="block text-sm font-semibold text-cyan-700 mb-1"
+          >
+            Descripción
+          </label>
+          <input
+            type="text"
+            {...register("description")}
+            id="description"
+            className="w-full px-4 py-3 rounded-xl border border-cyan-200 shadow focus:outline-none focus:ring-2 focus:ring-cyan-400 bg-cyan-50 text-lg"
+          />
+          {errors.description && (
+            <p className="text-red-500 text-sm mt-1">
+              {errors.description.message}
+            </p>
+          )}
+        </div>
 
-      {/* CAMPO 3: Tipo de reporte */}
-      <div>
-        <label
-          htmlFor="type_report"
-          className="block text-sm font-medium text-gray-700 mb-1"
-        >
-          Tipo de reporte
-        </label>
-        <select
-          id="type_report"
-          {...register("type_report")}
-          className="input input-bordered w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          <option value="">Seleccione</option>
-          <option value="Bache">Bache</option>
-          <option value="Alumbrado">Alumbrado</option>
-          <option value="Basura">Basura</option>
-          <option value="Incidente">Incidente</option>
-          <option value="Otro">Otro</option>
-        </select>
-        {errors.type_report && (
-          <p className="text-red-500 text-sm mt-1">
-            {errors.type_report.message}
-          </p>
-        )}
-        {watch("type_report") === "Otro" && (
-          <div>
-            <label
-              htmlFor="other_type_detail"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Especifique
-            </label>
-            <input
-              type="text"
-              {...register("other_type_detail")}
-              className="input input-bordered w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            {errors.other_type_detail && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.other_type_detail.message}
-              </p>
-            )}
-          </div>
-        )}
-      </div>
+        {/* CAMPO 3: Tipo de reporte */}
+        <div>
+          <label
+            htmlFor="type_report"
+            className="block text-sm font-semibold text-cyan-700 mb-1"
+          >
+            Tipo de reporte
+          </label>
+          <select
+            id="type_report"
+            {...register("type_report")}
+            className="w-full px-4 py-3 rounded-xl border border-cyan-200 shadow focus:outline-none focus:ring-2 focus:ring-cyan-400 bg-cyan-50 text-lg"
+          >
+            <option value="">Seleccione</option>
+            <option value="Bache">Bache</option>
+            <option value="Alumbrado">Alumbrado</option>
+            <option value="Basura">Basura</option>
+            <option value="Incidente">Incidente</option>
+            <option value="Otro">Otro</option>
+          </select>
+          {errors.type_report && (
+            <p className="text-red-500 text-sm mt-1">
+              {errors.type_report.message}
+            </p>
+          )}
+          {watch("type_report") === "Otro" && (
+            <div>
+              <label
+                htmlFor="other_type_detail"
+                className="block text-sm font-semibold text-cyan-700 mb-1"
+              >
+                Especifique
+              </label>
+              <input
+                type="text"
+                {...register("other_type_detail")}
+                className="w-full px-4 py-3 rounded-xl border border-cyan-200 shadow focus:outline-none focus:ring-2 focus:ring-cyan-400 bg-cyan-50 text-lg"
+              />
+              {errors.other_type_detail && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.other_type_detail.message}
+                </p>
+              )}
+            </div>
+          )}
+        </div>
 
-      {/* CAMPO 4: Subir imágenes (opcional) */}
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Imágenes (opcional, máx. 5)
-        </label>
-        <ImageUploader
-          onFilesChange={handleImagesChange} // Callback cuando cambian las imágenes
-          maxFiles={5} // Máximo 5 imágenes
-          maxSizeMB={15} // Máximo 15MB por imagen
-        />
-      </div>
+        {/* CAMPO 4: Subir imágenes (opcional) */}
+        <div>
+          <label className="block text-sm font-semibold text-cyan-700 mb-1">
+            Imágenes (opcional, máx. 5)
+          </label>
+          <ImageUploader
+            onFilesChange={handleImagesChange}
+            maxFiles={5}
+            maxSizeMB={15}
+          />
+        </div>
 
-      {/* CAMPO 5: Selección de ubicación en mapa */}
-      <div>
-        <CitizenLeafletMap onMarkerChange={handleMarkerChange} />
-        {markerPosition && (
-          <div className="mt-2 text-xs text-blue-700 text-center font-semibold">
-            Coordenadas seleccionadas: {markerPosition.join(", ")}
-          </div>
-        )}
-      </div>
+        {/* CAMPO 5: Selección de ubicación en mapa */}
+        <div>
+          <CitizenLeafletMap onMarkerChange={handleMarkerChange} />
+          {markerPosition && (
+            <div className="mt-2 text-xs text-cyan-700 text-center font-semibold">
+              Coordenadas seleccionadas: {markerPosition.join(", ")}
+            </div>
+          )}
+        </div>
 
-      {/* BOTÓN: Enviar formulario */}
-      <div className="flex justify-center mt-4">
-        <button
-          type="submit"
-          className="bg-blue-600 text-white font-semibold py-2 px-8 rounded-lg hover:bg-blue-700 transition shadow"
-        >
-          Enviar
-        </button>
-      </div>
-    </form>
+        {/* BOTÓN: Enviar formulario */}
+        <div className="flex justify-center mt-4">
+          <button
+            type="submit"
+            className="bg-cyan-600 text-white font-bold py-3 px-8 rounded-xl shadow hover:bg-cyan-700 transition text-lg"
+          >
+            Enviar
+          </button>
+        </div>
+      </form>
+    </div>
   );
 };
 

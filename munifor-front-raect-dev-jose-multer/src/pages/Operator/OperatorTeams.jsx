@@ -49,7 +49,7 @@ const OperatorTeams = () => {
       }
     };
     fetchCrews();
-  }, [selectedCrew]); //* Se re-ejecuta cuando se cierra el modal
+  }, [selectedCrew, getFetchData]); //* Se re-ejecuta cuando se cierra el modal
 
   //? ========================================
   //? FILTROS: BÚSQUEDA POR NOMBRE
@@ -71,19 +71,19 @@ const OperatorTeams = () => {
   const closePanel = () => setSelectedCrew(null);
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#eaf4fe] to-[#d2e7fa]">
       {/* ========================================
           SECCIÓN: HEADER CON BÚSQUEDA
           ======================================== */}
       <div className="max-w-5xl mx-auto px-4 py-4 flex flex-col gap-2">
-        <h2 className="text-xl font-bold text-gray-700">Cuadrillas</h2>
+        <h2 className="text-3xl font-extrabold text-cyan-700 mb-2 drop-shadow">Cuadrillas</h2>
         {/* Input de búsqueda por nombre */}
         <input
           type="text"
           placeholder="Buscar por nombre..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="border rounded px-3 py-2 w-full max-w-md focus:outline-none focus:ring focus:border-blue-300"
+          className="border-2 border-cyan-300 rounded-lg px-4 py-3 w-full max-w-lg focus:outline-none focus:ring-2 focus:ring-cyan-400 bg-white shadow-sm placeholder-cyan-600/60 text-cyan-700"
         />
       </div>
 
@@ -94,26 +94,26 @@ const OperatorTeams = () => {
         {filteredCrews.length === 0 ? (
           //* Mensaje cuando no hay cuadrillas
           <div className="flex flex-col items-center justify-center py-16">
-            <h3>No hay cuadrillas registradas</h3>
+            <h3 className="text-lg text-cyan-700 font-semibold">No hay cuadrillas registradas</h3>
           </div>
         ) : (
           //* Lista de cuadrillas filtradas
           filteredCrews.map((crew, idx) => (
             <div
               key={crew._id || idx}
-              className="bg-white rounded-lg shadow p-3 flex justify-between items-center border border-gray-200 w-full max-w-2xl mx-auto min-h-14 hover:cursor-pointer"
+              className="bg-white rounded-xl shadow-lg p-5 flex justify-between items-center border-2 border-cyan-300/20 w-full max-w-3xl mx-auto min-h-16 hover:cursor-pointer hover:shadow-xl transition-all duration-150"
               onClick={() => handleSelectCrew(crew)}
             >
               <div>
-                <span className="block text-xl font-semibold text-gray-800">
+                <span className="block text-2xl font-bold text-cyan-700 mb-1">
                   {crew.name}
                 </span>
-                <span className="block text-sm text-gray-500">
-                  Miembros: {crew.members ? crew.members.length : 0}
+                <span className="block text-sm text-cyan-600/70">
+                  Miembros: <span className="font-semibold text-cyan-700">{crew.members ? crew.members.length : 0}</span>
                 </span>
               </div>
               {/* Badge de acción */}
-              <span className="px-4 py-2 rounded-full text-base font-medium bg-blue-100 text-blue-700">
+              <span className="px-6 py-2 rounded-full text-base font-semibold shadow-sm border-2 bg-cyan-100 text-cyan-700 border-cyan-300">
                 Ver
               </span>
             </div>

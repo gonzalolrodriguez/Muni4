@@ -7,7 +7,7 @@
 
 const Footer = () => {
   return (
-    <footer className="bg-blue-700 text-white py-4 mt-8 shadow-inner">
+    <footer className="bg-cyan-800 text-white py-4 mt-8 shadow-inner">
       <div className="container mx-auto text-center text-sm">
         &copy; {new Date().getFullYear()} MuniFor. Todos los derechos reservados.
       </div>

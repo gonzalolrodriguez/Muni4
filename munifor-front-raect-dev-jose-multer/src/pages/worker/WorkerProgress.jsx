@@ -71,7 +71,7 @@ const WorkerProgress = () => {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [getFetchData]);
 
   //* Callback para recibir imágenes del ImageUploader
   const handleImagesChange = (files) => {
@@ -147,90 +147,65 @@ const WorkerProgress = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 max-w-4xl mx-auto w-full py-8 px-4">
-      <h1 className="text-2xl font-bold text-gray-800 mb-6">
+    <div className="min-h-screen bg-gradient-to-br from-cyan-50 to-blue-100 max-w-4xl mx-auto w-full py-8 px-4 flex flex-col">
+      <h1 className="text-2xl md:text-3xl font-extrabold text-cyan-700 mb-8 tracking-tight drop-shadow text-center">
         Registro de Avances
       </h1>
 
       {!currentTask ? (
-        <div className="flex flex-col items-center justify-center py-16">
-          <p className="text-gray-600 text-lg mb-4">
+        <div className="flex flex-1 flex-col items-center justify-center min-h-[300px]">
+          <p className="text-cyan-700 text-lg md:text-xl mb-6 text-center font-semibold">
             No tienes ninguna tarea en progreso
           </p>
           <button
             onClick={() => (window.location.href = "/worker/tasks")}
-            className="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition"
+            className="bg-cyan-600 text-white px-8 py-3 rounded-xl shadow-lg hover:bg-cyan-700 transition font-bold text-base md:text-lg"
           >
             Acepta una tarea
           </button>
         </div>
       ) : (
-        <div className="bg-white rounded-lg shadow p-6">
-          <div className="mb-6 p-4 bg-indigo-50 rounded-lg">
-            <h2 className="text-lg font-semibold text-indigo-700 mb-2">
-              Tarea actual: {currentTask.title}
-            </h2>
+        <div className="bg-white rounded-xl shadow-md p-6 border border-cyan-200">
+          <div className="mb-6 p-4 bg-cyan-50 rounded-lg">
+            <h2 className="text-lg font-semibold text-cyan-700 mb-2">Tarea actual: {currentTask.title}</h2>
             <p className="text-gray-600">{currentTask.description}</p>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div>
-              <label
-                htmlFor="title"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Título del avance
-              </label>
+              <label htmlFor="title" className="block text-sm font-medium text-cyan-700 mb-1">Título del avance</label>
               <input
                 type="text"
                 id="title"
                 {...register("title", { required: "El título es obligatorio" })}
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full border border-cyan-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-500 bg-white shadow-sm text-gray-700"
                 placeholder="Ej: Reparación de bache en progreso"
               />
               {errors.title && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.title.message}
-                </p>
+                <p className="text-red-500 text-sm mt-1">{errors.title.message}</p>
               )}
             </div>
 
             <div>
-              <label
-                htmlFor="description"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Descripción
-              </label>
+              <label htmlFor="description" className="block text-sm font-medium text-cyan-700 mb-1">Descripción</label>
               <textarea
                 id="description"
-                {...register("description", {
-                  required: "La descripción es obligatoria",
-                })}
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                {...register("description", { required: "La descripción es obligatoria" })}
+                className="w-full border border-cyan-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-500 bg-white shadow-sm text-gray-700"
                 rows="4"
                 placeholder="Describe el avance realizado..."
               />
               {errors.description && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.description.message}
-                </p>
+                <p className="text-red-500 text-sm mt-1">{errors.description.message}</p>
               )}
             </div>
 
             <div>
-              <label
-                htmlFor="status"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Estado del avance
-              </label>
+              <label htmlFor="status" className="block text-sm font-medium text-cyan-700 mb-1">Estado del avance</label>
               <select
                 id="status"
-                {...register("status", {
-                  required: "El estado es obligatorio",
-                })}
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                {...register("status", { required: "El estado es obligatorio" })}
+                className="w-full border border-cyan-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-500 bg-white shadow-sm text-gray-700"
               >
                 <option value="">Selecciona un estado</option>
                 <option value="Pendiente">Pendiente</option>
@@ -238,26 +213,18 @@ const WorkerProgress = () => {
                 <option value="Finalizado">Finalizado</option>
               </select>
               {errors.status && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.status.message}
-                </p>
+                <p className="text-red-500 text-sm mt-1">{errors.status.message}</p>
               )}
             </div>
 
             <div>
-              <ImageUploader
-                onFilesChange={handleImagesChange}
-                maxFiles={5}
-                maxSizeMB={15}
-              />
+              <ImageUploader onFilesChange={handleImagesChange} maxFiles={5} maxSizeMB={15} />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Ubicación actual
-              </label>
-              <div className="w-full h-96 border rounded-lg overflow-hidden">
-                //* Mapa Leaflet: Centrado en Formosa capital
+              <label className="block text-sm font-medium text-cyan-700 mb-2">Ubicación actual</label>
+              <div className="w-full h-96 border border-cyan-200 rounded-lg overflow-hidden">
+                {/* Mapa Leaflet: Centrado en Formosa capital */}
                 <MapContainer
                   center={[-26.1849, -58.1756]} // Coordenadas de Formosa
                   zoom={15}
@@ -280,10 +247,7 @@ const WorkerProgress = () => {
               </div>
               {/* Mostrar coordenadas seleccionadas */}
               {markerPosition && (
-                <p className="text-sm text-gray-600 mt-2">
-                  Coordenadas: {markerPosition[0].toFixed(4)},{" "}
-                  {markerPosition[1].toFixed(4)}
-                </p>
+                <p className="text-sm text-gray-600 mt-2">Coordenadas: {markerPosition[0].toFixed(4)}, {markerPosition[1].toFixed(4)}</p>
               )}
             </div>
 
@@ -295,13 +259,13 @@ const WorkerProgress = () => {
                   reset();
                   setMarkerPosition(null);
                 }}
-                className="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition"
+                className="px-6 py-2 border border-cyan-300 rounded-lg text-cyan-700 hover:bg-cyan-50 transition"
               >
                 Cancelar
               </button>
               <button
                 type="submit"
-                className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
+                className="px-6 py-2 bg-cyan-600 text-white font-semibold rounded-lg shadow hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-all"
               >
                 Registrar avance
               </button>

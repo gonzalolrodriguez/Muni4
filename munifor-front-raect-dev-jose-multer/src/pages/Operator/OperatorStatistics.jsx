@@ -103,14 +103,16 @@ const OperatorStatistics = () => {
   }, [getFetchData]); //* Se ejecuta al montar
 
   return (
-    <div className="min-h-screen w-full flex flex-row items-center justify-center gap-[2vw] flex-wrap bg-gray-300">
+    <div className="min-h-screen w-full flex flex-row items-center justify-center gap-[2vw] flex-wrap bg-gradient-to-br from-[#eaf4fe] to-[#d2e7fa]">
       {/* ========================================
           GRÁFICO 1: LÍNEA - ACEPTADOS VS COMPLETADOS
           ======================================== 
           * Muestra evolución mensual de reportes aceptados y completados
       */}
       <div className="bg-gray-100 rounded-lg shadow-lg p-4 w-[92%] h-80 flex items-center justify-center">
-        <ChartLine data={lineReportsData} />
+        <div className="bg-white/80 border-2 border-cyan-300 rounded-2xl shadow-2xl w-full h-full flex items-center justify-center">
+          <ChartLine data={lineReportsData} />
+        </div>
       </div>
 
       {/* ========================================
@@ -119,7 +121,9 @@ const OperatorStatistics = () => {
           * Muestra evolución mensual de cada tipo (Bache, Alumbrado, Basura, Otro)
       */}
       <div className="bg-gray-100 rounded-lg shadow-lg p-4 w-[92%] h-80 flex items-center justify-center">
-        <ChartLine data={lineTypesData} />
+        <div className="bg-white/80 border-2 border-cyan-300 rounded-2xl shadow-2xl w-full h-full flex items-center justify-center">
+          <ChartLine data={lineTypesData} />
+        </div>
       </div>
 
       {/* ========================================
@@ -128,7 +132,9 @@ const OperatorStatistics = () => {
           * Muestra porcentaje de reportes por estado
       */}
       <div className="bg-gray-100 rounded-lg shadow-lg p-4 w-2/5 h-80 flex items-center justify-center">
-        <ChartDoughnut data={doughnutData} />
+        <div className="bg-white/80 border-2 border-cyan-300 rounded-2xl shadow-2xl w-full h-full flex items-center justify-center">
+          <ChartDoughnut data={doughnutData} />
+        </div>
       </div>
     </div>
   );

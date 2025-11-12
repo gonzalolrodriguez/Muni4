@@ -77,26 +77,26 @@ const Login = () => {
 
   //* ========================================
   return (
-    <section className="flex items-center justify-center min-h-[70vh] bg-gradient-to-br from-blue-50 to-blue-100">
-      <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-md bg-white rounded-xl shadow-lg p-8 flex flex-col gap-6">
-        <h1 className="text-2xl font-bold text-blue-700 mb-2">Iniciar sesión</h1>
-        <div>
-          <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">Usuario</label>
-          <input type="text" {...register("username")} id="username" className="input input-bordered w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500" />
-          {errors.username && <span className="text-red-500 text-sm">{errors.username.message}</span>}
+    <section className="flex items-center justify-center min-h-screen bg-[#eaf4fe] px-2">
+      <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-lg bg-white/70 backdrop-blur-md rounded-2xl shadow-2xl p-10 flex flex-col gap-8 border border-cyan-300 border-t-4 border-cyan-500">
+        <h1 className="text-4xl font-extrabold text-cyan-700 mb-4 text-center tracking-tight drop-shadow">Iniciar sesión</h1>
+        <div className="flex flex-col gap-2">
+          <label htmlFor="username" className="block text-base font-semibold text-cyan-700 mb-1">Usuario</label>
+          <input type="text" {...register("username")} id="username" className="w-full px-5 py-3 rounded-xl border border-cyan-200 shadow focus:outline-none focus:ring-2 focus:ring-cyan-400 bg-cyan-50 text-lg" />
+          {errors.username && <span className="text-red-500 text-sm mt-1">{errors.username.message}</span>}
         </div>
-        <div>
-          <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
-          <input type="password" {...register("password")} id="password" className="input input-bordered w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500" />
-          {errors.password && <span className="text-red-500 text-sm">{errors.password.message}</span>}
+        <div className="flex flex-col gap-2">
+          <label htmlFor="password" className="block text-base font-semibold text-cyan-700 mb-1">Contraseña</label>
+          <input type="password" {...register("password")} id="password" className="w-full px-5 py-3 rounded-xl border border-cyan-200 shadow focus:outline-none focus:ring-2 focus:ring-cyan-400 bg-cyan-50 text-lg" />
+          {errors.password && <span className="text-red-500 text-sm mt-1">{errors.password.message}</span>}
         </div>
-        {backendError && <div className="text-red-500 text-sm mb-2">{backendError}</div>}
-        <div className="flex flex-col sm:flex-row sm:justify-between items-center gap-2">
-          <Link to="/forgotpassword" className="text-blue-600 hover:underline text-sm">¿Olvidaste tu contraseña?</Link>
-          <button type="submit" className="bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg hover:bg-blue-700 transition">Iniciar sesión</button>
+        {backendError && <div className="text-red-500 text-base font-semibold mb-2 text-center">{backendError}</div>}
+        <div className="flex flex-col sm:flex-row sm:justify-between items-center gap-3 mt-2">
+          <Link to="/forgotpassword" className="text-cyan-600 hover:underline text-base font-medium">¿Olvidaste tu contraseña?</Link>
+          <button type="submit" className="bg-cyan-600 text-white font-bold py-3 px-8 rounded-xl shadow hover:bg-cyan-700 transition text-lg">Iniciar sesión</button>
         </div>
-        <div className="text-center text-sm mt-2">
-          ¿No tienes una cuenta? <Link to="/register" className="text-blue-600 hover:underline">Regístrate</Link>
+        <div className="text-center text-base mt-4">
+          ¿No tienes una cuenta? <Link to="/register" className="text-cyan-600 hover:underline font-semibold">Regístrate</Link>
         </div>
       </form>
     </section>

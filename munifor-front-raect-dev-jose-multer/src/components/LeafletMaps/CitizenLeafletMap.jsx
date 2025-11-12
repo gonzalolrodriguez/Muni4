@@ -67,7 +67,7 @@ const CitizenLeafletMap = ({ onMarkerChange }) => {
         <h2 className="text-2xl font-extrabold text-blue-700 mb-4 text-center tracking-tight">
           Selecciona la ubicación en el mapa
         </h2>
-        <div className="w-full h-96 rounded-xl overflow-hidden mt-2 border-2 border-blue-200 shadow">
+        <div className="w-full h-96 rounded-xl overflow-hidden mt-2 border-2 border-blue-400 shadow">
           {position ? (
             <MapContainer
               center={position}
@@ -98,7 +98,7 @@ const CitizenLeafletMap = ({ onMarkerChange }) => {
             </div>
           )}
         </div>
-        <div className="mt-6 text-sm text-gray-600 text-center bg-blue-50 rounded-lg p-3 shadow-inner w-full">
+        <div className="mt-6 text-sm text-blue-700 text-center bg-blue-50 rounded-lg p-3 shadow-inner w-full">
           <span className="font-medium text-blue-600">Tip:</span> Puedes mover el
           marcador haciendo click en el mapa.
           <br />

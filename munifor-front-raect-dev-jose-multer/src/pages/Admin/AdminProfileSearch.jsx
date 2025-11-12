@@ -56,55 +56,44 @@ const AdminProfileSearch = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 max-w-4xl mx-auto w-full py-8">
-      {/* ========================================
-          SECCIÓN: HEADER
-          ======================================== */}
-      <h1 className="text-2xl font-bold text-gray-700 mb-8">User Directory</h1>
-
-      {/* ========================================
-          SECCIÓN: BÚSQUEDA
-          ======================================== */}
-      <input
-        type="text"
-        placeholder="Search by name, email or DNI..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        className="mb-6 px-4 py-2 border border-gray-300 rounded w-full"
-      />
-
-      {/* ========================================
-          SECCIÓN: LISTA DE USUARIOS
-          ======================================== */}
-      {filteredUsers.length === 0 ? (
-        //* Mensaje cuando no hay usuarios
-        <div className="flex flex-col items-center justify-center py-8">
-          <span className="text-gray-500">No users found</span>
-        </div>
-      ) : (
-        //* Lista de usuarios filtrados
-        <div className="flex flex-col gap-4">
-          {filteredUsers.map((user, idx) => (
-            <div
-              key={idx}
-              className="bg-white rounded-lg shadow p-4 flex justify-between items-center border border-gray-200 w-full"
-            >
-              <div>
-                <span className="block text-base font-semibold text-gray-800">
-                  {user.name} ({user.role})
-                </span>
-                <span className="block text-sm text-gray-500">
-                  DNI: {user.dni}
-                </span>
-                <span className="block text-sm text-gray-500">
-                  Email: {user.email}
-                </span>
+    <div className="min-h-screen bg-gradient-to-br from-[#eaf4fe] to-[#d2e7fa] flex items-center justify-center py-12">
+      <div className="w-full max-w-4xl bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-cyan-300 p-10">
+        <h1 className="text-3xl font-extrabold text-cyan-700 mb-8 text-center tracking-tight drop-shadow">Directorio de Usuarios</h1>
+        <input
+          type="text"
+          placeholder="Buscar por nombre, email o DNI..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="mb-8 px-4 py-3 border border-cyan-300 rounded-xl w-full shadow focus:outline-none focus:ring-2 focus:ring-cyan-400 text-cyan-700 bg-white/90"
+        />
+        {filteredUsers.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-12">
+            <span className="text-cyan-500 text-lg">No se encontraron usuarios</span>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-6">
+            {filteredUsers.map((user, idx) => (
+              <div
+                key={idx}
+                className="bg-white/90 rounded-xl shadow-lg border border-cyan-200 w-full p-6 flex justify-between items-center transition-all duration-200 hover:ring-2 hover:ring-cyan-300"
+              >
+                <div>
+                  <span className="block text-lg font-bold text-cyan-700 mb-1">
+                    {user.name} <span className="font-normal text-cyan-500">({user.role})</span>
+                  </span>
+                  <span className="block text-sm text-cyan-600">
+                    DNI: {user.dni}
+                  </span>
+                  <span className="block text-sm text-cyan-600">
+                    Email: {user.email}
+                  </span>
+                </div>
+                {/* Acciones rápidas futuras */}
               </div>
-              {/* TODO: Agregar acciones rápidas (editar, eliminar, etc.) */}
-            </div>
-          ))}
-        </div>
-      )}
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

@@ -119,135 +119,134 @@ const GlobalLeafletMap = ({ role }) => {
   //* RENDER
   //* ========================================
   return (
-    <div className="flex h-screen">
-      {/* //? ======================================== */}
-      {/* //? PANEL IZQUIERDO - FILTROS */}
-      {/* //? ======================================== */}
-      <aside className="w-1/6 bg-gray-100 border-r border-gray-300 p-4 overflow-y-auto">
-        <AsideFilterMap onFilters={handleApplyFilters} />
+    <div className="flex flex-col md:flex-row h-full min-h-screen bg-gradient-to-br from-[#eaf4fe] to-[#d2e7fa]">
+      {/* //? PANEL IZQUIERDO - FILTROS MODERNO */}
+      <aside className="w-full md:w-[320px] min-w-0 bg-white/80 backdrop-blur-xl border-b-4 md:border-b-0 md:border-r-4 border-cyan-300 p-4 md:p-8 flex flex-col gap-8 shadow-2xl z-20 rounded-b-3xl md:rounded-b-none md:rounded-r-3xl mb-4 md:mb-8 md:ml-8 overflow-hidden">
+        <div className="mb-4 md:mb-6 mt-4 md:mt-44">
+          <h2 className="text-2xl md:text-3xl font-extrabold text-cyan-700 mb-2 text-center tracking-tight drop-shadow">Filtros</h2>
+          <p className="text-cyan-600 text-base text-center mb-4">Personaliza la vista del mapa usando los filtros disponibles.</p>
+        </div>
+        <div className="flex-1 flex flex-col justify-start mt-2 md:mt-4">
+          <AsideFilterMap onFilters={handleApplyFilters} />
+        </div>
       </aside>
 
-      {/* //? ======================================== */}
-      {/* //? CONTENIDO CENTRAL - MAPA */}
-      {/* //? ======================================== */}
-      <main className="flex-1 relative">
-        <MapContainer
-          center={[-26.1849, -58.1731]} // Formosa, Argentina
-          zoom={15}
-          className="h-full w-full z-0"
-        >
-          {/* //? Capa de mosaicos (OpenStreetMap) */}
-          <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution='&copy; <a href="https://osm.org">OpenStreetMap</a> contributors'
-          />
-
-          {/* //! ======================================== */}
-          {/* //! MARCADORES SEGÚN TIPO DE DATO */}
-          {/* //! ======================================== */}
-
-          {/* //? CASO 1: Mostrar reportes */}
-          {filters.dataType === "report"
-            ? filteredData
-                .filter((item) => item.location?.lat && item.location?.lng)
-                .map((item) => (
-                  <Marker
-                    key={item._id}
-                    position={[item.location.lat, item.location.lng]}
-                    icon={getIconReport(
-                      item.report_type?.toLowerCase() || "otros",
-                      item.status?.toLowerCase()
-                    )}
-                    eventHandlers={{
-                      //! Click: abrir panel de detalles
-                      click: () => handleSelectReport(item),
-                      //! Hover: abrir popup
-                      mouseover: (e) => e.target.openPopup(),
-                      mouseout: (e) => e.target.closePopup(),
-                    }}
-                  >
-                    <Popup>
-                      <div>
-                        <b>{item.report_type?.toUpperCase()}</b>
-                        <br />
-                        <span>{item.title || item.description}</span>
-                        {item.status && (
-                          <>
+      {/* //? CONTENIDO CENTRAL - MAPA Y INFO */}
+      <main className="flex-1 relative flex flex-col items-center justify-start">
+        {/* //? Tarjeta informativa expandida */}
+        <div className="w-full px-0 pt-4 md:pt-10 flex justify-center">
+          <div className="w-full mx-0 bg-white/90 backdrop-blur-lg rounded-2xl shadow-2xl border border-cyan-400 p-4 md:p-8 mb-4 md:mb-6 flex flex-col gap-2 text-center">
+            <h2 className="text-2xl md:text-4xl font-extrabold text-cyan-700 mb-2 tracking-tight">Mapa Global de Reportes</h2>
+            <p className="text-cyan-600 text-base md:text-lg">Visualiza todos los reportes, tareas y avances en tiempo real. Haz clic en los marcadores para ver detalles.</p>
+          </div>
+        </div>
+        <div className="flex-1 w-full flex items-center justify-center pb-4 md:pb-8">
+          <div className="w-full h-[350px] md:h-full rounded-3xl overflow-hidden shadow-xl border border-cyan-300">
+            <MapContainer
+              center={[-26.1849, -58.1731]} // Formosa, Argentina
+              zoom={15}
+              className="h-full w-full z-0 min-h-[300px]"
+            >
+              <TileLayer
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                attribution='&copy; <a href="https://osm.org">OpenStreetMap</a> contributors'
+              />
+              {/* //! MARCADORES SEGÚN TIPO DE DATO */}
+              {filters.dataType === "report"
+                ? filteredData
+                  .filter((item) => item.location?.lat && item.location?.lng)
+                  .map((item) => (
+                    <Marker
+                      key={item._id}
+                      position={[item.location.lat, item.location.lng]}
+                      icon={getIconReport(
+                        item.report_type?.toLowerCase() || "otros",
+                        item.status?.toLowerCase()
+                      )}
+                      eventHandlers={{
+                        click: () => handleSelectReport(item),
+                        mouseover: (e) => e.target.openPopup(),
+                        mouseout: (e) => e.target.closePopup(),
+                      }}
+                    >
+                      <Popup>
+                        <div>
+                          <b>{item.report_type?.toUpperCase()}</b>
+                          <br />
+                          <span>{item.title || item.description}</span>
+                          {item.status && (
+                            <>
+                              <br />
+                              <small className="text-gray-600">
+                                Estado: {item.status}
+                              </small>
+                            </>
+                          )}
+                        </div>
+                      </Popup>
+                    </Marker>
+                  ))
+                : filters.dataType === "task"
+                  ? filteredData
+                    .filter((item) => item.location?.lat && item.location?.lng)
+                    .map((item) => (
+                      <Marker
+                        key={item._id}
+                        position={[item.location.lat, item.location.lng]}
+                        icon={getIconTask(
+                          item.task_type?.toLowerCase(),
+                          item.priority?.toLowerCase()
+                        )}
+                        eventHandlers={{
+                          click: () => handleSelectReport(item),
+                          mouseover: (e) => e.target.openPopup(),
+                          mouseout: (e) => e.target.closePopup(),
+                        }}
+                      >
+                        <Popup>
+                          <div>
+                            <b>{item.task_type?.toUpperCase()}</b>
+                            <br />
+                            <span>{item.title || item.description}</span>
                             <br />
                             <small className="text-gray-600">
                               Estado: {item.status}
                             </small>
-                          </>
-                        )}
-                      </div>
-                    </Popup>
-                  </Marker>
-                ))
-            : /* //? CASO 2: Mostrar tareas */
-            filters.dataType === "task"
-            ? filteredData
-                .filter((item) => item.location?.lat && item.location?.lng)
-                .map((item) => (
-                  <Marker
-                    key={item._id}
-                    position={[item.location.lat, item.location.lng]}
-                    icon={getIconTask(
-                      item.task_type?.toLowerCase(),
-                      item.priority?.toLowerCase()
-                    )}
-                    eventHandlers={{
-                      click: () => handleSelectReport(item),
-                      mouseover: (e) => e.target.openPopup(),
-                      mouseout: (e) => e.target.closePopup(),
-                    }}
-                  >
-                    <Popup>
-                      <div>
-                        <b>{item.task_type?.toUpperCase()}</b>
-                        <br />
-                        <span>{item.title || item.description}</span>
-                        <br />
-                        <small className="text-gray-600">
-                          Estado: {item.status}
-                        </small>
-                      </div>
-                    </Popup>
-                  </Marker>
-                ))
-            : /* //? CASO 3: Mostrar avances */
-              filters.dataType === "progress" &&
-              filteredData
-                .filter((item) => item.location?.lat && item.location?.lng)
-                .map((item) => (
-                  <Marker
-                    key={item._id}
-                    position={[item.location.lat, item.location.lng]}
-                    icon={getIconProgress(item.status?.toLowerCase())}
-                    eventHandlers={{
-                      click: () => handleSelectReport(item),
-                      mouseover: (e) => e.target.openPopup(),
-                      mouseout: (e) => e.target.closePopup(),
-                    }}
-                  >
-                    <Popup>
-                      <div>
-                        <b>PROGRESO</b>
-                        <br />
-                        <span>{item.worker?.name}</span>
-                        <br />
-                        <small className="text-gray-600">
-                          Estado: {item.status}
-                        </small>
-                      </div>
-                    </Popup>
-                  </Marker>
-                ))}
-        </MapContainer>
-
-        {/* //? ======================================== */}
+                          </div>
+                        </Popup>
+                      </Marker>
+                    ))
+                  : filters.dataType === "progress" &&
+                  filteredData
+                    .filter((item) => item.location?.lat && item.location?.lng)
+                    .map((item) => (
+                      <Marker
+                        key={item._id}
+                        position={[item.location.lat, item.location.lng]}
+                        icon={getIconProgress(item.status?.toLowerCase())}
+                        eventHandlers={{
+                          click: () => handleSelectReport(item),
+                          mouseover: (e) => e.target.openPopup(),
+                          mouseout: (e) => e.target.closePopup(),
+                        }}
+                      >
+                        <Popup>
+                          <div>
+                            <b>PROGRESO</b>
+                            <br />
+                            <span>{item.worker?.name}</span>
+                            <br />
+                            <small className="text-gray-600">
+                              Estado: {item.status}
+                            </small>
+                          </div>
+                        </Popup>
+                      </Marker>
+                    ))}
+            </MapContainer>
+          </div>
+        </div>
         {/* //? PANEL DERECHO - DETALLES */}
-        {/* //? ======================================== */}
-        {/* //TODO: Variar según el tipo de dato (report/task/progress) */}
         {selectedReport && (
           <ReportDetails
             report={selectedReport}

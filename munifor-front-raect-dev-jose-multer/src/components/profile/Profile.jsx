@@ -55,106 +55,90 @@ const Profile = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md mt-8">
-      <h2 className="text-2xl font-bold mb-2">Mi Perfil</h2>
-      <p className="text-gray-500 mb-6">
-        Gestiona tu información personal y configuración de cuenta
-      </p>
+    <div className="min-h-screen bg-[#eaf4fe] py-12 px-4 flex flex-col items-center">
+      <div className="w-full max-w-3xl mx-auto">
+        <div className="bg-white/70 backdrop-blur-md rounded-2xl shadow-2xl p-8 mb-8 border border-cyan-200">
+          <h2 className="text-4xl font-extrabold text-cyan-700 mb-2 text-center drop-shadow">Mi Perfil</h2>
+          <p className="text-cyan-600 mb-6 text-center text-lg">
+            Gestiona tu información personal y configuración de cuenta
+          </p>
 
-      {/* //? ======================================== */}
-      {/* //? MODO: Vista de lectura (updateProfile=true) */}
-      {/* //? ======================================== */}
-      {updateProfile ? (
-        <div className="flex flex-col md:flex-row gap-6 mb-6">
-          {/* //? SECCIÓN 1: Imagen, rol y fecha de registro */}
-          <div className="flex flex-col items-center bg-gray-100 rounded-lg p-4 w-full md:w-1/3">
-            <div className="w-20 h-20 rounded-full flex items-center justify-center mb-2">
-              <img src={userData?.image || userNotImagen} alt="" />
+
+          {/* //? ======================================== */}
+          {/* //? MODO: Vista de lectura (updateProfile=true) */}
+          {/* //? ======================================== */}
+          {updateProfile ? (
+            <div className="flex flex-col md:flex-row gap-8 items-center mb-8">
+              {/* //? SECCIÓN 1: Imagen, rol y fecha de registro */}
+              <div className="flex flex-col items-center bg-gradient-to-br from-cyan-100 to-cyan-200 rounded-2xl p-6 w-full md:w-1/3 shadow-md border border-cyan-200">
+                <div className="w-32 h-32 rounded-full overflow-hidden flex items-center justify-center mb-4 border-4 border-cyan-400 shadow-lg">
+                  <img src={userData?.image || userNotImagen} alt="avatar" className="object-cover w-full h-full" />
+                </div>
+                <p className="font-bold text-xl text-cyan-700 mb-1 capitalize">
+                  {userData?.role || "Rol no disponible"}
+                </p>
+                <p className="text-cyan-600 text-md mt-2">
+                  Miembro desde: <span className="font-semibold">{formattedDate || "Fecha no disponible"}</span>
+                </p>
+              </div>
+
+              {/* //? SECCIÓN 2: Información personal */}
+              <div className="flex-1 bg-cyan-50 rounded-2xl p-6 shadow-md border border-cyan-100">
+                <h3 className="text-2xl font-bold text-cyan-700 mb-4">Información Personal</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2 mb-6">
+                  <p className="text-lg font-medium text-cyan-700">
+                    Nombre: <span className="font-normal">{userData?.profile?.first_name || "No especificado"}</span>
+                  </p>
+                  <p className="text-lg font-medium text-cyan-700">
+                    Apellido: <span className="font-normal">{userData?.profile?.last_name || "No especificado"}</span>
+                  </p>
+                  <p className="text-lg font-medium text-cyan-700">
+                    Email: <span className="font-normal">{userData?.email || "No especificado"}</span>
+                  </p>
+                  <p className="text-lg font-medium text-cyan-700">
+                    Teléfono: <span className="font-normal">{userData?.profile?.phone || "No especificado"}</span>
+                  </p>
+                  <p className="text-lg font-medium text-cyan-700">
+                    Edad: <span className="font-normal">{userData?.profile?.age !== undefined ? userData.profile.age : "No especificada"}</span>
+                  </p>
+                  <p className="text-lg font-medium text-cyan-700">
+                    Dirección: <span className="font-normal">{userData?.profile?.address || "No especificada"}</span>
+                  </p>
+                  <p className="text-lg font-medium text-cyan-700">
+                    Sexo: <span className="font-normal">{userData?.profile?.sex || "No especificado"}</span>
+                  </p>
+                </div>
+                {/* //! Botón para activar modo edición */}
+                <button
+                  className="px-6 py-2 bg-cyan-600 text-white rounded-xl font-bold text-lg hover:bg-cyan-700 transition w-full md:w-auto"
+                  onClick={() => setUpdateProfile(false)}
+                >
+                  Editar Información
+                </button>
+              </div>
             </div>
-            <p className="font-semibold">
-              {userData?.role || "Rol no disponible"}
-            </p>
-            <p className="text-gray-500 text-sm mt-2">
-              Miembro desde: {formattedDate || "Fecha no disponible"}
-            </p>
-          </div>
+          ) : (
+            /* //? ======================================== */
+            /* //? MODO: Formulario de edición (updateProfile=false) */
+            /* //? ======================================== */
+            <UpdateProfile onUpdate={handleUpdate} />
+          )}
 
-          {/* //? SECCIÓN 2: Información personal */}
-          <div className="flex-1 bg-gray-100 rounded-lg p-4">
-            <h3 className="text-lg font-semibold mb-2">Información Personal</h3>
-            <p className="mb-1">
-              Nombre:{" "}
-              <span className="text-gray-700">
-                {userData?.profile?.first_name || "No especificado"}
-              </span>
-            </p>
-            <p className="mb-1">
-              Apellido:{" "}
-              <span className="text-gray-700">
-                {userData?.profile?.last_name || "No especificado"}
-              </span>
-            </p>
-            <p className="mb-1">
-              Email:{" "}
-              <span className="text-gray-700">
-                {userData?.email || "No especificado"}
-              </span>
-            </p>
-            <p className="mb-1">
-              Teléfono:{" "}
-              <span className="text-gray-700">
-                {userData?.profile?.phone || "No especificado"}
-              </span>
-            </p>
-            <p className="mb-1">
-              Edad:{" "}
-              <span className="text-gray-700">
-                {userData?.profile?.age !== undefined
-                  ? userData.profile.age
-                  : "No especificada"}
-              </span>
-            </p>
-            <p className="mb-3">
-              Dirección:{" "}
-              <span className="text-gray-700">
-                {userData?.profile?.address || "No especificada"}
-              </span>
-            </p>
-            <p className="mb-3">
-              Sexo:{" "}
-              <span className="text-gray-700">
-                {userData?.profile?.sex || "No especificado"}
-              </span>
-            </p>
-            {/* //! Botón para activar modo edición */}
-            <button
-              className="px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-              onClick={() => setUpdateProfile(false)}
-            >
-              Editar
+          {/* //? ======================================== */}
+          {/* //? SECCIÓN 3: Seguridad (siempre visible) */}
+          {/* //? ======================================== */}
+          <div className="bg-cyan-50 rounded-2xl p-6 shadow-md border border-cyan-100 mt-4">
+            <h3 className="text-2xl font-bold text-cyan-700 mb-4">Seguridad</h3>
+            {/* //TODO: Implementar funcionalidad de cambiar contraseña */}
+            <button className="px-6 py-2 bg-cyan-600 text-white rounded-xl font-bold text-lg hover:bg-cyan-700 transition w-full md:w-auto">
+              Cambiar contraseña
             </button>
           </div>
         </div>
-      ) : (
-        /* //? ======================================== */
-        /* //? MODO: Formulario de edición (updateProfile=false) */
-        /* //? ======================================== */
-        <UpdateProfile onUpdate={handleUpdate} />
-      )}
-
-      {/* //? ======================================== */}
-      {/* //? SECCIÓN 3: Seguridad (siempre visible) */}
-      {/* //? ======================================== */}
-      <div className="bg-gray-100 rounded-lg p-4">
-        <h3 className="text-lg font-semibold mb-2">Seguridad</h3>
-        {/* //TODO: Implementar funcionalidad de cambiar contraseña */}
-        <button className="px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
-          Cambiar contraseña
-        </button>
       </div>
     </div>
   );
-};
+}
 
 export default Profile;
 

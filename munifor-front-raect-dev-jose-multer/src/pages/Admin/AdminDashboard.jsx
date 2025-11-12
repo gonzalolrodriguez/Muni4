@@ -72,121 +72,96 @@ const AdminDashboard = () => {
   //? RENDERIZADO JSX
   //? ============================================
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 p-8">
+    <div className="min-h-screen bg-gradient-to-br from-[#eaf4fe] to-[#d2e7fa] p-8">
       <div className="mb-8 text-center">
-        <h1 className="text-4xl font-bold text-blue-700 mb-2">🛡️ Dashboard Administrador</h1>
-        <p className="text-gray-600 text-lg">
-          Panel de control y gestión completa del sistema municipal
-        </p>
+        <h1 className="text-4xl font-extrabold text-cyan-700 mb-2 drop-shadow">
+          🛡️ Dashboard Administrador
+        </h1>
+        <p className="text-cyan-600 text-lg">Panel de control y gestión completa del sistema municipal</p>
       </div>
 
-      {/* ====== SECCIÓN: Estadísticas principales (4 tarjetas) ====== */}
-      {/*//* Grid de 4 tarjetas mostrando estadísticas de usuarios y reportes */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        {/* Tarjeta: Total usuarios */}
-        <div className="bg-white rounded-lg shadow p-6 border border-gray-200">
-          <div className="text-4xl mb-4">👥</div>
-          <h3 className="text-xl font-semibold mb-2">
-            Total de usuarios registrados
-          </h3>
-          <p className="text-4xl font-bold mb-2">{count.totalUsers}</p>
+      <div className="flex flex-col gap-8">
+        {/* ====== SECCIÓN: Estadísticas principales (7 tarjetas) ====== */}
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {/* Tarjeta: Total usuarios */}
+          <div className="bg-blue-100/70 backdrop-blur-md shadow-2xl rounded-2xl text-blue-700 p-6 flex flex-col items-center justify-center border border-blue-300">
+            <span className="text-3xl font-bold">{count.totalUsers}</span>
+            <span className="mt-2 font-semibold">Total Usuarios</span>
+          </div>
+
+          {/* Tarjeta: Total reportes */}
+          <div className="bg-green-100/70 backdrop-blur-md shadow-2xl rounded-2xl text-green-700 p-6 flex flex-col items-center justify-center border border-green-300">
+            <span className="text-3xl font-bold">{count.totalReports}</span>
+            <span className="mt-2 font-semibold">Total Reportes</span>
+          </div>
+
+          {/* Tarjeta: Reportes nuevos */}
+          <div className="bg-yellow-100/70 backdrop-blur-md shadow-2xl rounded-2xl text-yellow-700 p-6 flex flex-col items-center justify-center border border-yellow-200">
+            <span className="text-3xl font-bold">{count.newReports}</span>
+            <span className="mt-2 font-semibold">Reportes Pendientes</span>
+          </div>
+
+          {/* Tarjeta: Reportes completados */}
+          <div className="bg-purple-100/70 backdrop-blur-md shadow-2xl rounded-2xl text-purple-700 p-6 flex flex-col items-center justify-center border border-purple-200">
+            <span className="text-3xl font-bold">{count.completedReports}</span>
+            <span className="mt-2 font-semibold">Completados</span>
+          </div>
+
+          {/* Tarjeta: Trabajadores activos */}
+          <div className="bg-orange-100/70 backdrop-blur-md shadow-2xl rounded-2xl text-orange-700 p-6 flex flex-col items-center justify-center border border-orange-200">
+            <span className="text-3xl font-bold">{count.activeWorkers}</span>
+            <span className="mt-2 font-semibold">Trabajadores Activos</span>
+          </div>
+
+          {/* Tarjeta: Operadores activos */}
+          <div className="bg-teal-100/70 backdrop-blur-md shadow-2xl rounded-2xl text-teal-700 p-6 flex flex-col items-center justify-center border border-teal-200">
+            <span className="text-3xl font-bold">{count.activeOperators}</span>
+            <span className="mt-2 font-semibold">Operadores Activos</span>
+          </div>
+
+          {/* Tarjeta: Tasa de eficiencia del sistema */}
+          <div className="bg-pink-100/70 backdrop-blur-md shadow-2xl rounded-2xl text-pink-700 p-6 flex flex-col items-center justify-center border border-pink-200 col-span-2">
+            <span className="text-3xl font-bold">{count.efficiencyRate}%</span>
+            <span className="mt-2 font-semibold">Tasa de Eficiencia</span>
+          </div>
         </div>
 
-        {/* Tarjeta: Total reportes */}
-        <div className="bg-white rounded-lg shadow p-6 border border-gray-200">
-          <div className="text-4xl mb-4">📋</div>
-          <h3 className="text-xl font-semibold mb-2">Total de reportes</h3>
-          <p className="text-4xl font-bold mb-2">{count.totalReports}</p>
+        {/* ====== SECCIÓN: Acciones rápidas (navegación a otras vistas) ====== */}
+        <div className="mb-4 text-center">
+          <h2 className="text-3xl font-extrabold text-cyan-700 mb-2 drop-shadow">Acciones Rápidas</h2>
+          <p className="text-cyan-600 text-lg">Acceso directo a las funciones principales</p>
         </div>
 
-        {/* Tarjeta: Reportes nuevos */}
-        <div className="bg-white rounded-lg shadow p-6 border border-gray-200">
-          <div className="text-4xl mb-4">⚠️</div>
-          <h3 className="text-xl font-semibold mb-2">Reportes nuevos</h3>
-          <p className="text-4xl font-bold mb-2">{count.newReports}</p>
-        </div>
+        {/*//* Grid de tarjetas clickeables que navegan a las principales funcionalidades */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 justify-center">
+          {/* Acción: Gestionar usuarios */}
+          <div
+            className="bg-white/70 backdrop-blur-md shadow-2xl rounded-2xl p-6 border border-cyan-200 hover:scale-[1.03] transition-transform cursor-pointer"
+            onClick={() => navigate("/admin/profilesearch")}
+          >
+            <div className="text-4xl mb-4 text-cyan-600">👥</div>
+            <h3 className="text-xl font-bold text-cyan-700 mb-2">Gestionar Usuarios</h3>
+            <p className="text-cyan-600 text-sm">Administrar cuentas de usuarios</p>
+          </div>
 
-        {/* Tarjeta: Reportes completados */}
-        <div className="bg-white rounded-lg shadow p-6 border border-gray-200">
-          <div className="text-4xl mb-4">✅</div>
-          <h3 className="text-xl font-semibold mb-2">Reportes completados</h3>
-          <p className="text-4xl font-bold mb-2">{count.completedReports}</p>
-        </div>
-      </div>
+          {/* Acción: Vista global del sistema */}
+          <div
+            className="bg-white/70 backdrop-blur-md shadow-2xl rounded-2xl p-6 border border-cyan-200 hover:scale-[1.03] transition-transform cursor-pointer"
+            onClick={() => navigate("/admin/globalview")}
+          >
+            <div className="text-4xl mb-4 text-cyan-600">📋</div>
+            <h3 className="text-xl font-bold text-cyan-700 mb-2">Vista General</h3>
+          </div>
 
-      {/* ====== SECCIÓN: Estadísticas de recursos humanos y eficiencia (3 tarjetas) ====== */}
-      {/*//* Muestra trabajadores activos, operadores activos y tasa de eficiencia */}
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-6 mb-8">
-        {/* Tarjeta: Trabajadores activos */}
-        <div className="bg-white rounded-lg shadow p-6 border border-gray-200">
-          <h3 className="text-lg font-semibold text-green-600 mb-2">
-            <div className="text-4xl mb-4">🔧</div>
-            Trabajadores Activos
-          </h3>
-          <p className="text-4xl font-bold mb-2">{count.activeWorkers}</p>
-          <p className="text-gray-600 text-sm">Actualmente trabajando</p>
-        </div>
-
-        {/* Tarjeta: Operadores activos */}
-        <div className="bg-white rounded-lg shadow p-6 border border-gray-200">
-          <h3 className="text-lg font-semibold text-blue-600 mb-2">
-            <div className="text-4xl mb-4">👨‍💼</div>
-            Operadores Activos
-          </h3>
-          <p className="text-4xl font-bold mb-2">{count.activeOperators}</p>
-          <p className="text-gray-600 text-sm">Actualmente operando</p>
-        </div>
-
-        {/* Tarjeta: Tasa de eficiencia del sistema */}
-        <div className="bg-white rounded-lg shadow p-6 border border-gray-200">
-          <h3 className="text-lg font-semibold text-purple-600 mb-2">
-            Tasa de Eficiencia
-          </h3>
-          <p className="text-4xl font-bold mb-2">{count.efficiencyRate}%</p>
-          <p className="text-gray-600 text-sm">Eficiencia general</p>
-        </div>
-      </div>
-
-      {/* ====== SECCIÓN: Acciones rápidas (navegación a otras vistas) ====== */}
-      <div className="mb-4">
-        <h2 className="text-xl font-bold text-gray-800 mb-4">
-          Acciones Rápidas
-        </h2>
-      </div>
-
-      {/*//* Grid de tarjetas clickeables que navegan a las principales funcionalidades */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {/* Acción: Gestionar usuarios */}
-        <div
-          className="bg-white rounded-lg shadow p-6 border border-gray-200 hover:cursor-pointer"
-          onClick={() => navigate("/admin/profilesearch")}
-        >
-          <div className="text-4xl mb-4">👥</div>
-          <h3 className="text-lg font-semibold mb-2">Gestionar Usuarios</h3>
-          <p className="text-gray-600 text-sm">
-            Administrar cuentas de usuarios
-          </p>
-        </div>
-
-        {/* Acción: Vista global del sistema */}
-        <div
-          className="bg-white rounded-lg shadow p-6 border border-gray-200 hover:cursor-pointer"
-          onClick={() => navigate("/admin/globalview")}
-        >
-          <div className="text-4xl mb-4">📋</div>
-          <h3 className="text-lg font-semibold mb-2">Vista General</h3>
-        </div>
-
-        {/* Acción: Ver estadísticas y gráficos */}
-        <div
-          className="bg-white rounded-lg shadow p-6 border border-gray-200 hover:cursor-pointer"
-          onClick={() => navigate("/admin/statistics")}
-        >
-          <div className="text-4xl mb-4">📊</div>
-          <h3 className="text-lg font-semibold mb-2">Estadísticas</h3>
-          <p className="text-gray-600 text-sm">
-            Análisis detallado del sistema
-          </p>
+          {/* Acción: Ver estadísticas y gráficos */}
+          <div
+            className="bg-white/70 backdrop-blur-md shadow-2xl rounded-2xl p-6 border border-cyan-200 hover:scale-[1.03] transition-transform cursor-pointer"
+            onClick={() => navigate("/admin/statistics")}
+          >
+            <div className="text-4xl mb-4 text-cyan-600">📊</div>
+            <h3 className="text-xl font-bold text-cyan-700 mb-2">Estadísticas</h3>
+            <p className="text-cyan-600 text-sm">Análisis detallado del sistema</p>
+          </div>
         </div>
       </div>
     </div>

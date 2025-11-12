@@ -52,7 +52,7 @@ const OperatorTasks = () => {
       }
     };
     fetchTasks();
-  }, [selectedTask]); //* Se re-ejecuta cuando se cierra el modal
+  }, [selectedTask, getFetchData]); //* Se re-ejecuta cuando se cierra el modal
 
   //? ========================================
   //? FILTROS: OPCIONES Y APLICACIÓN
@@ -86,19 +86,19 @@ const OperatorTasks = () => {
   const closePanel = () => setSelectedTask(null);
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#eaf4fe] to-[#d2e7fa]">
       {/* ========================================
           SECCIÓN: HEADER CON BÚSQUEDA
           ======================================== */}
       <div className="max-w-5xl mx-auto px-4 py-4 flex flex-col gap-2">
-        <h2 className="text-xl font-bold text-gray-700">Tareas</h2>
+        <h2 className="text-3xl font-extrabold text-cyan-700 mb-2 drop-shadow">Tareas</h2>
         {/* Input de búsqueda por título */}
         <input
           type="text"
           placeholder="Buscar por título..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="border rounded px-3 py-2 w-full max-w-md focus:outline-none focus:ring focus:border-blue-300"
+          className="border-2 border-cyan-300 rounded-lg px-4 py-3 w-full max-w-lg focus:outline-none focus:ring-2 focus:ring-cyan-400 bg-white shadow-sm placeholder-cyan-600/60 text-cyan-700"
         />
       </div>
 
@@ -113,12 +113,11 @@ const OperatorTasks = () => {
           {statusOptions.map((option) => (
             <button
               key={option}
-              className={`px-4 py-2 rounded border font-medium transition-colors duration-150
-              ${
-                statusFilter === option
-                  ? "bg-blue-600 text-white" //* Estilo del filtro activo
-                  : "bg-white text-blue-600 border-blue-600" //* Estilo del filtro inactivo
-              }`}
+              className={`px-6 py-2 rounded-full border-2 font-semibold transition-all duration-150 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-cyan-400
+                ${statusFilter === option
+                  ? "bg-cyan-600 text-white border-cyan-600 scale-105 shadow-lg"
+                  : "bg-white text-cyan-600 border-cyan-600 hover:bg-cyan-50"
+                }`}
               onClick={() => setStatusFilter(option)}
             >
               {option}
@@ -138,12 +137,11 @@ const OperatorTasks = () => {
           {priorityOptions.map((option) => (
             <button
               key={option}
-              className={`px-4 py-2 rounded border font-medium transition-colors duration-150
-              ${
-                priorityFilter === option
-                  ? "bg-green-600 text-white" //* Estilo del filtro activo
-                  : "bg-white text-green-600 border-green-600" //* Estilo del filtro inactivo
-              }`}
+              className={`px-6 py-2 rounded-full border-2 font-semibold transition-all duration-150 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-cyan-400
+                ${priorityFilter === option
+                  ? "bg-cyan-600 text-white border-cyan-600 scale-105 shadow-lg"
+                  : "bg-white text-cyan-600 border-cyan-600 hover:bg-cyan-50"
+                }`}
               onClick={() => setPriorityFilter(option)}
             >
               {option}
@@ -159,33 +157,34 @@ const OperatorTasks = () => {
         {filteredTasks.length === 0 ? (
           //* Mensaje cuando no hay tareas
           <div className="flex flex-col items-center justify-center py-16">
-            <h3>No hay tareas disponibles</h3>
+            <h3 className="text-lg text-cyan-700 font-semibold">No hay tareas disponibles</h3>
           </div>
         ) : (
           //* Lista de tareas filtradas
           filteredTasks.map((task, idx) => (
             <div
               key={idx}
-              className="bg-white rounded-lg shadow p-3 flex justify-between items-center border border-gray-200 w-full max-w-2xl mx-auto min-h-14 hover:cursor-pointer"
+              className="bg-white rounded-xl shadow-lg p-5 flex justify-between items-center border-2 border-cyan-300/20 w-full max-w-3xl mx-auto min-h-16 hover:cursor-pointer hover:shadow-xl transition-all duration-150"
               onClick={() => handleSelectTask(task)}
             >
               <div>
-                <span className="block text-xl font-semibold text-gray-800">
+                <span className="block text-2xl font-bold text-cyan-700 mb-1">
                   {task.title}
                 </span>
-                <span className="block text-sm text-gray-500">
-                  Prioridad: {task.priority} | Estado: {task.status}
+                <span className="block text-sm text-cyan-600/70">
+                  Prioridad: <span className="font-semibold text-cyan-700">{task.priority}</span> | Estado: <span className="font-semibold text-cyan-700">{task.status}</span>
                 </span>
               </div>
               {/* Badge de prioridad con color según nivel */}
               <span
-                className={`px-5 py-2 rounded-full text-base font-medium 
-                  ${
-                    task.priority === "Alta"
-                      ? "bg-red-100 text-red-700"
-                      : task.priority === "Media"
-                      ? "bg-yellow-100 text-yellow-700"
-                      : "bg-green-100 text-green-700"
+                className={`px-6 py-2 rounded-full text-base font-semibold shadow-sm border-2
+                  ${task.priority === "Alta"
+                    ? "bg-[#fee2e2] text-[#dc2626] border-[#dc2626]/30"
+                    : task.priority === "Media"
+                      ? "bg-[#fef9c3] text-[#ca8a04] border-[#ca8a04]/30"
+                      : task.priority === "Baja"
+                        ? "bg-[#dbeafe] text-[#2563eb] border-[#2563eb]/30"
+                        : "bg-gray-100 text-gray-500 border-gray-300"
                   }
                 `}
               >

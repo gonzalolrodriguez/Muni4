@@ -56,7 +56,7 @@ const OperatorCreateTask = () => {
       setCrews(data.crews || []);
     };
     fetchData();
-  }, [modal]); //* Se re-ejecuta cuando modal cambia (para actualizar lista después de crear tarea)
+  }, [modal, getFetchData]); //* Se re-ejecuta cuando modal cambia (para actualizar lista después de crear tarea)
 
   //? ========================================
   //? HANDLERS: GESTIÓN DE MODAL Y SELECCIONES
@@ -106,15 +106,15 @@ const OperatorCreateTask = () => {
   const filteredCrews = filterBySearch(crews, searchCrew, "name");
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#eaf4fe] to-[#d2e7fa]">
       {/* ========================================
           SECCIÓN: HEADER CON BOTÓN CREAR TAREA
           ======================================== */}
-      <div className="max-w-5xl mx-auto px-4 py-4 flex flex-col items-center">
-        <h2 className="text-xl font-bold text-gray-700">Tareas</h2>
+      <div className="max-w-5xl mx-auto px-4 py-8 flex flex-col items-center">
+        <h2 className="text-3xl font-extrabold text-cyan-700 mb-2 drop-shadow">Tareas</h2>
         {/* Botón para abrir modal de creación */}
         <button
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition mt-2"
+          className="bg-cyan-600 text-white px-6 py-2 rounded-2xl shadow hover:bg-cyan-700 transition mt-2 font-bold"
           onClick={() => setModal(true)}
         >
           Crear tarea
@@ -129,14 +129,12 @@ const OperatorCreateTask = () => {
             COLUMNA IZQUIERDA: REPORTES ACEPTADOS
             ======================================== */}
         <div>
-          <h3 className="text-lg font-semibold text-indigo-700 mb-4">
-            Reportes aceptados
-          </h3>
+          <h3 className="text-xl font-bold text-cyan-700 mb-4">Reportes aceptados</h3>
           {/* Input de búsqueda por título */}
           <input
             type="text"
             placeholder="Buscar por nombre de reporte..."
-            className="border rounded px-3 py-2 w-full max-w-md focus:outline-none focus:ring focus:border-blue-300 mb-4"
+            className="border border-cyan-300 rounded-lg px-4 py-2 w-full max-w-md focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-cyan-500 bg-white shadow-sm text-gray-700 mb-4"
             value={searchReport}
             onChange={(e) => setSearchReport(e.target.value)}
           />
@@ -144,17 +142,17 @@ const OperatorCreateTask = () => {
           {filteredReports.map((reporte) => (
             <div
               key={reporte._id}
-              className={`bg-white rounded-lg shadow p-3 flex flex-col border w-full mb-3 min-h-14 hover:cursor-pointer ${
-                reportSelected.includes(reporte._id)
-                  ? "border-blue-500 ring-2 ring-blue-300" //* Estilo cuando está seleccionado
-                  : "border-gray-200" //* Estilo por defecto
-              }`}
+              className={`bg-white/70 backdrop-blur-md rounded-2xl shadow-2xl p-3 flex flex-col border w-full mb-3 min-h-14 hover:scale-[1.02] transition-transform cursor-pointer
+                ${reportSelected.includes(reporte._id)
+                  ? "border-cyan-400 ring-2 ring-cyan-300"
+                  : "border-gray-200"}
+              `}
               onClick={() => handleSelectReport(reporte)}
             >
-              <span className="block text-base font-semibold text-gray-800">
+              <span className="block text-base font-bold text-cyan-700">
                 {reporte.title}
               </span>
-              <span className="text-sm text-gray-500">
+              <span className="text-sm text-cyan-600">
                 {reporte.description}
               </span>
             </div>
@@ -165,12 +163,12 @@ const OperatorCreateTask = () => {
             COLUMNA DERECHA: CUADRILLAS
             ======================================== */}
         <div>
-          <h3 className="text-lg font-semibold text-blue-700 mb-4">Crews</h3>
+          <h3 className="text-xl font-bold text-cyan-700 mb-4">Cuadrillas</h3>
           {/* Input de búsqueda por nombre */}
           <input
             type="text"
             placeholder="Buscar por nombre de crew..."
-            className="border rounded px-3 py-2 w-full max-w-md focus:outline-none focus:ring focus:border-blue-300 mb-4"
+            className="border border-cyan-300 rounded-lg px-4 py-2 w-full max-w-md focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-cyan-500 bg-white shadow-sm text-gray-700 mb-4"
             value={searchCrew}
             onChange={(e) => setSearchCrew(e.target.value)}
           />
@@ -179,27 +177,25 @@ const OperatorCreateTask = () => {
             filteredCrews.map((crew) => (
               <div
                 key={crew._id}
-                className={`bg-white rounded-lg shadow p-3 flex flex-col border w-full mb-3 min-h-14 hover:cursor-pointer transition-all
-                  ${
-                    crewSelected === crew._id
-                      ? "border-blue-600 ring-2 ring-blue-400" //* Estilo cuando está seleccionado
-                      : "border-gray-200" //* Estilo por defecto
-                  }
+                className={`bg-white/70 backdrop-blur-md rounded-2xl shadow-2xl p-3 flex flex-col border w-full mb-3 min-h-14 hover:scale-[1.02] transition-transform cursor-pointer
+                  ${crewSelected === crew._id
+                    ? "border-cyan-400 ring-2 ring-cyan-300"
+                    : "border-gray-200"}
                 `}
                 onClick={() => handleSelectCrew(crew)}
               >
-                <span className="block text-base font-semibold text-gray-800">
+                <span className="block text-base font-bold text-cyan-700">
                   {crew.name}
                 </span>
-                <span className="text-sm text-gray-500">
+                <span className="text-sm text-cyan-600">
                   {crew.description}
                 </span>
               </div>
             ))
           ) : (
             //* Mensaje cuando no hay cuadrillas disponibles
-            <div className="bg-white rounded-lg shadow p-3 flex flex-col border border-gray-200 w-full mb-3 min-h-14">
-              <span className="block text-base font-semibold text-gray-800">
+            <div className="bg-white/70 backdrop-blur-md rounded-2xl shadow-2xl p-3 flex flex-col border border-gray-200 w-full mb-3 min-h-14">
+              <span className="block text-base font-bold text-cyan-700">
                 No hay cuadrillas disponibles
               </span>
             </div>

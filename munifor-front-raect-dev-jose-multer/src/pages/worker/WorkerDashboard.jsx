@@ -60,105 +60,88 @@ const WorkerDashboard = () => {
   //* RENDER
   //* ========================================
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 p-8">
+    <div className="min-h-screen bg-gradient-to-br from-[#eaf4fe] to-[#d2e7fa] p-8">
       <div className="mb-8 text-center">
-        <h1 className="text-4xl font-bold text-blue-700 mb-2">Accesos Rápidos</h1>
+        <h1 className="text-4xl font-extrabold text-cyan-700 mb-2 drop-shadow">Mis Tareas</h1>
+        <p className="text-cyan-600">Gestiona y completa las tareas asignadas</p>
       </div>
 
-      {/* //? ======================================== */}
+      {/* //? Tarjetas de estadísticas de tareas (4) */}
+      <div className="flex flex-col gap-8 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="bg-orange-100/70 backdrop-blur-md shadow-2xl rounded-2xl text-orange-700 p-6 flex flex-col items-center justify-center border border-orange-200">
+            <span className="text-3xl font-bold">{counts.total}</span>
+            <span className="mt-2 font-semibold">Total</span>
+          </div>
+          <div className="bg-yellow-100/70 backdrop-blur-md shadow-2xl rounded-2xl text-yellow-700 p-6 flex flex-col items-center justify-center border border-yellow-200">
+            <span className="text-3xl font-bold">{counts.pending}</span>
+            <span className="mt-2 font-semibold">Pendientes</span>
+          </div>
+          <div className="bg-blue-100/70 backdrop-blur-md shadow-2xl rounded-2xl text-blue-700 p-6 flex flex-col items-center justify-center border border-blue-300">
+            <span className="text-3xl font-bold">{counts.inProgress}</span>
+            <span className="mt-2 font-semibold">En Proceso</span>
+          </div>
+          <div className="bg-green-100/70 backdrop-blur-md shadow-2xl rounded-2xl text-green-700 p-6 flex flex-col items-center justify-center border border-green-200">
+            <span className="text-3xl font-bold">{counts.completed}</span>
+            <span className="mt-2 font-semibold">Completadas</span>
+          </div>
+        </div>
+      </div>
+
       {/* //? TARJETAS DE ACCESO RÁPIDO (5) */}
-      {/* //? ======================================== */}
+      <div className="mb-8 text-center">
+        <h1 className="text-4xl font-extrabold text-cyan-700 mb-2 drop-shadow">Accesos Rápidos</h1>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
         {/* //? Tarjeta 1: Ver tareas */}
         <div
-          className="bg-white rounded-lg shadow p-6 border border-gray-200 hover:cursor-pointer"
+          className="bg-white/70 backdrop-blur-md shadow-2xl rounded-2xl p-6 border border-cyan-200 hover:scale-[1.03] transition-transform cursor-pointer"
           onClick={() => navigate("/worker/tasks")}
         >
-          <div className="text-4xl mb-4">📋</div>
-          <h3 className="text-xl font-semibold mb-2">Ver Tareas</h3>
-          <p className="text-gray-600 text-sm">Listado completo</p>
+          <div className="text-4xl mb-4 text-cyan-600">�</div>
+          <h3 className="text-xl font-bold text-cyan-700 mb-2">Ver Tareas</h3>
+          <p className="text-cyan-600 text-sm">Listado completo</p>
         </div>
 
         {/* //? Tarjeta 2: Nuevo avance */}
         <div
-          className="bg-white rounded-lg shadow p-6 border border-gray-200 hover:cursor-pointer"
-          onClick={() => navigate("/worker/create-progress")}
+          className="bg-white/70 backdrop-blur-md shadow-2xl rounded-2xl p-6 border border-cyan-200 hover:scale-[1.03] transition-transform cursor-pointer"
+          onClick={() => navigate("/worker/progress")}
         >
-          <div className="text-4xl mb-4">➕</div>
-          <h3 className="text-xl font-semibold mb-2">Nuevo Avance</h3>
-          <p className="text-gray-600 text-sm">Reportar avance</p>
+          <div className="text-4xl mb-4 text-cyan-600">➕</div>
+          <h3 className="text-xl font-bold text-cyan-700 mb-2">Nuevo Avance</h3>
+          <p className="text-cyan-600 text-sm">Reportar avance</p>
         </div>
 
         {/* //? Tarjeta 3: Historial de avances */}
         <div
-          className="bg-white rounded-lg shadow p-6 border border-gray-200 hover:cursor-pointer"
+          className="bg-white/70 backdrop-blur-md shadow-2xl rounded-2xl p-6 border border-cyan-200 hover:scale-[1.03] transition-transform cursor-pointer"
           onClick={() => navigate("/worker/progress-history")}
         >
-          <div className="text-4xl mb-4">📈</div>
-          <h3 className="text-xl font-semibold mb-2">Historial de Avances</h3>
-          <p className="text-gray-600 text-sm">Ver avances previos</p>
+          <div className="text-4xl mb-4 text-cyan-600">�</div>
+          <h3 className="text-xl font-bold text-cyan-700 mb-2">Historial de Avances</h3>
+          <p className="text-cyan-600 text-sm">Ver avances previos</p>
         </div>
 
         {/* //? Tarjeta 4: Equipo */}
         <div
-          className="bg-white rounded-lg shadow p-6 border border-gray-200 hover:cursor-pointer"
+          className="bg-white/70 backdrop-blur-md shadow-2xl rounded-2xl p-6 border border-cyan-200 hover:scale-[1.03] transition-transform cursor-pointer"
           onClick={() => navigate("/worker/team")}
         >
-          <div className="text-4xl mb-4">👥</div>
-          <h3 className="text-xl font-semibold mb-2">Equipo</h3>
-          <p className="text-gray-600 text-sm">Ver miembros</p>
+          <div className="text-4xl mb-4 text-cyan-600">👥</div>
+          <h3 className="text-xl font-bold text-cyan-700 mb-2">Equipo</h3>
+          <p className="text-cyan-600 text-sm">Ver miembros</p>
         </div>
 
-        {/* //? Tarjeta 5: Historial de tareas */}
+        {/* //? Tarjeta 5: Historial de tareas
         <div
-          className="bg-white rounded-lg shadow p-6 border border-gray-200 hover:cursor-pointer"
-          onClick={() => navigate("/worker/history")}
+          className="bg-white/70 backdrop-blur-md shadow-2xl rounded-2xl p-6 border border-cyan-200 hover:scale-[1.03] transition-transform cursor-pointer"
+          onClick={() => navigate("x")}
         >
-          <div className="text-4xl mb-4">🗂️</div>
-          <h3 className="text-xl font-semibold mb-2">Historial</h3>
-          <p className="text-gray-600 text-sm">Tareas completadas</p>
-        </div>
-      </div>
-
-      {/* //? ======================================== */}
-      {/* //? SECCIÓN DE ESTADÍSTICAS */}
-      {/* //? ======================================== */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">Mis Tareas</h1>
-        <p className="text-gray-600">
-          Gestiona y completa las tareas asignadas
-        </p>
-      </div>
-
-      {/* //? Tarjetas de estadísticas de tareas (4) */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        {/* //? Estadística 1: Pendiente */}
-        <div className="bg-white rounded-lg shadow p-6 border border-gray-200">
-          <div className="text-4xl mb-4">⏱️</div>
-          <p className="text-4xl font-bold mb-2">{counts.pending}</p>
-          <h3 className="text-lg font-semibold">Pendiente</h3>
-        </div>
-
-        {/* //? Estadística 2: En progreso */}
-        <div className="bg-white rounded-lg shadow p-6 border border-gray-200">
-          <div className="text-4xl mb-4">🔄</div>
-          <p className="text-4xl font-bold mb-2">{counts.inProgress}</p>
-          <h3 className="text-lg font-semibold">En Progreso</h3>
-        </div>
-
-        {/* //? Estadística 3: Finalizada */}
-        <div className="bg-white rounded-lg shadow p-6 border border-gray-200">
-          <div className="text-4xl mb-4">✅</div>
-          <p className="text-4xl font-bold mb-2">{counts.completed}</p>
-          <h3 className="text-lg font-semibold">Finalizada</h3>
-        </div>
-
-        {/* //? Estadística 4: Total */}
-        <div className="bg-white rounded-lg shadow p-6 border border-gray-200">
-          <div className="text-4xl mb-4">📋</div>
-          <p className="text-4xl font-bold mb-2">{counts.total}</p>
-          <h3 className="text-lg font-semibold">Total</h3>
-        </div>
+          <div className="text-4xl mb-4 text-cyan-600">🗂️</div>
+          <h3 className="text-xl font-bold text-cyan-700 mb-2">Historial de avances</h3>
+          <p className="text-cyan-600 text-sm">Tus avances</p>
+        </div> */}
       </div>
     </div>
   );

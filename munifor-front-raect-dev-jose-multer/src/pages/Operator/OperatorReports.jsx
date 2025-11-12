@@ -14,6 +14,7 @@
 //*   - Modal de detalles con acciones (aceptar/rechazar)
 //*   - Soporte para query params (?status=Rechazado desde dashboard)
 
+import React from "react";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
@@ -44,7 +45,7 @@ const OperatorReports = () => {
   //? FUNCIÓN: CARGAR REPORTES
   //? ========================================
   //* Definida fuera del useEffect para reutilizarla (se llama al cerrar modal)
-  const fetchReports = async () => {
+  const fetchReports = React.useCallback(async () => {
     try {
       //? Obtiene todos los reportes desde el endpoint del operador
       const data = await getFetchData("/report/operator");
@@ -53,14 +54,14 @@ const OperatorReports = () => {
     } catch (error) {
       console.error("Error al obtener los reportes ciudadanos:", error);
     }
-  };
+  }, [getFetchData]);
 
   //? ========================================
   //? EFFECT: CARGAR REPORTES AL MONTAR
   //? ========================================
   useEffect(() => {
     fetchReports();
-  }, []); //* Solo al montar
+  }, [fetchReports]); //* Solo al montar
 
   //? ========================================
   //? FILTROS: OPCIONES Y APLICACIÓN
@@ -116,12 +117,12 @@ const OperatorReports = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#eaf4fe] to-[#d2e7fa]">
       {/* ========================================
           SECCIÓN: HEADER CON BÚSQUEDA
           ======================================== */}
-      <div className="max-w-5xl mx-auto px-4 py-4 flex flex-col gap-2">
-        <h2 className="text-xl font-bold text-gray-700">
+      <div className="max-w-5xl mx-auto px-4 py-8 flex flex-col gap-4">
+        <h2 className="text-3xl font-extrabold text-cyan-700 mb-2 drop-shadow">
           Reportes de Ciudadanos
         </h2>
         {/* Input de búsqueda por título */}
@@ -130,22 +131,21 @@ const OperatorReports = () => {
           placeholder="Buscar por nombre..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="border rounded px-3 py-2 w-full max-w-md focus:outline-none focus:ring focus:border-blue-300"
+          className="border-2 border-cyan-300 rounded-lg px-4 py-3 w-full max-w-lg focus:outline-none focus:ring-2 focus:ring-cyan-400 bg-white shadow-sm placeholder-cyan-600/60 text-cyan-700"
         />
       </div>
 
       {/* ========================================
           SECCIÓN: FILTROS POR ESTADO
           ======================================== */}
-      <div className="max-w-5xl mx-auto px-4 pb-4 flex gap-2">
+      <div className="max-w-5xl mx-auto px-4 pb-6 flex gap-3 flex-wrap">
         {statusOptions.map((option) => (
           <button
             key={option}
-            className={`px-4 py-2 rounded border font-medium transition-colors duration-150
-              ${
-                filter === option
-                  ? "bg-blue-600 text-white" //* Estilo del filtro activo
-                  : "bg-white text-blue-600 border-blue-600" //* Estilo del filtro inactivo
+            className={`px-6 py-2 rounded-full border-2 font-semibold transition-all duration-150 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-cyan-400
+              ${filter === option
+                ? "bg-cyan-600 text-white border-cyan-600 scale-105 shadow-lg"
+                : "bg-white text-cyan-600 border-cyan-600 hover:bg-cyan-50"
               }`}
             onClick={() => setFilter(option)}
           >
@@ -157,37 +157,42 @@ const OperatorReports = () => {
       {/* ========================================
           SECCIÓN: LISTA DE REPORTES
           ======================================== */}
-      <div className="space-y-4">
+      <div className="space-y-6">
         {filteredReports.length === 0 ? (
           //* Mensaje cuando no hay reportes
           <div className="flex flex-col items-center justify-center py-16">
-            <h3>No hay reportes ciudadanos</h3>
+            <h3 className="text-lg text-cyan-700 font-semibold">No hay reportes ciudadanos</h3>
           </div>
         ) : (
           //* Lista de reportes filtrados
           filteredReports.map((reporte, idx) => (
             <div
               key={idx}
-              className="bg-white rounded-lg shadow p-3 flex justify-between items-center border border-gray-200 w-full max-w-2xl mx-auto min-h-14 hover:cursor-pointer"
+              className="bg-white rounded-xl shadow-lg p-5 flex justify-between items-center border-2 border-cyan-300/20 w-full max-w-3xl mx-auto min-h-16 hover:cursor-pointer hover:shadow-xl transition-all duration-150"
               onClick={() => handleSelectReport(reporte)}
             >
               <div>
-                <span className="block text-xl font-semibold text-gray-800">
+                <span className="block text-2xl font-bold text-cyan-700 mb-1">
                   {reporte.title}
                 </span>
-                <span className="block text-sm text-gray-500">
-                  Autor: {reporte.author?.username}
+                <span className="block text-sm text-cyan-600/70">
+                  Autor: <span className="font-semibold text-cyan-700">{reporte.author?.username}</span>
                 </span>
               </div>
               {/* Badge de estado con color según el estado */}
               <span
-                className={`px-5 py-2 rounded-full text-base font-medium 
-                  ${
-                    reporte.status === "Resuelto"
-                      ? "bg-green-100 text-green-700"
-                      : reporte.status === "En proceso"
-                      ? "bg-yellow-100 text-yellow-700"
-                      : "bg-red-100 text-red-700"
+                className={`px-6 py-2 rounded-full text-base font-semibold shadow-sm border-2
+                  ${reporte.status === "Resuelto"
+                    ? "bg-[#e0f7e9] text-[#059669] border-[#059669]/30"
+                    : reporte.status === "En proceso"
+                      ? "bg-[#fef9c3] text-[#ca8a04] border-[#ca8a04]/30"
+                      : reporte.status === "Rechazado"
+                        ? "bg-[#fee2e2] text-[#dc2626] border-[#dc2626]/30"
+                        : reporte.status === "Aceptado"
+                          ? "bg-[#dbeafe] text-cyan-700 border-cyan-300/30"
+                          : reporte.status === "Completado"
+                            ? "bg-[#e0e7ff] text-[#6366f1] border-[#6366f1]/30"
+                            : "bg-gray-100 text-gray-500 border-gray-300"
                   }
                 `}
               >
@@ -204,13 +209,24 @@ const OperatorReports = () => {
             * Botones para aceptar o rechazar
         */}
         {selectedReport && (
-          <ReportDetails
-            report={selectedReport}
-            onClose={closeModal}
-            onReject={handleRejectReport}
-            onAccept={handleAcceptReport}
-            role={"Operador"} //* Determina qué botones mostrar
-          />
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+            <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-lg w-full relative">
+              <button
+                className="absolute top-4 right-4 text-gray-400 hover:text-blue-600 text-2xl font-bold"
+                onClick={closeModal}
+                aria-label="Cerrar"
+              >
+                &times;
+              </button>
+              <ReportDetails
+                report={selectedReport}
+                onClose={closeModal}
+                onReject={handleRejectReport}
+                onAccept={handleAcceptReport}
+                role={"Operador"}
+              />
+            </div>
+          </div>
         )}
       </div>
     </div>

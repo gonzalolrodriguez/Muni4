@@ -13,21 +13,24 @@ import { Link } from "react-router-dom";
 
 const GeneralNavBar = () => {
   return (
-    <nav className="bg-white shadow-md px-4 py-2 flex items-center justify-between sticky top-0 z-20">
+    <nav className="bg-white/70 backdrop-blur-md shadow-lg px-6 py-4 flex items-center justify-between sticky top-0 z-20 border-b-4 border-cyan-500 rounded-b-2xl">
+      <div className="flex items-center gap-4">
+        <span className="text-2xl font-extrabold text-cyan-700 tracking-tight">MuniFor</span>
+      </div>
       <ul className="flex gap-4">
         <li>
-          <Link to="/" className="text-blue-700 font-semibold hover:text-blue-900 transition">Inicio</Link>
+          <Link to="/" className="text-cyan-700 font-bold hover:text-cyan-900 transition">Inicio</Link>
         </li>
         <li>
-          <Link to="/faq" className="text-blue-700 font-semibold hover:text-blue-900 transition">Preguntas Frecuentes</Link>
+          <Link to="/faq" className="text-cyan-700 font-bold hover:text-cyan-900 transition">Preguntas Frecuentes</Link>
         </li>
       </ul>
       <ul className="flex gap-2">
         <li>
-          <Link to="/register" className="px-4 py-1 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition">Registrarse</Link>
+          <Link to="/register" className="px-4 py-2 rounded-xl bg-cyan-600 text-white font-bold shadow hover:bg-cyan-700 transition">Registrarse</Link>
         </li>
         <li>
-          <Link to="/login" className="px-4 py-1 rounded-lg bg-white border border-blue-600 text-blue-600 font-semibold hover:bg-blue-50 transition">Iniciar sesión</Link>
+          <Link to="/login" className="px-4 py-2 rounded-xl bg-white border border-cyan-600 text-cyan-600 font-bold shadow hover:bg-cyan-50 transition">Iniciar sesión</Link>
         </li>
       </ul>
     </nav>
