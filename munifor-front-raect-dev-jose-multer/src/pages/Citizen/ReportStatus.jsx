@@ -15,9 +15,10 @@
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../context/UserContext";
 import useFetch from "../../hooks/useFetch";
-import ReportModal from "../../components/ReportModal";
+import useFilter from "../../hooks/useFilter";
 import { Link } from "react-router-dom";
 import ReportDetails from "../../components/details/ReportDetails";
+import Pagination from "../../components/Pagination";
 
 const ReportStatus = () => {
   //* ========================================
@@ -25,6 +26,7 @@ const ReportStatus = () => {
   //* ========================================
   const { user } = useContext(UserContext);
   const { getFetchData } = useFetch();
+  const { limitData } = useFilter();
 
   //? Estado de reportes del usuario
   const [reports, setReports] = useState([]);
@@ -34,6 +36,8 @@ const ReportStatus = () => {
   const [filter, setFilter] = useState("Todos");
   //? Búsqueda por título
   const [search, setSearch] = useState("");
+  //? Paginación
+  const [currentPage, setCurrentPage] = useState(1);
 
   //* ========================================
   //* EFECTO: Cargar reportes del usuario
@@ -50,7 +54,7 @@ const ReportStatus = () => {
       }
     };
     fetchReports();
-  }, [user, getFetchData]);
+  }, [user]);
 
   //* ========================================
   //* HANDLERS
@@ -74,12 +78,19 @@ const ReportStatus = () => {
   ];
 
   //* ========================================
-  //* FILTRADO DE REPORTES
+  //* FILTRADO Y PAGINACIÓN DE REPORTES
   //* ========================================
   //! Aplicar filtro por estado y búsqueda por título
   const filteredReports = (
     filter === "Todos" ? reports : reports.filter((r) => r.status === filter)
   ).filter((r) => r.title.toLowerCase().includes(search.toLowerCase()));
+
+  //! Aplicar paginación (10 reportes por página)
+  const { data: paginatedReports, totalPages } = limitData(
+    filteredReports,
+    10,
+    currentPage
+  );
 
   //* ========================================
   //* RENDER
@@ -88,7 +99,9 @@ const ReportStatus = () => {
     <div className="min-h-screen bg-[#eaf4fe] flex flex-col py-8 px-2">
       <div className="relative w-full flex-1">
         <div className="max-w-4xl mx-auto flex flex-col gap-6 text-center bg-white/70 backdrop-blur-md rounded-2xl shadow-2xl p-8 border border-cyan-300">
-          <h2 className="text-5xl font-extrabold text-cyan-700 mb-2 tracking-tight drop-shadow">Tus Reportes</h2>
+          <h2 className="text-5xl font-extrabold text-cyan-700 mb-2 tracking-tight drop-shadow">
+            Tus Reportes
+          </h2>
           <input
             type="text"
             placeholder="Buscar por nombre..."
@@ -102,9 +115,10 @@ const ReportStatus = () => {
               <button
                 key={option}
                 className={`px-5 py-2 rounded-xl font-semibold border transition-colors duration-150 shadow-sm text-base
-                  ${filter === option
-                    ? "bg-cyan-600 text-white border-cyan-700"
-                    : "bg-white text-cyan-600 border-cyan-400 hover:bg-cyan-50"
+                  ${
+                    filter === option
+                      ? "bg-cyan-600 text-white border-cyan-700"
+                      : "bg-white text-cyan-600 border-cyan-400 hover:bg-cyan-50"
                   }`}
                 onClick={() => setFilter(option)}
               >
@@ -112,17 +126,37 @@ const ReportStatus = () => {
               </button>
             ))}
           </div>
+          {/* //? CONTADOR DE RESULTADOS */}
+          {/* {filteredReports.length > 0 && (
+            <p className="text-cyan-600 font-medium text-lg">
+              Mostrando {paginatedReports.length} de {totalItems} reportes
+              {totalPages > 1 && ` Página ${page} de ${totalPages}`}
+            </p>
+          )} */}
+
+          {/* //? PAGINACIÓN SUPERIOR */}
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
+
           {/* //? LISTA DE REPORTES */}
           <div className="space-y-6 mt-6">
             {filteredReports.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-20">
-                <h3 className="text-2xl font-semibold text-cyan-700 mb-4">¡Haz tu primer reporte!</h3>
-                <Link to="/citizen/reports" className="bg-cyan-600 text-white px-6 py-3 rounded-xl font-bold shadow hover:bg-cyan-700 transition">
+                <h3 className="text-2xl font-semibold text-cyan-700 mb-4">
+                  ¡Haz tu primer reporte!
+                </h3>
+                <Link
+                  to="/citizen/reports"
+                  className="bg-cyan-600 text-white px-6 py-3 rounded-xl font-bold shadow hover:bg-cyan-700 transition"
+                >
                   Hacer reporte
                 </Link>
               </div>
             ) : (
-              filteredReports.map((reporte, idx) => (
+              paginatedReports.map((reporte, idx) => (
                 <div
                   key={idx}
                   className="bg-white/80 backdrop-blur rounded-2xl shadow-lg p-6 flex justify-between items-center border border-cyan-200 w-full max-w-3xl mx-auto min-h-16 hover:scale-[1.02] transition-transform cursor-pointer"
@@ -136,17 +170,18 @@ const ReportStatus = () => {
                   {/* //? Badge de estado con colores según status */}
                   <span
                     className={`px-6 py-2 rounded-full text-lg font-bold shadow-sm
-                      ${reporte.status === "Pendiente"
-                        ? "bg-yellow-100 text-yellow-700"
-                        : reporte.status === "Revisado"
+                      ${
+                        reporte.status === "Pendiente"
+                          ? "bg-yellow-100 text-yellow-700"
+                          : reporte.status === "Revisado"
                           ? "bg-cyan-100 text-cyan-700"
                           : reporte.status === "Aceptado"
-                            ? "bg-green-100 text-green-700"
-                            : reporte.status === "Completado"
-                              ? "bg-emerald-100 text-emerald-700"
-                              : reporte.status === "Rechazado"
-                                ? "bg-red-100 text-red-700"
-                                : "bg-gray-100 text-gray-700"
+                          ? "bg-green-100 text-green-700"
+                          : reporte.status === "Completado"
+                          ? "bg-emerald-100 text-emerald-700"
+                          : reporte.status === "Rechazado"
+                          ? "bg-red-100 text-red-700"
+                          : "bg-gray-100 text-gray-700"
                       }
                     `}
                   >
@@ -155,9 +190,41 @@ const ReportStatus = () => {
                 </div>
               ))
             )}
+
+            {/* //? PAGINACIÓN INFERIOR (con scroll) */}
+            <div className="mt-8">
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+                scrollToTop={true}
+              />
+            </div>
+
             {/* //? PANEL DE DETALLES (MODAL) */}
             {selectedReport && (
-              <ReportDetails report={selectedReport} onClose={closeModal} />
+              <div
+                className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+                onClick={closeModal}
+              >
+                <div
+                  className="bg-white rounded-3xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto relative"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <button
+                    onClick={closeModal}
+                    className="sticky top-4 right-4 float-right text-gray-400 hover:text-gray-700 text-3xl font-bold bg-white rounded-full w-10 h-10 flex items-center justify-center shadow-lg hover:bg-gray-100 transition z-10"
+                  >
+                    ✕
+                  </button>
+                  <div className="p-8">
+                    <ReportDetails
+                      report={selectedReport}
+                      onClose={closeModal}
+                    />
+                  </div>
+                </div>
+              </div>
             )}
           </div>
         </div>

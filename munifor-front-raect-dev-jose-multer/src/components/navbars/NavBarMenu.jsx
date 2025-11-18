@@ -14,22 +14,54 @@
 
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import userImage from "../../assets/img/images.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { UserContext } from "../../context/UserContext";
 
 const NavBarMenu = ({ profileType }) => {
+  const navigate = useNavigate();
+  const { user } = useContext(UserContext);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
+
+  // Configuración de avatar según el tipo de perfil
+  const avatarConfig = {
+    citizen: { bg: "bg-cyan-600", letter: "C" },
+    operator: { bg: "bg-purple-500", letter: "O" },
+    worker: { bg: "bg-orange-500", letter: "T" },
+    admin: { bg: "bg-pink-500", letter: "A" },
+  };
+
+  const config = avatarConfig[profileType] || avatarConfig.citizen;
+
+  // Verificar si el usuario tiene imagen de perfil
+  const hasProfileImage = user?.profile_picture || user?.image;
+
   return (
     //* Menu: Contenedor relativo para dropdown
     <Menu as="div" className="relative ml-3">
-      {/* //? Botón que abre el menú: imagen de usuario circular */}
+      {/* //? Botón que abre el menú: imagen de usuario circular o span con letra */}
       <MenuButton className="relative flex rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
         <span className="absolute -inset-1.5" />
         {/* //? Texto para lectores de pantalla */}
         <span className="sr-only">Open user menu</span>
-        <img
-          alt=""
-          src={userImage}
-          className="size-8 rounded-full bg-gray-800 outline -outline-offset-1 outline-white/10"
-        />
+
+        {hasProfileImage ? (
+          <img
+            alt=""
+            src={`http://localhost:3000/${user?.profile_picture}`}
+            className="size-8 rounded-full bg-gray-800 outline -outline-offset-1 outline-white/10"
+          />
+        ) : (
+          <span
+            className={`${config.bg} text-white rounded-full w-8 h-8 flex items-center justify-center font-bold`}
+          >
+            {config.letter}
+          </span>
+        )}
       </MenuButton>
 
       {/* //! MenuItems: Dropdown con transiciones de Headless UI */}
@@ -48,12 +80,13 @@ const NavBarMenu = ({ profileType }) => {
         </MenuItem>
         {/* //! Opción 2: Cerrar sesión (redirige a login) */}
         <MenuItem>
-          <Link
-            to="/login"
-            className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
+          <button
+            onClick={handleLogout}
+            className="block w-full text-left px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
+            type="button"
           >
             Sign out
-          </Link>
+          </button>
         </MenuItem>
       </MenuItems>
     </Menu>

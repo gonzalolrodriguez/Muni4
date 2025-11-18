@@ -34,6 +34,7 @@ const OperatorStatistics = () => {
       try {
         const res = await getFetchData("/operator/statistics");
         const data = res.data;
+        console.log(data);
         setDoughnutData({
           labels: Object.keys(data.chartDoughnutData),
           datasets: [
@@ -100,7 +101,7 @@ const OperatorStatistics = () => {
       }
     };
     fetchStatistics();
-  }, [getFetchData]); //* Se ejecuta al montar
+  }, []); //* Se ejecuta al montar
 
   return (
     <div className="min-h-screen w-full flex flex-row items-center justify-center gap-[2vw] flex-wrap bg-gradient-to-br from-[#eaf4fe] to-[#d2e7fa]">

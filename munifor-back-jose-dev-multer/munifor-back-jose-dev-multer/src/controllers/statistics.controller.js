@@ -5,8 +5,10 @@
 //? Incluye estadísticas para administradores (todo el sistema) y operadores (solo sus reportes)
 
 //! IMPORTS DE MODELOS
+import { Types } from "mongoose";
 import ReportModel from "../models/report.model.js";
 import UserModel from "../models/user.model.js";
+import mongoose from "mongoose";
 
 //* ============================================
 //* CONSTANTES
@@ -32,314 +34,6 @@ const MESES = [
 const TIPOS_REPORTE = ["Bache", "Alumbrado", "Basura", "Otro"];
 
 //* ============================================
-//* FUNCIONES AUXILIARES PARA ADMINISTRADOR
-//* ============================================
-
-/**
- * Obtiene conteo de usuarios por rol (Gráfico de Barras)
- * @returns {Object} Conteo de Ciudadano, Operador, Trabajador, Administrador
- */
-const getChartBarData = async () => {
-  //? Contar usuarios por cada rol
-  const citizenCount = await UserModel.countDocuments({ role: "Ciudadano" });
-  const operatorCount = await UserModel.countDocuments({ role: "Operador" });
-  const workerCount = await UserModel.countDocuments({ role: "Trabajador" });
-  const adminCount = await UserModel.countDocuments({ role: "Administrador" });
-
-  return {
-    Ciudadano: citizenCount,
-    Operador: operatorCount,
-    Trabajador: workerCount,
-    Administrador: adminCount,
-  };
-};
-
-/**
- * Obtiene conteo de reportes por estado (Gráfico de Dona)
- * @description Cuenta TODOS los reportes del sistema agrupados por status
- * @returns {Object} Conteo de Pendiente, Revisado, Aceptado, Completado, Rechazado
- */
-const getChartDoughnutData = async () => {
-  const pendingCount = await ReportModel.countDocuments({
-    status: "Pendiente",
-  });
-  const viewCount = await ReportModel.countDocuments({ status: "Revisado" });
-  const acceptedCount = await ReportModel.countDocuments({
-    status: "Aceptado",
-  });
-  const completeCount = await ReportModel.countDocuments({
-    status: "Completado",
-  });
-  const rejectCount = await ReportModel.countDocuments({ status: "Rechazado" });
-
-  return {
-    Pendiente: pendingCount,
-    Revisado: viewCount,
-    Aceptado: acceptedCount,
-    Completado: completeCount,
-    Rechazado: rejectCount,
-  };
-};
-
-/**
- * Obtiene reportes aceptados y completados por mes (Gráfico de Líneas)
- * @description Usa agregaciones de MongoDB para agrupar reportes por mes
- * @param {Number} year - Año para filtrar los datos
- * @returns {Object} Arrays con conteo de reportes aceptados y completados por mes
- */
-const getChartLineReportsPerYearData = async (year) => {
-  //? Agregación: Reportes aceptados por mes
-  // $match filtra por status y rango de fechas
-  // $group agrupa por mes ($month extrae el mes de approved_at)
-  // $sort ordena por mes
-  const acceptedByMonth = await ReportModel.aggregate([
-    {
-      $match: {
-        status: "Aceptado",
-        approved_at: {
-          $ne: null,
-          $gte: new Date(`${year}-01-01`),
-          $lte: new Date(`${year}-12-31T23:59:59`),
-        },
-      },
-    },
-    { $group: { _id: { $month: "$approved_at" }, count: { $sum: 1 } } },
-    { $sort: { _id: 1 } },
-  ]);
-
-  //? Agregación: Reportes completados por mes
-  const completedByMonth = await ReportModel.aggregate([
-    {
-      $match: {
-        status: "Completado",
-        completed_at: {
-          $ne: null,
-          $gte: new Date(`${year}-01-01`),
-          $lte: new Date(`${year}-12-31T23:59:59`),
-        },
-      },
-    },
-    { $group: { _id: { $month: "$completed_at" }, count: { $sum: 1 } } },
-    { $sort: { _id: 1 } },
-  ]);
-
-  //? Inicializar arrays con 0 para todos los 12 meses
-  const monthsAccepted = Array(12).fill(0);
-  const monthsCompleted = Array(12).fill(0);
-
-  //? Llenar datos de reportes aceptados (índice mes-1 porque los meses van de 1-12)
-  acceptedByMonth.forEach((item) => {
-    monthsAccepted[item._id - 1] = item.count;
-  });
-
-  //? Llenar datos de reportes completados
-  completedByMonth.forEach((item) => {
-    monthsCompleted[item._id - 1] = item.count;
-  });
-
-  return {
-    year,
-    months: MESES,
-    Aceptado: monthsAccepted,
-    Completado: monthsCompleted,
-  };
-};
-
-/**
- * Obtiene reportes por tipo por mes (Gráfico de Líneas por Tipo)
- * @description Agrupa reportes por tipo (Bache, Alumbrado, Basura, Otro) y mes
- * @param {Number} year - Año para filtrar los datos
- * @returns {Object} Arrays con conteo de cada tipo de reporte por mes
- */
-const getChartLineReportTypesData = async (year) => {
-  const chartLineReportTypesData = {
-    year,
-    months: MESES,
-  };
-
-  //? Por cada tipo de reporte, obtener conteo por mes
-  for (const reportType of TIPOS_REPORTE) {
-    //? Agregación: Reportes de este tipo por mes
-    const dataByMonth = await ReportModel.aggregate([
-      {
-        $match: {
-          report_type: reportType,
-          created_at: {
-            $gte: new Date(`${year}-01-01`),
-            $lte: new Date(`${year}-12-31T23:59:59`),
-          },
-        },
-      },
-      { $group: { _id: { $month: "$created_at" }, count: { $sum: 1 } } },
-      { $sort: { _id: 1 } },
-    ]);
-
-    //? Inicializar array con 0 para todos los 12 meses
-    const monthsData = Array(12).fill(0);
-
-    //? Llenar datos del tipo de reporte
-    dataByMonth.forEach((item) => {
-      monthsData[item._id - 1] = item.count;
-    });
-
-    chartLineReportTypesData[reportType] = monthsData;
-  }
-
-  return chartLineReportTypesData;
-};
-
-//* ============================================
-//* FUNCIONES AUXILIARES PARA OPERADOR
-//* ============================================
-
-/**
- * Obtiene conteo de reportes por estado del operador (Gráfico de Dona)
- * @description Cuenta SOLO los reportes asignados al operador específico
- * @param {ObjectId} operatorId - ID del operador
- * @returns {Object} Conteo de Pendiente, Revisado, Aceptado, Completado, Rechazado
- */
-const getChartDoughnutDataOperator = async (operatorId) => {
-  //! Los pendientes NO se cuentan porque aún no están asignados a ningún operador
-  const pendingCount = 0;
-
-  const viewCount = await ReportModel.countDocuments({
-    status: "Revisado",
-    assigned_operator: operatorId,
-  });
-
-  const acceptedCount = await ReportModel.countDocuments({
-    status: "Aceptado",
-    assigned_operator: operatorId,
-  });
-
-  const completeCount = await ReportModel.countDocuments({
-    status: "Completado",
-    assigned_operator: operatorId,
-  });
-
-  const rejectCount = await ReportModel.countDocuments({
-    status: "Rechazado",
-    assigned_operator: operatorId,
-  });
-
-  return {
-    Pendiente: pendingCount,
-    Revisado: viewCount,
-    Aceptado: acceptedCount,
-    Completado: completeCount,
-    Rechazado: rejectCount,
-  };
-};
-
-/**
- * Obtiene reportes aceptados y completados por mes del operador (Gráfico de Líneas)
- * @description Usa agregaciones para contar SOLO reportes del operador específico
- * @param {ObjectId} operatorId - ID del operador
- * @param {Number} year - Año para filtrar los datos
- * @returns {Object} Arrays con conteo de reportes aceptados y completados por mes del operador
- */
-const getChartLineReportsPerYearDataOperator = async (operatorId, year) => {
-  //? Agregación: Reportes aceptados por mes del operador
-  const acceptedByMonth = await ReportModel.aggregate([
-    {
-      $match: {
-        status: "Aceptado",
-        approved_at: {
-          $ne: null,
-          $gte: new Date(`${year}-01-01`),
-          $lte: new Date(`${year}-12-31T23:59:59`),
-        },
-        assigned_operator: operatorId, //! Filtro por operador
-      },
-    },
-    { $group: { _id: { $month: "$approved_at" }, count: { $sum: 1 } } },
-    { $sort: { _id: 1 } },
-  ]);
-
-  //? Agregación: Reportes completados por mes del operador
-  const completedByMonth = await ReportModel.aggregate([
-    {
-      $match: {
-        status: "Completado",
-        completed_at: {
-          $ne: null,
-          $gte: new Date(`${year}-01-01`),
-          $lte: new Date(`${year}-12-31T23:59:59`),
-        },
-        assigned_operator: operatorId, //! Filtro por operador
-      },
-    },
-    { $group: { _id: { $month: "$completed_at" }, count: { $sum: 1 } } },
-    { $sort: { _id: 1 } },
-  ]);
-
-  //? Inicializar arrays con 0 para todos los 12 meses
-  const monthsAccepted = Array(12).fill(0);
-  const monthsCompleted = Array(12).fill(0);
-
-  //? Llenar datos de reportes aceptados
-  acceptedByMonth.forEach((item) => {
-    monthsAccepted[item._id - 1] = item.count;
-  });
-
-  //? Llenar datos de reportes completados
-  completedByMonth.forEach((item) => {
-    monthsCompleted[item._id - 1] = item.count;
-  });
-
-  return {
-    year,
-    months: MESES,
-    Aceptado: monthsAccepted,
-    Completado: monthsCompleted,
-  };
-};
-
-/**
- * Obtiene reportes por tipo por mes del operador (Gráfico de Líneas por Tipo)
- * @description Agrupa reportes SOLO del operador por tipo y mes
- * @param {ObjectId} operatorId - ID del operador
- * @param {Number} year - Año para filtrar los datos
- * @returns {Object} Arrays con conteo de cada tipo de reporte por mes del operador
- */
-const getChartLineReportTypesDataOperator = async (operatorId, year) => {
-  const chartLineReportTypesData = {
-    year,
-    months: MESES,
-  };
-
-  //? Por cada tipo de reporte, obtener conteo por mes del operador
-  for (const reportType of TIPOS_REPORTE) {
-    const dataByMonth = await ReportModel.aggregate([
-      {
-        $match: {
-          report_type: reportType,
-          created_at: {
-            $gte: new Date(`${year}-01-01`),
-            $lte: new Date(`${year}-12-31T23:59:59`),
-          },
-          assigned_operator: operatorId, //! Filtro por operador
-        },
-      },
-      { $group: { _id: { $month: "$created_at" }, count: { $sum: 1 } } },
-      { $sort: { _id: 1 } },
-    ]);
-
-    //? Inicializar array con 0 para todos los 12 meses
-    const monthsData = Array(12).fill(0);
-
-    //? Llenar datos del tipo de reporte
-    dataByMonth.forEach((item) => {
-      monthsData[item._id - 1] = item.count;
-    });
-
-    chartLineReportTypesData[reportType] = monthsData;
-  }
-
-  return chartLineReportTypesData;
-};
-
-//* ============================================
 //* ENDPOINTS PRINCIPALES
 //* ============================================
 
@@ -351,23 +45,137 @@ const getChartLineReportTypesDataOperator = async (operatorId, year) => {
  */
 export const getOperatorStatistics = async (req, res) => {
   try {
-    const operatorId = req.user._id; //? ID del operador logueado
+    // const operatorId = req.user._id;
+    const operatorId = new mongoose.Types.ObjectId(req.user._id); //? ID del operador logueado como ObjectId
 
     //? Obtener año de los query params, o usar año actual
     const year = req.query.year
       ? parseInt(req.query.year)
       : new Date().getFullYear();
 
-    //? Obtener datos de gráficos usando las funciones auxiliares
-    const chartDoughnutData = await getChartDoughnutDataOperator(operatorId);
-    const chartLineReportsData = await getChartLineReportsPerYearDataOperator(
-      operatorId,
-      year
-    );
-    const chartLineReportTypesData = await getChartLineReportTypesDataOperator(
-      operatorId,
-      year
-    );
+    //? Función auxiliar interna: Obtener datos de gráfico de dona
+    const getChartDoughnutData = async () => {
+      const pendingCount = 0; //! Los pendientes NO se cuentan
+      const viewCount = await ReportModel.countDocuments({
+        status: "Revisado",
+        assigned_operator: operatorId,
+      });
+      const acceptedCount = await ReportModel.countDocuments({
+        status: "Aceptado",
+        assigned_operator: operatorId,
+      });
+      const completeCount = await ReportModel.countDocuments({
+        status: "Completado",
+        assigned_operator: operatorId,
+      });
+      const rejectCount = await ReportModel.countDocuments({
+        status: "Rechazado",
+        assigned_operator: operatorId,
+      });
+
+      return {
+        Pendiente: pendingCount,
+        Revisado: viewCount,
+        Aceptado: acceptedCount,
+        Completado: completeCount,
+        Rechazado: rejectCount,
+      };
+    };
+
+    //? Función auxiliar interna: Obtener datos de reportes por mes
+    const getChartLineReportsData = async () => {
+      const acceptedByMonth = await ReportModel.aggregate([
+        {
+          $match: {
+            status: "Aceptado",
+            approved_at: {
+              $ne: null,
+              $gte: new Date(`${year}-01-01`),
+              $lte: new Date(`${year}-12-31T23:59:59`),
+            },
+            assigned_operator: operatorId,
+          },
+        },
+        { $group: { _id: { $month: "$approved_at" }, count: { $sum: 1 } } },
+        { $sort: { _id: 1 } },
+      ]);
+
+      const completedByMonth = await ReportModel.aggregate([
+        {
+          $match: {
+            status: "Completado",
+            completed_at: {
+              $ne: null,
+              $gte: new Date(`${year}-01-01`),
+              $lte: new Date(`${year}-12-31T23:59:59`),
+            },
+            assigned_operator: operatorId,
+          },
+        },
+        { $group: { _id: { $month: "$completed_at" }, count: { $sum: 1 } } },
+        { $sort: { _id: 1 } },
+      ]);
+
+      const monthsAccepted = Array(12).fill(0);
+      const monthsCompleted = Array(12).fill(0);
+
+      acceptedByMonth.forEach((item) => {
+        monthsAccepted[item._id - 1] = item.count;
+      });
+
+      completedByMonth.forEach((item) => {
+        monthsCompleted[item._id - 1] = item.count;
+      });
+
+      return {
+        year,
+        months: MESES,
+        Aceptado: monthsAccepted,
+        Completado: monthsCompleted,
+      };
+    };
+
+    //? Función auxiliar interna: Obtener datos de reportes por tipo
+    const getChartLineReportTypesData = async () => {
+      const chartLineReportTypesData = {
+        year,
+        months: MESES,
+      };
+
+      for (const reportType of TIPOS_REPORTE) {
+        const dataByMonth = await ReportModel.aggregate([
+          {
+            $match: {
+              type_report: reportType,
+              //! Usar approved_at en lugar de created_at para que coincida con cuando fue asignado
+              approved_at: {
+                $ne: null,
+                $gte: new Date(`${year}-01-01`),
+                $lte: new Date(`${year}-12-31T23:59:59`),
+              },
+              assigned_operator: operatorId,
+            },
+          },
+          { $group: { _id: { $month: "$approved_at" }, count: { $sum: 1 } } },
+          { $sort: { _id: 1 } },
+        ]);
+
+        const monthsData = Array(12).fill(0);
+
+        dataByMonth.forEach((item) => {
+          monthsData[item._id - 1] = item.count;
+        });
+
+        chartLineReportTypesData[reportType] = monthsData;
+      }
+
+      return chartLineReportTypesData;
+    };
+
+    //? Obtener todos los datos usando las funciones internas
+    const chartDoughnutData = await getChartDoughnutData();
+    const chartLineReportsData = await getChartLineReportsData();
+    const chartLineReportTypesData = await getChartLineReportTypesData();
 
     return res.status(200).json({
       ok: true,
@@ -399,11 +207,146 @@ export const getAdminStatistics = async (req, res) => {
       ? parseInt(req.query.year)
       : new Date().getFullYear();
 
-    //? Obtener datos de gráficos usando las funciones auxiliares
-    const chartBarData = await getChartBarData(); //? Usuarios por rol
-    const chartDoughnutData = await getChartDoughnutData(); //? Reportes por estado
-    const chartLineReportsData = await getChartLineReportsPerYearData(year); //? Reportes por mes
-    const chartLineReportTypesData = await getChartLineReportTypesData(year); //? Reportes por tipo por mes
+    //? Función auxiliar interna: Obtener datos de usuarios por rol
+    const getChartBarData = async () => {
+      const citizenCount = await UserModel.countDocuments({
+        role: "Ciudadano",
+      });
+      const operatorCount = await UserModel.countDocuments({
+        role: "Operador",
+      });
+      const workerCount = await UserModel.countDocuments({
+        role: "Trabajador",
+      });
+      const adminCount = await UserModel.countDocuments({
+        role: "Administrador",
+      });
+
+      return {
+        Ciudadano: citizenCount,
+        Operador: operatorCount,
+        Trabajador: workerCount,
+        Administrador: adminCount,
+      };
+    };
+
+    //? Función auxiliar interna: Obtener datos de gráfico de dona
+    const getChartDoughnutData = async () => {
+      const pendingCount = await ReportModel.countDocuments({
+        status: "Pendiente",
+      });
+      const viewCount = await ReportModel.countDocuments({
+        status: "Revisado",
+      });
+      const acceptedCount = await ReportModel.countDocuments({
+        status: "Aceptado",
+      });
+      const completeCount = await ReportModel.countDocuments({
+        status: "Completado",
+      });
+      const rejectCount = await ReportModel.countDocuments({
+        status: "Rechazado",
+      });
+
+      return {
+        Pendiente: pendingCount,
+        Revisado: viewCount,
+        Aceptado: acceptedCount,
+        Completado: completeCount,
+        Rechazado: rejectCount,
+      };
+    };
+
+    //? Función auxiliar interna: Obtener datos de reportes por mes
+    const getChartLineReportsData = async () => {
+      const acceptedByMonth = await ReportModel.aggregate([
+        {
+          $match: {
+            status: "Aceptado",
+            approved_at: {
+              $ne: null,
+              $gte: new Date(`${year}-01-01`),
+              $lte: new Date(`${year}-12-31T23:59:59`),
+            },
+          },
+        },
+        { $group: { _id: { $month: "$approved_at" }, count: { $sum: 1 } } },
+        { $sort: { _id: 1 } },
+      ]);
+
+      const completedByMonth = await ReportModel.aggregate([
+        {
+          $match: {
+            status: "Completado",
+            completed_at: {
+              $ne: null,
+              $gte: new Date(`${year}-01-01`),
+              $lte: new Date(`${year}-12-31T23:59:59`),
+            },
+          },
+        },
+        { $group: { _id: { $month: "$completed_at" }, count: { $sum: 1 } } },
+        { $sort: { _id: 1 } },
+      ]);
+
+      const monthsAccepted = Array(12).fill(0);
+      const monthsCompleted = Array(12).fill(0);
+
+      acceptedByMonth.forEach((item) => {
+        monthsAccepted[item._id - 1] = item.count;
+      });
+
+      completedByMonth.forEach((item) => {
+        monthsCompleted[item._id - 1] = item.count;
+      });
+
+      return {
+        year,
+        months: MESES,
+        Aceptado: monthsAccepted,
+        Completado: monthsCompleted,
+      };
+    };
+
+    //? Función auxiliar interna: Obtener datos de reportes por tipo
+    const getChartLineReportTypesData = async () => {
+      const chartLineReportTypesData = {
+        year,
+        months: MESES,
+      };
+
+      for (const reportType of TIPOS_REPORTE) {
+        const dataByMonth = await ReportModel.aggregate([
+          {
+            $match: {
+              type_report: reportType,
+              created_at: {
+                $gte: new Date(`${year}-01-01`),
+                $lte: new Date(`${year}-12-31T23:59:59`),
+              },
+            },
+          },
+          { $group: { _id: { $month: "$created_at" }, count: { $sum: 1 } } },
+          { $sort: { _id: 1 } },
+        ]);
+
+        const monthsData = Array(12).fill(0);
+
+        dataByMonth.forEach((item) => {
+          monthsData[item._id - 1] = item.count;
+        });
+
+        chartLineReportTypesData[reportType] = monthsData;
+      }
+
+      return chartLineReportTypesData;
+    };
+
+    //? Obtener todos los datos usando las funciones internas
+    const chartBarData = await getChartBarData();
+    const chartDoughnutData = await getChartDoughnutData();
+    const chartLineReportsData = await getChartLineReportsData();
+    const chartLineReportTypesData = await getChartLineReportTypesData();
 
     return res.status(200).json({
       ok: true,

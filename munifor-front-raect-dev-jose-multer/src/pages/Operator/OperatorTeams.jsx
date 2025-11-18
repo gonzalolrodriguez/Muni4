@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 import useFetch from "../../hooks/useFetch";
 import useFilter from "../../hooks/useFilter";
 import CrewDetails from "../../components/details/CrewDetails";
+import Pagination from "../../components/Pagination";
 
 //? ========================================
 //? COMPONENTE PRINCIPAL - OPERATORTEAMS
@@ -30,8 +31,9 @@ const OperatorTeams = () => {
 
   //? Estados para búsqueda
   const [search, setSearch] = useState(""); //* Búsqueda por nombre de cuadrilla
+  const [currentPage, setCurrentPage] = useState(1); //* Página actual
 
-  const { filterBySearch } = useFilter();
+  const { filterBySearch, limitData } = useFilter();
 
   //? ========================================
   //? EFFECT: CARGAR CUADRILLAS
@@ -49,13 +51,27 @@ const OperatorTeams = () => {
       }
     };
     fetchCrews();
-  }, [selectedCrew, getFetchData]); //* Se re-ejecuta cuando se cierra el modal
+  }, [selectedCrew]); //* Se re-ejecuta cuando se cierra el modal
+
+  //? ========================================
+  //? EFFECT: RESETEAR PÁGINA AL CAMBIAR BÚSQUEDA
+  //? ========================================
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search]);
 
   //? ========================================
   //? FILTROS: BÚSQUEDA POR NOMBRE
   //? ========================================
   //* Filtra cuadrillas por nombre usando el hook useFilter
   const filteredCrews = filterBySearch(crews, search, "name");
+
+  //* Aplicar paginación (10 cuadrillas por página)
+  const { data: paginatedCrews, totalPages } = limitData(
+    filteredCrews,
+    20,
+    currentPage
+  );
 
   //? ========================================
   //? HANDLERS: ACCIONES DE CUADRILLAS
@@ -76,7 +92,9 @@ const OperatorTeams = () => {
           SECCIÓN: HEADER CON BÚSQUEDA
           ======================================== */}
       <div className="max-w-5xl mx-auto px-4 py-4 flex flex-col gap-2">
-        <h2 className="text-3xl font-extrabold text-cyan-700 mb-2 drop-shadow">Cuadrillas</h2>
+        <h2 className="text-3xl font-extrabold text-cyan-700 mb-2 drop-shadow">
+          Cuadrillas
+        </h2>
         {/* Input de búsqueda por nombre */}
         <input
           type="text"
@@ -84,6 +102,16 @@ const OperatorTeams = () => {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="border-2 border-cyan-300 rounded-lg px-4 py-3 w-full max-w-lg focus:outline-none focus:ring-2 focus:ring-cyan-400 bg-white shadow-sm placeholder-cyan-600/60 text-cyan-700"
+        />
+      </div>
+      {/* ========================================
+          SECCIÓN: PAGINACIÓN SUPERIOR
+          ======================================== */}
+      <div className="max-w-5xl mx-auto px-4 pb-4">
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
         />
       </div>
 
@@ -94,11 +122,13 @@ const OperatorTeams = () => {
         {filteredCrews.length === 0 ? (
           //* Mensaje cuando no hay cuadrillas
           <div className="flex flex-col items-center justify-center py-16">
-            <h3 className="text-lg text-cyan-700 font-semibold">No hay cuadrillas registradas</h3>
+            <h3 className="text-lg text-cyan-700 font-semibold">
+              No hay cuadrillas registradas
+            </h3>
           </div>
         ) : (
-          //* Lista de cuadrillas filtradas
-          filteredCrews.map((crew, idx) => (
+          //* Lista de cuadrillas paginadas
+          paginatedCrews.map((crew, idx) => (
             <div
               key={crew._id || idx}
               className="bg-white rounded-xl shadow-lg p-5 flex justify-between items-center border-2 border-cyan-300/20 w-full max-w-3xl mx-auto min-h-16 hover:cursor-pointer hover:shadow-xl transition-all duration-150"
@@ -109,7 +139,10 @@ const OperatorTeams = () => {
                   {crew.name}
                 </span>
                 <span className="block text-sm text-cyan-600/70">
-                  Miembros: <span className="font-semibold text-cyan-700">{crew.members ? crew.members.length : 0}</span>
+                  Miembros:{" "}
+                  <span className="font-semibold text-cyan-700">
+                    {crew.members ? crew.members.length : 0}
+                  </span>
                 </span>
               </div>
               {/* Badge de acción */}
@@ -121,12 +154,35 @@ const OperatorTeams = () => {
         )}
 
         {/* ========================================
+            SECCIÓN: PAGINACIÓN INFERIOR
+            ======================================== */}
+        <div className="max-w-5xl mx-auto px-4 pt-6">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            scrollToTop={true}
+          />
+        </div>
+
+        {/* ========================================
             MODAL: DETALLES DE LA CUADRILLA
             ======================================== 
             * Muestra líder, miembros, tareas asignadas
         */}
         {selectedCrew && (
-          <CrewDetails crew={selectedCrew} onClose={closePanel} />
+          <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg shadow-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+              <CrewDetails crew={selectedCrew} onClose={closePanel} />
+              {/* Botón cerrar */}
+              <button
+                className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 w-full"
+                onClick={closePanel}
+              >
+                Cerrar
+              </button>
+            </div>
+          </div>
         )}
       </div>
     </div>

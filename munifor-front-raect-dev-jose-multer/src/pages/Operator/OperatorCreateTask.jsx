@@ -56,7 +56,7 @@ const OperatorCreateTask = () => {
       setCrews(data.crews || []);
     };
     fetchData();
-  }, [modal, getFetchData]); //* Se re-ejecuta cuando modal cambia (para actualizar lista después de crear tarea)
+  }, [modal]); //* Se re-ejecuta cuando modal cambia (para actualizar lista después de crear tarea)
 
   //? ========================================
   //? HANDLERS: GESTIÓN DE MODAL Y SELECCIONES
@@ -111,7 +111,9 @@ const OperatorCreateTask = () => {
           SECCIÓN: HEADER CON BOTÓN CREAR TAREA
           ======================================== */}
       <div className="max-w-5xl mx-auto px-4 py-8 flex flex-col items-center">
-        <h2 className="text-3xl font-extrabold text-cyan-700 mb-2 drop-shadow">Tareas</h2>
+        <h2 className="text-3xl font-extrabold text-cyan-700 mb-2 drop-shadow">
+          Tareas
+        </h2>
         {/* Botón para abrir modal de creación */}
         <button
           className="bg-cyan-600 text-white px-6 py-2 rounded-2xl shadow hover:bg-cyan-700 transition mt-2 font-bold"
@@ -129,7 +131,9 @@ const OperatorCreateTask = () => {
             COLUMNA IZQUIERDA: REPORTES ACEPTADOS
             ======================================== */}
         <div>
-          <h3 className="text-xl font-bold text-cyan-700 mb-4">Reportes aceptados</h3>
+          <h3 className="text-xl font-bold text-cyan-700 mb-4">
+            Reportes aceptados
+          </h3>
           {/* Input de búsqueda por título */}
           <input
             type="text"
@@ -143,9 +147,11 @@ const OperatorCreateTask = () => {
             <div
               key={reporte._id}
               className={`bg-white/70 backdrop-blur-md rounded-2xl shadow-2xl p-3 flex flex-col border w-full mb-3 min-h-14 hover:scale-[1.02] transition-transform cursor-pointer
-                ${reportSelected.includes(reporte._id)
-                  ? "border-cyan-400 ring-2 ring-cyan-300"
-                  : "border-gray-200"}
+                ${
+                  reportSelected.includes(reporte._id)
+                    ? "border-cyan-400 ring-2 ring-cyan-300"
+                    : "border-gray-200"
+                }
               `}
               onClick={() => handleSelectReport(reporte)}
             >
@@ -178,9 +184,11 @@ const OperatorCreateTask = () => {
               <div
                 key={crew._id}
                 className={`bg-white/70 backdrop-blur-md rounded-2xl shadow-2xl p-3 flex flex-col border w-full mb-3 min-h-14 hover:scale-[1.02] transition-transform cursor-pointer
-                  ${crewSelected === crew._id
-                    ? "border-cyan-400 ring-2 ring-cyan-300"
-                    : "border-gray-200"}
+                  ${
+                    crewSelected === crew._id
+                      ? "border-cyan-400 ring-2 ring-cyan-300"
+                      : "border-gray-200"
+                  }
                 `}
                 onClick={() => handleSelectCrew(crew)}
               >
@@ -211,7 +219,7 @@ const OperatorCreateTask = () => {
           * Recibe crewSelected y reportSelected como props
       */}
       {modal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
           <CreateTaskModal
             onClose={handleCloseModal}
             crewSelected={crewSelected}

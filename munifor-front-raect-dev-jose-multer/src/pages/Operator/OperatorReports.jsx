@@ -20,6 +20,7 @@ import { useSearchParams } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
 import useFilter from "../../hooks/useFilter";
 import ReportDetails from "../../components/details/ReportDetails";
+import Pagination from "../../components/Pagination";
 
 //? ========================================
 //? COMPONENTE PRINCIPAL - OPERATORREPORTS
@@ -39,7 +40,8 @@ const OperatorReports = () => {
   const statusParam = searchParams.get("status"); //* Obtiene ?status= de la URL
   const [filter, setFilter] = useState(() => statusParam || "Todos"); //* Inicializa filtro con statusParam o "Todos"
   const [search, setSearch] = useState(""); //* Búsqueda por título
-  const { filterReportsByStatus, filterBySearch } = useFilter();
+  const [currentPage, setCurrentPage] = useState(1); //* Página actual
+  const { filterReportsByStatus, filterBySearch, limitData } = useFilter();
 
   //? ========================================
   //? FUNCIÓN: CARGAR REPORTES
@@ -54,14 +56,21 @@ const OperatorReports = () => {
     } catch (error) {
       console.error("Error al obtener los reportes ciudadanos:", error);
     }
-  }, [getFetchData]);
+  }, []);
 
   //? ========================================
   //? EFFECT: CARGAR REPORTES AL MONTAR
   //? ========================================
   useEffect(() => {
     fetchReports();
-  }, [fetchReports]); //* Solo al montar
+  }, []); //* Solo al montar
+
+  //? ========================================
+  //? EFFECT: RESETEAR PÁGINA AL CAMBIAR FILTROS
+  //? ========================================
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filter, search]);
 
   //? ========================================
   //? FILTROS: OPCIONES Y APLICACIÓN
@@ -69,6 +78,7 @@ const OperatorReports = () => {
   //* Opciones de filtro por estado
   const statusOptions = [
     "Todos",
+    "Pendiente",
     "Revisado",
     "Aceptado",
     "Completado",
@@ -80,6 +90,13 @@ const OperatorReports = () => {
     filterReportsByStatus(reports, filter), //* Filtra por estado seleccionado
     search, //* Luego filtra por texto de búsqueda
     "title" //* Campo a buscar
+  );
+
+  //* Aplicar paginación (10 reportes por página)
+  const { data: paginatedReports, totalPages } = limitData(
+    filteredReports,
+    20,
+    currentPage
   );
 
   //? ========================================
@@ -96,6 +113,9 @@ const OperatorReports = () => {
   //* @param {Object} reporte - Reporte a visualizar
   const handleSelectReport = (reporte) => {
     setSelectedReport(reporte);
+    console.log("Report selected:", reporte);
+    //? Marca automáticamente como "Revisado" al abrirlo
+    if (reporte.status === "Pendiente") putFetch("/report/review", reporte._id);
   };
 
   //* Rechaza un reporte
@@ -143,9 +163,10 @@ const OperatorReports = () => {
           <button
             key={option}
             className={`px-6 py-2 rounded-full border-2 font-semibold transition-all duration-150 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-cyan-400
-              ${filter === option
-                ? "bg-cyan-600 text-white border-cyan-600 scale-105 shadow-lg"
-                : "bg-white text-cyan-600 border-cyan-600 hover:bg-cyan-50"
+              ${
+                filter === option
+                  ? "bg-cyan-600 text-white border-cyan-600 scale-105 shadow-lg"
+                  : "bg-white text-cyan-600 border-cyan-600 hover:bg-cyan-50"
               }`}
             onClick={() => setFilter(option)}
           >
@@ -155,17 +176,30 @@ const OperatorReports = () => {
       </div>
 
       {/* ========================================
+          SECCIÓN: PAGINACIÓN SUPERIOR
+          ======================================== */}
+      <div className="max-w-5xl mx-auto px-4 pb-4">
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
+      </div>
+
+      {/* ========================================
           SECCIÓN: LISTA DE REPORTES
           ======================================== */}
       <div className="space-y-6">
         {filteredReports.length === 0 ? (
           //* Mensaje cuando no hay reportes
           <div className="flex flex-col items-center justify-center py-16">
-            <h3 className="text-lg text-cyan-700 font-semibold">No hay reportes ciudadanos</h3>
+            <h3 className="text-lg text-cyan-700 font-semibold">
+              No hay reportes ciudadanos
+            </h3>
           </div>
         ) : (
-          //* Lista de reportes filtrados
-          filteredReports.map((reporte, idx) => (
+          //* Lista de reportes paginados
+          paginatedReports.map((reporte, idx) => (
             <div
               key={idx}
               className="bg-white rounded-xl shadow-lg p-5 flex justify-between items-center border-2 border-cyan-300/20 w-full max-w-3xl mx-auto min-h-16 hover:cursor-pointer hover:shadow-xl transition-all duration-150"
@@ -176,23 +210,27 @@ const OperatorReports = () => {
                   {reporte.title}
                 </span>
                 <span className="block text-sm text-cyan-600/70">
-                  Autor: <span className="font-semibold text-cyan-700">{reporte.author?.username}</span>
+                  Autor:{" "}
+                  <span className="font-semibold text-cyan-700">
+                    {reporte.author?.username}
+                  </span>
                 </span>
               </div>
               {/* Badge de estado con color según el estado */}
               <span
                 className={`px-6 py-2 rounded-full text-base font-semibold shadow-sm border-2
-                  ${reporte.status === "Resuelto"
-                    ? "bg-[#e0f7e9] text-[#059669] border-[#059669]/30"
-                    : reporte.status === "En proceso"
+                  ${
+                    reporte.status === "Pendiente"
                       ? "bg-[#fef9c3] text-[#ca8a04] border-[#ca8a04]/30"
+                      : reporte.status === "Revisado"
+                      ? "bg-[#e0f7e9] text-[#059669] border-[#059669]/30"
                       : reporte.status === "Rechazado"
-                        ? "bg-[#fee2e2] text-[#dc2626] border-[#dc2626]/30"
-                        : reporte.status === "Aceptado"
-                          ? "bg-[#dbeafe] text-cyan-700 border-cyan-300/30"
-                          : reporte.status === "Completado"
-                            ? "bg-[#e0e7ff] text-[#6366f1] border-[#6366f1]/30"
-                            : "bg-gray-100 text-gray-500 border-gray-300"
+                      ? "bg-[#fee2e2] text-[#dc2626] border-[#dc2626]/30"
+                      : reporte.status === "Aceptado"
+                      ? "bg-[#dbeafe] text-cyan-700 border-cyan-300/30"
+                      : reporte.status === "Completado"
+                      ? "bg-[#e0e7ff] text-[#6366f1] border-[#6366f1]/30"
+                      : "bg-gray-100 text-gray-500 border-gray-300"
                   }
                 `}
               >
@@ -203,14 +241,32 @@ const OperatorReports = () => {
         )}
 
         {/* ========================================
+            SECCIÓN: PAGINACIÓN INFERIOR
+            ======================================== */}
+        <div className="max-w-5xl mx-auto px-4 pt-6">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            scrollToTop={true}
+          />
+        </div>
+
+        {/* ========================================
             MODAL: DETALLES DEL REPORTE
             ======================================== 
             * Muestra información completa del reporte
             * Botones para aceptar o rechazar
         */}
         {selectedReport && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-            <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-lg w-full relative">
+          <div
+            className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50"
+            onClick={closeModal}
+          >
+            <div
+              className="bg-white rounded-lg shadow-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
               <button
                 className="absolute top-4 right-4 text-gray-400 hover:text-blue-600 text-2xl font-bold"
                 onClick={closeModal}

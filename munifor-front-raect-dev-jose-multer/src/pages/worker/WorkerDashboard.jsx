@@ -54,7 +54,7 @@ const WorkerDashboard = () => {
     return () => {
       isMounted = false;
     };
-  }, [getFetchData]);
+  }, []);
 
   //* ========================================
   //* RENDER
@@ -62,8 +62,12 @@ const WorkerDashboard = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#eaf4fe] to-[#d2e7fa] p-8">
       <div className="mb-8 text-center">
-        <h1 className="text-4xl font-extrabold text-cyan-700 mb-2 drop-shadow">Mis Tareas</h1>
-        <p className="text-cyan-600">Gestiona y completa las tareas asignadas</p>
+        <h1 className="text-4xl font-extrabold text-cyan-700 mb-2 drop-shadow">
+          Mis Tareas
+        </h1>
+        <p className="text-cyan-600">
+          Gestiona y completa las tareas asignadas
+        </p>
       </div>
 
       {/* //? Tarjetas de estadísticas de tareas (4) */}
@@ -90,7 +94,9 @@ const WorkerDashboard = () => {
 
       {/* //? TARJETAS DE ACCESO RÁPIDO (5) */}
       <div className="mb-8 text-center">
-        <h1 className="text-4xl font-extrabold text-cyan-700 mb-2 drop-shadow">Accesos Rápidos</h1>
+        <h1 className="text-4xl font-extrabold text-cyan-700 mb-2 drop-shadow">
+          Accesos Rápidos
+        </h1>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
         {/* //? Tarjeta 1: Ver tareas */}
@@ -119,7 +125,9 @@ const WorkerDashboard = () => {
           onClick={() => navigate("/worker/progress-history")}
         >
           <div className="text-4xl mb-4 text-cyan-600">�</div>
-          <h3 className="text-xl font-bold text-cyan-700 mb-2">Historial de Avances</h3>
+          <h3 className="text-xl font-bold text-cyan-700 mb-2">
+            Historial de Avances
+          </h3>
           <p className="text-cyan-600 text-sm">Ver avances previos</p>
         </div>
 

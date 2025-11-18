@@ -65,7 +65,7 @@ const WorkerTasks = () => {
     return () => {
       isMounted = false;
     };
-  }, [getFetchData]);
+  }, []);
 
   console.log(leaderCrew);
 
@@ -99,42 +99,64 @@ const WorkerTasks = () => {
       {/* //? ======================================== */}
       <div className="flex flex-col gap-6">
         {/* //? Sección 1: Tarea actual */}
-        <h2 className="text-2xl font-bold text-cyan-700 mb-4 tracking-tight drop-shadow">Tarea actual</h2>
+        <h2 className="text-2xl font-bold text-cyan-700 mb-4 tracking-tight drop-shadow">
+          Tarea actual
+        </h2>
         {!currentTask ? (
           <div className="flex flex-1 items-center justify-center py-8 min-h-[120px]">
-            <span className="text-gray-400 text-center">No tienes tarea actual asignada</span>
+            <span className="text-gray-400 text-center">
+              No tienes tarea actual asignada
+            </span>
           </div>
         ) : (
           <div
             className={`bg-white rounded-xl shadow-md p-6 border w-full hover:cursor-pointer transition-all duration-200
-              ${selectedTask?._id === currentTask._id
-                ? "border-cyan-400 ring-2 ring-cyan-300"
-                : "border-gray-200 hover:border-cyan-300 hover:shadow-lg"}
+              ${
+                selectedTask?._id === currentTask._id
+                  ? "border-cyan-400 ring-2 ring-cyan-300"
+                  : "border-gray-200 hover:border-cyan-300 hover:shadow-lg"
+              }
             `}
             onClick={() => setSelectedTask(currentTask)}
           >
-            <h3 className="text-lg font-semibold text-cyan-700 mb-2">{currentTask.title}</h3>
-            <span className="px-5 py-2 rounded-full text-base font-medium bg-cyan-100 text-cyan-700 drop-shadow">{currentTask.status ? currentTask.status : "Sin estado"}</span>
+            <h3 className="text-lg font-semibold text-cyan-700 mb-2">
+              {currentTask.title}
+            </h3>
+            <span className="px-5 py-2 rounded-full text-base font-medium bg-cyan-100 text-cyan-700 drop-shadow">
+              {currentTask.status ? currentTask.status : "Sin estado"}
+            </span>
           </div>
         )}
 
         {/* //? Sección 2: Tareas futuras */}
-        <h2 className="text-2xl font-bold text-cyan-700 mb-4 tracking-tight drop-shadow">Tareas futuras</h2>
+        <h2 className="text-2xl font-bold text-cyan-700 mb-4 tracking-tight drop-shadow">
+          Tareas futuras
+        </h2>
         {futureTasks.length === 0 ? (
           <div className="flex flex-1 items-center justify-center py-8 min-h-[120px]">
-            <span className="text-gray-400 text-center">No tienes tareas futuras asignadas</span>
+            <span className="text-gray-400 text-center">
+              No tienes tareas futuras asignadas
+            </span>
           </div>
         ) : (
           futureTasks.map((task, idx) => (
             <div
               key={idx}
               className={`bg-white rounded-xl shadow-md p-3 flex justify-between items-center border w-full mb-3 min-h-14 hover:cursor-pointer transition-all duration-200
-                ${selectedTask?._id === task._id ? "border-cyan-400 ring-2 ring-cyan-300" : "border-gray-200 hover:border-cyan-300 hover:shadow-lg"}
+                ${
+                  selectedTask?._id === task._id
+                    ? "border-cyan-400 ring-2 ring-cyan-300"
+                    : "border-gray-200 hover:border-cyan-300 hover:shadow-lg"
+                }
               `}
               onClick={() => setSelectedTask(task)}
             >
-              <span className="block text-base font-semibold text-cyan-700">{task.title}</span>
-              <span className="px-5 py-2 rounded-full text-base font-medium bg-cyan-100 text-cyan-700 drop-shadow">{task.status ? task.status : "Sin estado"}</span>
+              <span className="block text-base font-semibold text-cyan-700">
+                {task.title}
+              </span>
+              <span className="px-5 py-2 rounded-full text-base font-medium bg-cyan-100 text-cyan-700 drop-shadow">
+                {task.status ? task.status : "Sin estado"}
+              </span>
             </div>
           ))
         )}
@@ -144,14 +166,20 @@ const WorkerTasks = () => {
       {/* //? COLUMNA DERECHA: DETALLES DE LA TAREA */}
       {/* //? ======================================== */}
       <div className="flex flex-col h-full">
-        <h2 className="text-2xl font-bold text-cyan-700 mb-4 tracking-tight drop-shadow">Detalle de la tarea</h2>
+        <h2 className="text-2xl font-bold text-cyan-700 mb-4 tracking-tight drop-shadow">
+          Detalle de la tarea
+        </h2>
         {!selectedTask ? (
           <div className="flex flex-1 items-center justify-center py-8 min-h-[120px]">
-            <span className="text-gray-400 text-center">Selecciona una tarea para ver detalles</span>
+            <span className="text-gray-400 text-center">
+              Selecciona una tarea para ver detalles
+            </span>
           </div>
         ) : (
           <div className="bg-white rounded-xl shadow-md p-6 border border-cyan-200 w-full">
-            <h3 className="text-lg font-semibold text-cyan-700 mb-2">{selectedTask.title}</h3>
+            <h3 className="text-lg font-semibold text-cyan-700 mb-2">
+              {selectedTask.title}
+            </h3>
             <p className="text-gray-600 mb-2">{selectedTask.description}</p>
 
             {/* //? Estado de la tarea */}
@@ -159,11 +187,13 @@ const WorkerTasks = () => {
               <span className="font-semibold text-cyan-700">Estado:</span>
               <span
                 className={`ml-2 px-3 py-1 rounded-full text-white text-xs font-bold drop-shadow
-                  ${selectedTask.status === "Finalizada"
-                    ? "bg-green-500"
-                    : selectedTask.status === "En Progreso"
+                  ${
+                    selectedTask.status === "Finalizada"
+                      ? "bg-green-500"
+                      : selectedTask.status === "En Progreso"
                       ? "bg-cyan-500"
-                      : "bg-red-500"}
+                      : "bg-red-500"
+                  }
                 `}
               >
                 {selectedTask.status}
@@ -173,13 +203,17 @@ const WorkerTasks = () => {
             {/* //? Prioridad de la tarea */}
             <div className="mb-2">
               <span className="font-semibold text-cyan-700">Prioridad:</span>
-              <span className="ml-2 text-gray-600">{selectedTask.priority}</span>
+              <span className="ml-2 text-gray-600">
+                {selectedTask.priority}
+              </span>
             </div>
 
             {/* //? ID de la tarea */}
             <div className="mb-2">
               <span className="font-semibold text-cyan-700">ID:</span>
-              <span className="ml-2 text-cyan-700 font-mono">{selectedTask._id}</span>
+              <span className="ml-2 text-cyan-700 font-mono">
+                {selectedTask._id}
+              </span>
             </div>
 
             {/* //! Botón "Aceptar tarea" (solo visible para el líder y si no hay tarea actual) */}

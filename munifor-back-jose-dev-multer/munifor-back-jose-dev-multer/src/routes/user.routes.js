@@ -13,7 +13,9 @@ import {
   rejectUser,
   putIsActiveUser,
   putIsAvailableUser,
+  updateProfile,
   updateProfilePicture,
+  getAllUsers,
 } from "../controllers/user.controller.js";
 
 //! IMPORTS DE MIDDLEWARES (MULTER)
@@ -25,6 +27,8 @@ const userRoutes = Router();
 //* ============================================
 //* DEFINICIÓN DE RUTAS
 //* ============================================
+
+userRoutes.get("/user/all", getAllUsers);
 
 //? GET /api/user/workers - Obtener lista de trabajadores
 // Filtra usuarios con role: "Worker"
@@ -57,6 +61,14 @@ userRoutes.put("/user/activate/:id", putIsActiveUser);
 // Params: id
 // Responde: { ok, msg, user }
 userRoutes.put("/user/available/:id", putIsAvailableUser);
+
+//? PUT /api/user/profile/:id - Actualizar perfil completo
+// Actualiza datos del perfil incluyendo foto si se envía
+// Usa Multer para manejar imagen opcional
+// Params: id
+// Body (multipart/form-data): datos del perfil + profile_picture (file opcional)
+// Responde: { ok, msg, user }
+userRoutes.put("/user/profile/:id", uploadProfilePicture, updateProfile);
 
 //? PUT /api/user/profile-picture/:id - Actualizar foto de perfil
 // Usa Multer para subir imagen a uploads/profiles/

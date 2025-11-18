@@ -38,6 +38,7 @@ export const createProgressReport = async (req, res) => {
     //? Crear el nuevo avance en la base de datos
     const newProgressReport = await ProgressReportModel.create({
       ...req.body, // Todos los campos del body
+      worker: req.user._id, // Asignar el usuario autenticado como worker
       images, // Array de rutas de imágenes
     });
 
@@ -73,6 +74,7 @@ export const createProgressReport = async (req, res) => {
       .status(201)
       .json({ ok: true, progress_report: newProgressReport });
   } catch (error) {
+    console.log(error);
     console.error("Error al crear progress report:", error);
     //! Error del servidor
     return res.status(500).json({ ok: false, msg: "Internal server error" });
@@ -89,7 +91,13 @@ export const createProgressReport = async (req, res) => {
 export const getAllProgressReports = async (req, res) => {
   try {
     //? Buscar todos los avances
-    const progressReports = await ProgressReportModel.find();
+    const progressReports = await ProgressReportModel.find()
+      .sort({
+        created_at: -1,
+      }) // Ordenar por fecha de creación descendente
+      .populate("worker", "username") // Poblar referencias a worker y task
+      .populate("crew", "name") // Poblar referencias a crew
+      .populate("task", "title"); // Poblar referencias a task
 
     //* Respuesta exitosa
     return res
@@ -115,8 +123,11 @@ export const getProgressByLeader = async (req, res) => {
     //? Buscar avances donde el worker es este líder
     const progressReports = await ProgressReportModel.find({
       worker: leaderId,
-    });
-
+    })
+      .sort({ createdAt: -1 }) // Ordenar por fecha de creación descendente
+      .populate("worker", "username") // Poblar referencias a worker y task
+      .populate("crew", "name") // Poblar referencias a crew
+      .populate("task", "title"); // Poblar referencias a task  ;
     //* Respuesta exitosa
     return res
       .status(200)

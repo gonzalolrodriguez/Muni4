@@ -14,6 +14,7 @@
 import { useEffect, useState } from "react";
 import useFetch from "../../hooks/useFetch";
 import useFilter from "../../hooks/useFilter";
+import ProgressWorkerDetail from "../../components/details/ProgressWorkerDetail";
 
 //? ========================================
 //? COMPONENTE PRINCIPAL - OPERATORWORKERPROGRESS
@@ -43,7 +44,8 @@ const OperatorWorkerProgress = () => {
       try {
         //? Obtiene todos los reportes de progreso
         const data = await getFetchData("/progress-report");
-        setProgressReports(data.progressReports || []);
+        console.log(data);
+        setProgressReports(data.progress_reports || []);
       } catch (error) {
         setProgressReports([]); //* Si hay error, muestra lista vacía
       }
@@ -130,7 +132,7 @@ const OperatorWorkerProgress = () => {
                   {progress.title}
                 </span>
                 <span className="block text-sm text-gray-500">
-                  Trabajador: {progress.worker?.name || progress.worker}
+                  Trabajador: {progress.worker?.username || progress.worker}
                 </span>
                 <span className="block text-sm text-gray-500">
                   Equipo: {progress.crew?.name || progress.crew}
@@ -159,62 +161,21 @@ const OperatorWorkerProgress = () => {
             * Muestra imágenes del progreso si existen
         */}
         {selectedProgress && (
-          <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg shadow-lg p-6 max-w-lg w-full">
-              <h3 className="text-lg font-semibold text-indigo-700 mb-2">
-                {selectedProgress.title}
-              </h3>
-              <p className="text-gray-600 mb-2">
-                {selectedProgress.description}
-              </p>
-
-              {/* Información del trabajador */}
-              <div className="mb-2">
-                <span className="font-semibold text-gray-700">Trabajador:</span>
-                <span className="ml-2 text-gray-600">
-                  {selectedProgress.worker?.name || selectedProgress.worker}
-                </span>
-              </div>
-
-              {/* Información de la cuadrilla */}
-              <div className="mb-2">
-                <span className="font-semibold text-gray-700">Equipo:</span>
-                <span className="ml-2 text-gray-600">
-                  {selectedProgress.crew?.name || selectedProgress.crew}
-                </span>
-              </div>
-
-              {/* Estado del progreso */}
-              <div className="mb-2">
-                <span className="font-semibold text-gray-700">Estado:</span>
-                <span className="ml-2 text-gray-600">
-                  {selectedProgress.status}
-                </span>
-              </div>
-
-              {/* Imágenes del progreso */}
-              {selectedProgress.images &&
-                selectedProgress.images.length > 0 && (
-                  <div className="mb-2">
-                    <span className="font-semibold text-gray-700">
-                      Imágenes:
-                    </span>
-                    <div className="flex gap-2 mt-2">
-                      {selectedProgress.images.map((img, i) => (
-                        <img
-                          key={i}
-                          src={img}
-                          alt="avance"
-                          className="h-20 w-20 object-cover rounded"
-                        />
-                      ))}
-                    </div>
-                  </div>
-                )}
-
+          <div
+            className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50"
+            onClick={closeModal}
+          >
+            <div
+              className="bg-white rounded-lg shadow-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <ProgressWorkerDetail
+                progress={selectedProgress}
+                onClose={closeModal}
+              />
               {/* Botón cerrar */}
               <button
-                className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 w-full"
                 onClick={closeModal}
               >
                 Cerrar

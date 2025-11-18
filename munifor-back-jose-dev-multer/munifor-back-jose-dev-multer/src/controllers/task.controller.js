@@ -4,6 +4,7 @@
 
 //! IMPORTS DE MODELOS
 import CrewModel from "../models/crew.model.js";
+import ReportModel from "../models/report.model.js";
 import TaskModel from "../models/task.model.js";
 
 //* ============================================
@@ -22,7 +23,13 @@ export const createTask = async (req, res) => {
     const newTask = await TaskModel.create({
       ...req.body, // Datos de la tarea
       assigned_operator: operatorId, // Asignar operador automáticamente
-    });
+    }); // No se puede usar .sort() en create, solo en find
+    await ReportModel.updateMany(
+      { _id: { $in: req.body.report } },
+      {
+        task_assigned: true,
+      }
+    );
 
     //* Respuesta exitosa con tarea creada
     return res.status(201).json({
@@ -31,6 +38,7 @@ export const createTask = async (req, res) => {
     });
   } catch (error) {
     //! Error del servidor
+    console.error(error);
     return res.status(500).json({
       ok: false,
       msg: "Error interno del servidor",
@@ -49,7 +57,7 @@ export const createTask = async (req, res) => {
 export const getAllTasks = async (req, res) => {
   try {
     //? Buscar todas las tareas
-    const tasks = await TaskModel.find();
+    const tasks = await TaskModel.find().sort({ created_at: -1 }); // Ordenar por fecha de creación descendente
 
     //* Respuesta exitosa
     return res.status(200).json({
@@ -109,14 +117,16 @@ export const getTaskWorker = async (req, res) => {
     const crew = await CrewModel.findOne({
       $or: [{ members: workerId }, { leader: workerId }],
       deleted_at: null, // Solo cuadrillas activas
-    });
+    }).sort({ created_at: -1 }); // Ordenar por fecha de creación descendente
 
     //! Si el trabajador no está en ninguna cuadrilla
     if (!crew)
       return res.status(400).json({ ok: false, msg: "La cuadrilla no existe" });
 
     //? Buscar todas las tareas asignadas a esa cuadrilla
-    const tasks = await TaskModel.find({ crew: crew._id });
+    const tasks = await TaskModel.find({ crew: crew._id }).sort({
+      created_at: -1,
+    });
 
     //* Respuesta con cuadrilla y tareas
     return res.status(200).json({
@@ -145,7 +155,11 @@ export const getTaskOperator = async (req, res) => {
   const operatorId = req.user._id; // ID del operador autenticado
   try {
     //? Buscar tareas donde assigned_operator es este operador
-    const tasks = await TaskModel.find({ assigned_operator: operatorId });
+    const tasks = await TaskModel.find({
+      assigned_operator: operatorId,
+    })
+      .sort({ created_at: -1 }) // Ordenar por fecha de creación descendente
+      .populate("crew", "name");
 
     //* Respuesta exitosa con las tareas
     return res.status(200).json({

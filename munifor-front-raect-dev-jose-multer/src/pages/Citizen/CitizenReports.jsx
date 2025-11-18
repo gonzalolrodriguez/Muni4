@@ -51,6 +51,8 @@ const CitizenReports = () => {
 
   //* selectedImages: Array de archivos de imagen seleccionados
   const [selectedImages, setSelectedImages] = useState([]);
+  // Estado para resetear el ImageUploader
+  const [resetImages, setResetImages] = useState(false);
 
   //* ========================================
   //* FUNCIÓN: handleMarkerChange
@@ -70,6 +72,8 @@ const CitizenReports = () => {
   //* Se ejecuta cuando el usuario selecciona imágenes válidas
   const handleImagesChange = (files) => {
     setSelectedImages(files);
+    // Si el usuario selecciona imágenes, desactiva el reset
+    if (resetImages) setResetImages(false);
   };
 
   //* ========================================
@@ -125,6 +129,9 @@ const CitizenReports = () => {
     //* Resetear formulario y estados después del envío
     reset(); // Limpiar campos del formulario
     setSelectedImages([]); // Limpiar imágenes seleccionadas
+    setResetImages(true); // Indicar al ImageUploader que limpie
+    // Hacer scroll al tope de la página
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   //* ========================================
@@ -197,7 +204,6 @@ const CitizenReports = () => {
             <option value="Bache">Bache</option>
             <option value="Alumbrado">Alumbrado</option>
             <option value="Basura">Basura</option>
-            <option value="Incidente">Incidente</option>
             <option value="Otro">Otro</option>
           </select>
           {errors.type_report && (
@@ -229,13 +235,14 @@ const CitizenReports = () => {
 
         {/* CAMPO 4: Subir imágenes (opcional) */}
         <div>
-          <label className="block text-sm font-semibold text-cyan-700 mb-1">
+          <label className=" text-sm font-semibold text-cyan-700 mb-1">
             Imágenes (opcional, máx. 5)
           </label>
           <ImageUploader
             onFilesChange={handleImagesChange}
             maxFiles={5}
             maxSizeMB={15}
+            resetImages={resetImages}
           />
         </div>
 

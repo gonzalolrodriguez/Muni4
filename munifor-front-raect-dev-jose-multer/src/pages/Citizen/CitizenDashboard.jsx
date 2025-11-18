@@ -61,7 +61,7 @@ const CitizenDashboard = () => {
     return () => {
       isMounted = false;
     };
-  }, [user, getFetchData]);
+  }, [user]);
 
   //* ========================================
   //* RENDER
@@ -111,7 +111,9 @@ const CitizenDashboard = () => {
           onClick={() => navigate("/citizen/reports")}
         >
           <div className="text-4xl mb-4 text-cyan-600">➕</div>
-          <h3 className="text-xl font-bold text-cyan-700 mb-2">Hacer Reporte</h3>
+          <h3 className="text-xl font-bold text-cyan-700 mb-2">
+            Hacer Reporte
+          </h3>
           <p className="text-cyan-600 text-sm">Crea un nuevo reporte</p>
         </div>
         {/* //? Tarjeta 2: Mis reportes */}

@@ -57,7 +57,7 @@ const ReportSchema = new Schema(
     //! CATEGORIZACIÓN
 
     //? Tipo de problema reportado
-    report_type: {
+    type_report: {
       type: String,
       enum: ["Bache", "Alumbrado", "Basura", "Otro"],
       default: "",

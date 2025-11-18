@@ -14,9 +14,24 @@
 //*   - maxFiles: Máximo de archivos permitidos (default: 5)
 //*   - maxSizeMB: Tamaño máximo por archivo en MB (default: 15)
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-const ImageUploader = ({ onFilesChange, maxFiles = 5, maxSizeMB = 15 }) => {
+const ImageUploader = ({
+  onFilesChange,
+  maxFiles = 5,
+  maxSizeMB = 15,
+  resetImages = false,
+}) => {
+  // Limpiar previews y errores si resetImages cambia a true
+  useEffect(() => {
+    if (resetImages) {
+      // Revocar URLs temporales para liberar memoria
+      previews.forEach((p) => URL.revokeObjectURL(p.url));
+      setPreviews([]);
+      setErrors([]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [resetImages]);
   //? Estado para guardar las previsualizaciones de imágenes
   //* Cada preview tiene: { file, url, name }
   const [previews, setPreviews] = useState([]);
@@ -54,32 +69,27 @@ const ImageUploader = ({ onFilesChange, maxFiles = 5, maxSizeMB = 15 }) => {
     //? Convertir FileList a Array para poder usar forEach
     const files = Array.from(e.target.files);
 
-    //* Arrays para almacenar archivos válidos y errores
-    const validFiles = [];
+    // Tomar los archivos ya seleccionados
+    const currentFiles = previews.map((p) => p.file);
+    const totalFiles = currentFiles.length + files.length;
     const newErrors = [];
+    const validFiles = [];
 
-    //* ========================================
-    //* VALIDACIÓN 1: Cantidad de archivos
-    //* ========================================
-    if (files.length > maxFiles) {
+    // Validar cantidad total
+    if (totalFiles > maxFiles) {
       newErrors.push(`Máximo ${maxFiles} imágenes permitidas`);
       setErrors(newErrors);
-      return; // Detener si excede la cantidad
+      return;
     }
 
-    //* ========================================
-    //* VALIDACIÓN 2 y 3: Formato y tamaño de cada archivo
-    //* ========================================
-    files.forEach((file, index) => {
-      //? VALIDACIÓN 2: Verificar formato
+    // Validar formato y tamaño de cada archivo nuevo
+    files.forEach((file) => {
       if (!allowedFormats.includes(file.type)) {
         newErrors.push(
           `${file.name}: formato no permitido (solo jpg, png, gif, webp)`
         );
-        return; // Saltar este archivo, continuar con el siguiente
+        return;
       }
-
-      //? VALIDACIÓN 3: Verificar tamaño
       if (file.size > maxSizeBytes) {
         newErrors.push(
           `${file.name}: tamaño excede ${maxSizeMB}MB (${(
@@ -88,33 +98,30 @@ const ImageUploader = ({ onFilesChange, maxFiles = 5, maxSizeMB = 15 }) => {
             1024
           ).toFixed(2)}MB)`
         );
-        return; // Saltar este archivo
+        return;
       }
-
-      //! Archivo válido, agregarlo al array
-      validFiles.push(file);
+      // Evitar archivos duplicados por nombre y tamaño
+      const alreadyExists = currentFiles.some(
+        (f) => f.name === file.name && f.size === file.size
+      );
+      if (!alreadyExists) {
+        validFiles.push(file);
+      }
     });
 
-    //* Actualizar errores en el estado
     setErrors(newErrors);
 
-    //* ========================================
-    //* CREAR PREVISUALIZACIONES
-    //* ========================================
     if (validFiles.length > 0) {
-      //* Crear URLs temporales para mostrar las imágenes
-      //* URL.createObjectURL() crea una URL blob temporal
+      // Crear previews para los nuevos archivos
       const newPreviews = validFiles.map((file) => ({
-        file, // Archivo original
-        url: URL.createObjectURL(file), // URL temporal para preview
-        name: file.name, // Nombre del archivo
+        file,
+        url: URL.createObjectURL(file),
+        name: file.name,
       }));
-
-      setPreviews(newPreviews);
-
-      //! Callback al componente padre con los archivos válidos
-      //* El componente padre (CitizenReports, WorkerProgress) recibe estos archivos
-      onFilesChange(validFiles);
+      // Concatenar previews anteriores con los nuevos
+      setPreviews([...previews, ...newPreviews]);
+      // Notificar al padre con todos los archivos
+      onFilesChange([...currentFiles, ...validFiles]);
     }
   };
 

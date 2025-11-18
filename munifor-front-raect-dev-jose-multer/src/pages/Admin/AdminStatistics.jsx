@@ -55,6 +55,7 @@ const AdminStatistics = () => {
       try {
         const res = await getFetchData("/admin/statistics");
         const data = res.data;
+        console.log(data);
 
         //* ====== Configurar gráfico de barras (Usuarios por rol) ======
         setBarData({
@@ -144,7 +145,7 @@ const AdminStatistics = () => {
       }
     };
     fetchStatistics();
-  }, [getFetchData]);
+  }, []);
 
   //? ============================================
   //? RENDERIZADO JSX

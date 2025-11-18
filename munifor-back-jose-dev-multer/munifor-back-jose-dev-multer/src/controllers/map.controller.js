@@ -29,13 +29,19 @@ export const getMapaData = async (req, res) => {
 
     //? Obtener tareas no eliminadas
     // Las tareas tienen su propia ubicación
-    const tasks = await TaskModel.find({ deleted_at: null });
+    const tasks = await TaskModel.find({ deleted_at: null }).populate(
+      "crew",
+      "name"
+    );
 
     //? Obtener reportes de progreso/avances
     // Los avances también tienen ubicación
     const progress = await ProgressReportModel.find({
       deleted_at: null,
-    });
+    })
+      .populate("worker", "username") // Poblar referencias a worker y task
+      .populate("crew", "name") // Poblar referencias a crew
+      .populate("task", "title"); // Poblar referencias a task  ;
 
     //* Respuesta con todos los datos para el mapa
     return res.status(200).json({
@@ -73,14 +79,14 @@ export const getMapaOperatorData = async (req, res) => {
     //? 1. Obtener reportes asignados a este operador
     const reports = await ReportModel.find({
       deleted_at: null,
-      assigned_operator: operatorId, // Solo sus reportes
+      $or: [{ assigned_operator: operatorId }, { status: "Pendiente" }], // Solo sus reportes
     });
 
     //? 2. Obtener tareas asignadas a este operador
     const tasks = await TaskModel.find({
       deleted_at: null,
       assigned_operator: operatorId, // Solo sus tareas
-    });
+    }).populate("crew", "name");
 
     //? 3. Obtener IDs de las tareas del operador
     // Necesitamos los IDs para buscar los avances relacionados
@@ -91,8 +97,10 @@ export const getMapaOperatorData = async (req, res) => {
     const progress = await ProgressReportModel.find({
       deleted_at: null,
       task: { $in: taskIds }, // Solo avances de sus tareas
-    });
-
+    })
+      .populate("worker", "username") // Poblar referencias a worker y task
+      .populate("crew", "name") // Poblar referencias a crew
+      .populate("task", "title"); // Poblar referencias a task  ;
     //* Respuesta con datos filtrados del operador
     return res.status(200).json({
       ok: true,

@@ -41,9 +41,9 @@ const RegistrationRequests = () => {
    * ! Estructura de respuesta: { users: [...] }
    *
    * //* Se ejecuta:
-   * //? - Al montar el componente (useEffect)
-   * //? - Después de aprobar un usuario
-   * //? - Después de rechazar un usuario
+   * ? - Al montar el componente (useEffect)
+   * ? - Después de aprobar un usuario
+   * ? - Después de rechazar un usuario
    */
   const fetchPendingUsers = async () => {
     try {
@@ -76,7 +76,8 @@ const RegistrationRequests = () => {
    */
   const handleAccept = async (userId) => {
     try {
-      await putFetch("/user/available", userId, {});
+      await putFetch("/user/activate", userId, {});
+      console.log("hola");
       fetchPendingUsers(); //* Refrescar la lista después de aceptar
       setSelectedUser(null); //? Cerrar detalles del usuario aceptado
     } catch (error) {
@@ -113,18 +114,25 @@ const RegistrationRequests = () => {
       <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-10 bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-cyan-300 p-10">
         {/* ====== COLUMNA IZQUIERDA: Lista de solicitudes pendientes ====== */}
         <div className="flex flex-col gap-6">
-          <h2 className="text-3xl font-extrabold text-cyan-700 mb-2 text-center tracking-tight drop-shadow">Solicitudes de registro</h2>
+          <h2 className="text-3xl font-extrabold text-cyan-700 mb-2 text-center tracking-tight drop-shadow">
+            Solicitudes de registro
+          </h2>
           {pendingUsers.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12">
-              <span className="text-cyan-500 text-lg">No hay solicitudes de registro pendientes</span>
+              <span className="text-cyan-500 text-lg">
+                No hay solicitudes de registro pendientes
+              </span>
             </div>
           ) : (
             <div className="space-y-4 max-h-[700px] overflow-y-auto">
               {pendingUsers.map((user) => (
                 <div
                   key={user._id}
-                  className={`bg-white/90 rounded-xl shadow-lg border border-cyan-200 w-full p-5 hover:cursor-pointer transition-all duration-200 ${selectedUser?._id === user._id ? "ring-2 ring-cyan-400" : "hover:ring-2 hover:ring-cyan-200"
-                    }`}
+                  className={`bg-white/90 rounded-xl shadow-lg border border-cyan-200 w-full p-5 hover:cursor-pointer transition-all duration-200 ${
+                    selectedUser?._id === user._id
+                      ? "ring-2 ring-cyan-400"
+                      : "hover:ring-2 hover:ring-cyan-200"
+                  }`}
                   onClick={() => setSelectedUser(user)}
                 >
                   <h3 className="text-lg font-bold text-cyan-700 mb-2">
@@ -132,12 +140,13 @@ const RegistrationRequests = () => {
                   </h3>
                   <div className="flex items-center justify-between">
                     <span
-                      className={`px-3 py-1 rounded-full text-xs font-semibold ${user.role === "Operador"
+                      className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                        user.role === "Operador"
                           ? "bg-cyan-100 text-cyan-700"
                           : user.role === "Trabajador"
-                            ? "bg-green-100 text-green-700"
-                            : "bg-gray-100 text-gray-700"
-                        }`}
+                          ? "bg-green-100 text-green-700"
+                          : "bg-gray-100 text-gray-700"
+                      }`}
                     >
                       {user.role}
                     </span>
@@ -152,10 +161,14 @@ const RegistrationRequests = () => {
         </div>
         {/* ====== COLUMNA DERECHA: Detalles del usuario seleccionado ====== */}
         <div className="flex flex-col gap-6">
-          <h2 className="text-3xl font-extrabold text-cyan-700 mb-2 text-center tracking-tight drop-shadow">Detalles del solicitante</h2>
+          <h2 className="text-3xl font-extrabold text-cyan-700 mb-2 text-center tracking-tight drop-shadow">
+            Detalles del solicitante
+          </h2>
           {!selectedUser ? (
             <div className="flex flex-col items-center justify-center py-12">
-              <span className="text-cyan-500 text-lg">Selecciona una solicitud para ver detalles</span>
+              <span className="text-cyan-500 text-lg">
+                Selecciona una solicitud para ver detalles
+              </span>
             </div>
           ) : (
             <ProfileDetails

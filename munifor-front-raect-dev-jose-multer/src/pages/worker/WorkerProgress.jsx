@@ -18,16 +18,20 @@
 //*   - task: ID de la tarea (automático)
 //*   - crew: ID de la cuadrilla (automático)
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useForm } from "react-hook-form";
 import useFetch from "../../hooks/useFetch";
+import { UserContext } from "../../context/UserContext";
 import ImageUploader from "../../components/ImageUploader";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import MapClickHandler from "../../components/LeafletMaps/MapClick";
 import "leaflet/dist/leaflet.css";
+import { useNavigate } from "react-router-dom";
 
 const WorkerProgress = () => {
   const { getFetchData, postFetchFormData } = useFetch();
+  // Obtener usuario logueado
+  const { user } = useContext(UserContext);
 
   //* Estados locales
   const [currentTask, setCurrentTask] = useState(null); // Tarea actual "En Progreso"
@@ -37,6 +41,7 @@ const WorkerProgress = () => {
 
   const { register, handleSubmit, reset, formState } = useForm();
   const { errors } = formState;
+  const navigate = useNavigate();
 
   //* ========================================
   //* USEEFFECT: Cargar tarea actual al montar componente
@@ -71,7 +76,7 @@ const WorkerProgress = () => {
     return () => {
       isMounted = false;
     };
-  }, [getFetchData]);
+  }, []);
 
   //* Callback para recibir imágenes del ImageUploader
   const handleImagesChange = (files) => {
@@ -146,6 +151,30 @@ const WorkerProgress = () => {
     }
   };
 
+  // Solo mostrar el formulario si el usuario es líder de la cuadrilla
+  const isLeader =
+    crew &&
+    user &&
+    crew.leader &&
+    (crew.leader._id === user._id || crew.leader === user._id);
+
+  // Si no es líder, mostrar solo el mensaje y salir
+  if (!isLeader) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-cyan-50 to-blue-100 max-w-4xl mx-auto w-full py-8 px-4 flex flex-col">
+        <h1 className="text-2xl md:text-3xl font-extrabold text-cyan-700 mb-8 tracking-tight drop-shadow text-center">
+          Registro de Avances
+        </h1>
+        <div className="flex flex-1 flex-col items-center justify-center min-h-[300px]">
+          <p className="text-cyan-700 text-lg md:text-xl mb-6 text-center font-semibold">
+            Solo el líder de la cuadrilla puede registrar avances de la tarea.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // Si es líder, mostrar la lógica normal
   return (
     <div className="min-h-screen bg-gradient-to-br from-cyan-50 to-blue-100 max-w-4xl mx-auto w-full py-8 px-4 flex flex-col">
       <h1 className="text-2xl md:text-3xl font-extrabold text-cyan-700 mb-8 tracking-tight drop-shadow text-center">
@@ -158,7 +187,7 @@ const WorkerProgress = () => {
             No tienes ninguna tarea en progreso
           </p>
           <button
-            onClick={() => (window.location.href = "/worker/tasks")}
+            onClick={() => navigate("/worker/tasks")}
             className="bg-cyan-600 text-white px-8 py-3 rounded-xl shadow-lg hover:bg-cyan-700 transition font-bold text-base md:text-lg"
           >
             Acepta una tarea
@@ -166,14 +195,23 @@ const WorkerProgress = () => {
         </div>
       ) : (
         <div className="bg-white rounded-xl shadow-md p-6 border border-cyan-200">
+          {/* ...existing code for the form... */}
           <div className="mb-6 p-4 bg-cyan-50 rounded-lg">
-            <h2 className="text-lg font-semibold text-cyan-700 mb-2">Tarea actual: {currentTask.title}</h2>
+            <h2 className="text-lg font-semibold text-cyan-700 mb-2">
+              Tarea actual: {currentTask.title}
+            </h2>
             <p className="text-gray-600">{currentTask.description}</p>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            {/* ...existing code for form fields, uploader, mapa, botones... */}
             <div>
-              <label htmlFor="title" className="block text-sm font-medium text-cyan-700 mb-1">Título del avance</label>
+              <label
+                htmlFor="title"
+                className="block text-sm font-medium text-cyan-700 mb-1"
+              >
+                Título del avance
+              </label>
               <input
                 type="text"
                 id="title"
@@ -182,29 +220,47 @@ const WorkerProgress = () => {
                 placeholder="Ej: Reparación de bache en progreso"
               />
               {errors.title && (
-                <p className="text-red-500 text-sm mt-1">{errors.title.message}</p>
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.title.message}
+                </p>
               )}
             </div>
 
             <div>
-              <label htmlFor="description" className="block text-sm font-medium text-cyan-700 mb-1">Descripción</label>
+              <label
+                htmlFor="description"
+                className="block text-sm font-medium text-cyan-700 mb-1"
+              >
+                Descripción
+              </label>
               <textarea
                 id="description"
-                {...register("description", { required: "La descripción es obligatoria" })}
+                {...register("description", {
+                  required: "La descripción es obligatoria",
+                })}
                 className="w-full border border-cyan-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-500 bg-white shadow-sm text-gray-700"
                 rows="4"
                 placeholder="Describe el avance realizado..."
               />
               {errors.description && (
-                <p className="text-red-500 text-sm mt-1">{errors.description.message}</p>
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.description.message}
+                </p>
               )}
             </div>
 
             <div>
-              <label htmlFor="status" className="block text-sm font-medium text-cyan-700 mb-1">Estado del avance</label>
+              <label
+                htmlFor="status"
+                className="block text-sm font-medium text-cyan-700 mb-1"
+              >
+                Estado del avance
+              </label>
               <select
                 id="status"
-                {...register("status", { required: "El estado es obligatorio" })}
+                {...register("status", {
+                  required: "El estado es obligatorio",
+                })}
                 className="w-full border border-cyan-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-500 bg-white shadow-sm text-gray-700"
               >
                 <option value="">Selecciona un estado</option>
@@ -213,16 +269,24 @@ const WorkerProgress = () => {
                 <option value="Finalizado">Finalizado</option>
               </select>
               {errors.status && (
-                <p className="text-red-500 text-sm mt-1">{errors.status.message}</p>
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.status.message}
+                </p>
               )}
             </div>
 
             <div>
-              <ImageUploader onFilesChange={handleImagesChange} maxFiles={5} maxSizeMB={15} />
+              <ImageUploader
+                onFilesChange={handleImagesChange}
+                maxFiles={5}
+                maxSizeMB={15}
+              />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-cyan-700 mb-2">Ubicación actual</label>
+              <label className="block text-sm font-medium text-cyan-700 mb-2">
+                Ubicación actual
+              </label>
               <div className="w-full h-96 border border-cyan-200 rounded-lg overflow-hidden">
                 {/* Mapa Leaflet: Centrado en Formosa capital */}
                 <MapContainer
@@ -247,7 +311,10 @@ const WorkerProgress = () => {
               </div>
               {/* Mostrar coordenadas seleccionadas */}
               {markerPosition && (
-                <p className="text-sm text-gray-600 mt-2">Coordenadas: {markerPosition[0].toFixed(4)}, {markerPosition[1].toFixed(4)}</p>
+                <p className="text-sm text-gray-600 mt-2">
+                  Coordenadas: {markerPosition[0].toFixed(4)},{" "}
+                  {markerPosition[1].toFixed(4)}
+                </p>
               )}
             </div>
 

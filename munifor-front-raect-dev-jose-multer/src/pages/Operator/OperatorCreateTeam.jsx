@@ -42,23 +42,25 @@ const OperatorCreateTeams = () => {
   const [selectingLeader, setSelectingLeader] = useState(false); //* Muestra/oculta sección de selección de líder
   const [selectingMembers, setSelectingMembers] = useState(false); //* Muestra/oculta sección de selección de miembros
 
+  const [error, setError] = useState(null); //* Estado para mensajes de error
+
   //? ========================================
   //? EFFECT: CARGAR LISTA DE TRABAJADORES
   //? ========================================
   //* Se ejecuta al montar el componente
   //* Obtiene todos los trabajadores disponibles para formar cuadrillas
+  const fetchWorkers = async () => {
+    try {
+      //? Llama al endpoint para obtener trabajadores con role="Trabajador"
+      const data = await getFetchData("/user/workers");
+      console.log(data);
+      //? Actualiza estado con lista de trabajadores
+      setWorkers(data.workers);
+    } catch (error) {
+      console.error("Error al obtener los trabajadores:", error);
+    }
+  };
   useEffect(() => {
-    const fetchWorkers = async () => {
-      try {
-        //? Llama al endpoint para obtener trabajadores con role="Trabajador"
-        const data = await getFetchData("/user/workers");
-        console.log(data);
-        //? Actualiza estado con lista de trabajadores
-        setWorkers(data.workers);
-      } catch (error) {
-        console.error("Error al obtener los trabajadores:", error);
-      }
-    };
     fetchWorkers();
   }, []); //* Solo se ejecuta una vez al montar
 
@@ -104,6 +106,20 @@ const OperatorCreateTeams = () => {
 
   //* Envía la nueva cuadrilla al backend y resetea el formulario
   const handleSubmit = () => {
+    // Validaciones
+    if (!name) {
+      setError("El nombre del equipo es obligatorio.");
+      return;
+    }
+    if (!leader) {
+      setError("Debe seleccionar un líder para el equipo.");
+      return;
+    }
+    if (!members || members.length < 2) {
+      setError("Debe seleccionar al menos 2 miembros para la cuadrilla.");
+      return;
+    }
+    setError(null);
     //? Construye payload con datos de la cuadrilla
     const payload = {
       name, //* Nombre de la cuadrilla
@@ -114,9 +130,11 @@ const OperatorCreateTeams = () => {
     //? Envía POST a /crew
     postFetchLocalStorage("/crew", payload);
     //? Resetea formulario después de crear
-    setMembers([]);
-    setLeader(null);
-    setName("");
+    // setMembers([]);
+    // setLeader(null);
+    // setName("");
+    setWorkers([]);
+    fetchWorkers();
   };
 
   //? ========================================
@@ -205,7 +223,9 @@ const OperatorCreateTeams = () => {
               onChange={(e) => setName(e.target.value)}
               className="border rounded px-3 py-2 w-full max-w-md focus:outline-none focus:ring focus:border-blue-300"
               placeholder="Ingrese el nombre del equipo"
+              required
             />
+            {error && <div className="text-red-600 text-sm mt-2">{error}</div>}
           </div>
 
           {/* ========================================

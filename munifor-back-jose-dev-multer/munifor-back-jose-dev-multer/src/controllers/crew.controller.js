@@ -4,6 +4,7 @@
 
 //! IMPORT DE MODELO
 import CrewModel from "../models/crew.model.js";
+import UserModel from "../models/user.model.js";
 
 //* ============================================
 //* CREAR CUADRILLA
@@ -17,6 +18,13 @@ export const createCrew = async (req, res) => {
   try {
     //? Crear nueva cuadrilla con los datos del body
     const newCrew = await CrewModel.create(req.body);
+
+    await UserModel.findByIdAndUpdate(req.body.leader, { is_available: false });
+
+    await UserModel.updateMany(
+      { _id: { $in: req.body.members } },
+      { is_available: false }
+    );
 
     //* Respuesta exitosa con la cuadrilla creada
     return res.status(201).json({
@@ -44,16 +52,19 @@ export const createCrew = async (req, res) => {
 export const getAllCrews = async (req, res) => {
   try {
     //? Buscar todas las cuadrillas y poblar referencias
-    const crews = await CrewModel.find()
-      .populate("leader", "username") // Incluye solo el username del líder
-      .populate("members", "username"); // Incluye solo el username de los miembros
-
+    const crews = await CrewModel.find({
+      deleted_at: null,
+    })
+      .sort({ created_at: -1 })
+      .populate("leader", "username")
+      .populate("members", "username"); // Ordenar por fecha de creación descendente
     //* Respuesta exitosa con lista de cuadrillas
     return res.status(200).json({
       ok: true,
       crews,
     });
   } catch (error) {
+    console.log(error);
     //! Error del servidor
     return res.status(500).json({
       ok: false,
@@ -77,6 +88,7 @@ export const getCrewByWorker = async (req, res) => {
     // $or: busca en múltiples condiciones (es miembro OR es líder)
     const currentCrew = await CrewModel.findOne({
       $or: [{ members: workerId }, { leader: workerId }],
+      deleted_at: null,
     })
       .populate("leader", "username")
       .populate("members", "username");
@@ -86,6 +98,7 @@ export const getCrewByWorker = async (req, res) => {
       $or: [{ members: workerId }, { leader: workerId }],
       deleted_at: { $ne: null }, // $ne = Not Equal (no es null)
     })
+      .sort({ createdAt: -1 }) // Ordenar por fecha de creación descendente
       .populate("leader", "username")
       .populate("members", "username");
 
@@ -115,7 +128,9 @@ export const getCrewById = async (req, res) => {
   const { id } = req.params;
   try {
     //? Buscar cuadrilla por ID
-    const crew = await CrewModel.findById(id);
+    const crew = await CrewModel.findById(id)
+      .populate("leader", "username")
+      .populate("members", "username");
 
     //* Respuesta exitosa
     return res.status(200).json({
@@ -144,7 +159,9 @@ export const getCrewWorker = async (req, res) => {
   // ! Debo modificar esto para que tome el id del user logueado
   try {
     //? Buscar cuadrilla donde el memberId está en el array members
-    const crew = await CrewModel.findOne({ members: memberId });
+    const crew = await CrewModel.findOne({ members: memberId })
+      .populate("leader", "username")
+      .populate("members", "username");
 
     //* Respuesta exitosa
     return res.status(200).json({
@@ -202,13 +219,13 @@ export const updateCrew = async (req, res) => {
 export const deleteCrew = async (req, res) => {
   const { id } = req.params;
   try {
-    //? Eliminar cuadrilla permanentemente
-    await CrewModel.findByIdAndDelete(id);
+    //? Soft delete: actualizar deleted_at con la fecha actual
+    await CrewModel.findByIdAndUpdate(id, { deleted_at: new Date() });
 
     //* Respuesta exitosa
     return res.status(200).json({
       ok: true,
-      msg: "Crew deleted successfully",
+      msg: "Crew deleted (soft delete) successfully",
     });
   } catch (error) {
     //! Error del servidor

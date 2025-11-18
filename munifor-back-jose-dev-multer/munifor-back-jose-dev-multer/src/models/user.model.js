@@ -89,6 +89,10 @@ const UserSchema = new Schema(
         enum: ["Hombre", "Mujer", "Otro"],
         default: "Otro",
       },
+      dni: {
+        type: String,
+        required: true,
+      },
     },
 
     //! IMAGEN DE PERFIL (MULTER)

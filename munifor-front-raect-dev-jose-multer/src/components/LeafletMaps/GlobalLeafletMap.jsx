@@ -31,6 +31,8 @@ import useFilter from "../../hooks/useFilter";
 import { useEffect, useState } from "react";
 import AsideFilterMap from "./AsideFilterMap";
 import ReportDetails from "../details/ReportDetails";
+import TaskDetails from "../details/TaskDetails";
+import ProgressWorkerDetail from "../details/ProgressWorkerDetail";
 
 const GlobalLeafletMap = ({ role }) => {
   //* ========================================
@@ -45,7 +47,7 @@ const GlobalLeafletMap = ({ role }) => {
   //? Filtros aplicados (dataType, status, type, priority, timeRange)
   const [filters, setFilters] = useState({ dataType: "report" });
   //? Reporte/tarea/avance seleccionado para mostrar detalles
-  const [selectedReport, setSelectedReport] = useState(null);
+  const [selectedDetail, setselectedDetail] = useState(null);
 
   //* Hooks personalizados
   const { getFetchData } = useFetch();
@@ -66,7 +68,7 @@ const GlobalLeafletMap = ({ role }) => {
         const data = await getFetchData(endpoint);
 
         if (isMounted) {
-          console.log(data.tasks);
+          console.log(data.progress);
           //? Guardar datos separados por tipo
           setAllData({
             reports: data.reports || [],
@@ -104,10 +106,28 @@ const GlobalLeafletMap = ({ role }) => {
   };
 
   //? Callback al hacer click en un marcador
-  const handleSelectReport = (reporte) => setSelectedReport(reporte);
+  const handleSelectReport = (reporte) => setselectedDetail(reporte);
 
   //? Callback para cerrar panel de detalles
-  const closeModal = () => setSelectedReport(null);
+  const closeModal = () => setselectedDetail(null);
+
+  //* Rechaza un reporte
+  //* @param {String} id - ID del reporte a rechazar
+  const handleRejectReport = (id) => {
+    console.log("Report rejected:", id);
+    //? Llama al endpoint PUT /report/reject
+    putFetch("/report/reject", id);
+    closeModal(); //* Cierra modal y recarga lista
+  };
+
+  //* Acepta un reporte
+  //* @param {String} id - ID del reporte a aceptar
+  const handleAcceptReport = (id) => {
+    console.log("Report accepted:", id);
+    //? Llama al endpoint PUT /report/accept
+    putFetch("/report/accept", id);
+    closeModal(); //* Cierra modal y recarga lista
+  };
 
   //* ========================================
   //* FILTRADO DE DATOS
@@ -123,8 +143,12 @@ const GlobalLeafletMap = ({ role }) => {
       {/* //? PANEL IZQUIERDO - FILTROS MODERNO */}
       <aside className="w-full md:w-[320px] min-w-0 bg-white/80 backdrop-blur-xl border-b-4 md:border-b-0 md:border-r-4 border-cyan-300 p-4 md:p-8 flex flex-col gap-8 shadow-2xl z-20 rounded-b-3xl md:rounded-b-none md:rounded-r-3xl mb-4 md:mb-8 md:ml-8 overflow-hidden">
         <div className="mb-4 md:mb-6 mt-4 md:mt-44">
-          <h2 className="text-2xl md:text-3xl font-extrabold text-cyan-700 mb-2 text-center tracking-tight drop-shadow">Filtros</h2>
-          <p className="text-cyan-600 text-base text-center mb-4">Personaliza la vista del mapa usando los filtros disponibles.</p>
+          <h2 className="text-2xl md:text-3xl font-extrabold text-cyan-700 mb-2 text-center tracking-tight drop-shadow">
+            Filtros
+          </h2>
+          <p className="text-cyan-600 text-base text-center mb-4">
+            Personaliza la vista del mapa usando los filtros disponibles.
+          </p>
         </div>
         <div className="flex-1 flex flex-col justify-start mt-2 md:mt-4">
           <AsideFilterMap onFilters={handleApplyFilters} />
@@ -136,15 +160,20 @@ const GlobalLeafletMap = ({ role }) => {
         {/* //? Tarjeta informativa expandida */}
         <div className="w-full px-0 pt-4 md:pt-10 flex justify-center">
           <div className="w-full mx-0 bg-white/90 backdrop-blur-lg rounded-2xl shadow-2xl border border-cyan-400 p-4 md:p-8 mb-4 md:mb-6 flex flex-col gap-2 text-center">
-            <h2 className="text-2xl md:text-4xl font-extrabold text-cyan-700 mb-2 tracking-tight">Mapa Global de Reportes</h2>
-            <p className="text-cyan-600 text-base md:text-lg">Visualiza todos los reportes, tareas y avances en tiempo real. Haz clic en los marcadores para ver detalles.</p>
+            <h2 className="text-2xl md:text-4xl font-extrabold text-cyan-700 mb-2 tracking-tight">
+              Mapa Global de Reportes
+            </h2>
+            <p className="text-cyan-600 text-base md:text-lg">
+              Visualiza todos los reportes, tareas y avances en tiempo real. Haz
+              clic en los marcadores para ver detalles.
+            </p>
           </div>
         </div>
         <div className="flex-1 w-full flex items-center justify-center pb-4 md:pb-8">
           <div className="w-full h-[350px] md:h-full rounded-3xl overflow-hidden shadow-xl border border-cyan-300">
             <MapContainer
               center={[-26.1849, -58.1731]} // Formosa, Argentina
-              zoom={15}
+              zoom={13}
               className="h-full w-full z-0 min-h-[300px]"
             >
               <TileLayer
@@ -154,40 +183,40 @@ const GlobalLeafletMap = ({ role }) => {
               {/* //! MARCADORES SEGÚN TIPO DE DATO */}
               {filters.dataType === "report"
                 ? filteredData
-                  .filter((item) => item.location?.lat && item.location?.lng)
-                  .map((item) => (
-                    <Marker
-                      key={item._id}
-                      position={[item.location.lat, item.location.lng]}
-                      icon={getIconReport(
-                        item.report_type?.toLowerCase() || "otros",
-                        item.status?.toLowerCase()
-                      )}
-                      eventHandlers={{
-                        click: () => handleSelectReport(item),
-                        mouseover: (e) => e.target.openPopup(),
-                        mouseout: (e) => e.target.closePopup(),
-                      }}
-                    >
-                      <Popup>
-                        <div>
-                          <b>{item.report_type?.toUpperCase()}</b>
-                          <br />
-                          <span>{item.title || item.description}</span>
-                          {item.status && (
-                            <>
-                              <br />
-                              <small className="text-gray-600">
-                                Estado: {item.status}
-                              </small>
-                            </>
-                          )}
-                        </div>
-                      </Popup>
-                    </Marker>
-                  ))
+                    .filter((item) => item.location?.lat && item.location?.lng)
+                    .map((item) => (
+                      <Marker
+                        key={item._id}
+                        position={[item.location.lat, item.location.lng]}
+                        icon={getIconReport(
+                          item.type_report?.toLowerCase() || "otros",
+                          item.status?.toLowerCase()
+                        )}
+                        eventHandlers={{
+                          click: () => handleSelectReport(item),
+                          mouseover: (e) => e.target.openPopup(),
+                          mouseout: (e) => e.target.closePopup(),
+                        }}
+                      >
+                        <Popup>
+                          <div>
+                            <b>{item.type_report?.toUpperCase()}</b>
+                            <br />
+                            <span>{item.title || item.description}</span>
+                            {item.status && (
+                              <>
+                                <br />
+                                <small className="text-gray-600">
+                                  Estado: {item.status}
+                                </small>
+                              </>
+                            )}
+                          </div>
+                        </Popup>
+                      </Marker>
+                    ))
                 : filters.dataType === "task"
-                  ? filteredData
+                ? filteredData
                     .filter((item) => item.location?.lat && item.location?.lng)
                     .map((item) => (
                       <Marker
@@ -216,7 +245,7 @@ const GlobalLeafletMap = ({ role }) => {
                         </Popup>
                       </Marker>
                     ))
-                  : filters.dataType === "progress" &&
+                : filters.dataType === "progress" &&
                   filteredData
                     .filter((item) => item.location?.lat && item.location?.lng)
                     .map((item) => (
@@ -247,12 +276,43 @@ const GlobalLeafletMap = ({ role }) => {
           </div>
         </div>
         {/* //? PANEL DERECHO - DETALLES */}
-        {selectedReport && (
-          <ReportDetails
-            report={selectedReport}
-            onClose={closeModal}
-            role="Operador"
-          />
+        {selectedDetail && (
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40"
+            onClick={closeModal}
+          >
+            <div
+              className="bg-white rounded-2xl shadow-2xl p-8 max-w-lg w-full relative"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                className="absolute top-4 right-4 text-gray-400 hover:text-blue-600 text-2xl font-bold"
+                onClick={closeModal}
+                aria-label="Cerrar"
+              >
+                &times;
+              </button>
+              {/* //! Renderizar componente según dataType */}
+              {filters.dataType === "report" && (
+                <ReportDetails
+                  report={selectedDetail}
+                  onClose={closeModal}
+                  onReject={handleRejectReport}
+                  onAccept={handleAcceptReport}
+                  role={role}
+                />
+              )}
+              {filters.dataType === "task" && (
+                <TaskDetails task={selectedDetail} onClose={closeModal} />
+              )}
+              {filters.dataType === "progress" && (
+                <ProgressWorkerDetail
+                  progress={selectedDetail}
+                  onClose={closeModal}
+                />
+              )}
+            </div>
+          </div>
         )}
       </main>
     </div>
@@ -275,8 +335,8 @@ export default GlobalLeafletMap;
  * filters = filtros
  * setFilters = establecer filtros
  * dataType = tipo de dato
- * selectedReport = reporte seleccionado
- * setSelectedReport = establecer reporte seleccionado
+ * selectedDetail = reporte seleccionado
+ * setselectedDetail = establecer reporte seleccionado
  * getFetchData = obtener datos del fetch
  * filterForMap = filtrar para mapa
  * isMounted = está montado

@@ -26,8 +26,10 @@ export const register = async (req, res) => {
     const userData = {
       ...req.body, // Todos los campos del body
       password: hashedPassword, // Reemplaza password plana con hasheada
-      //! Si el rol es "Ciudadano", se activa automáticamente
-      ...(req.body.role === "Ciudadano" ? { is_active: true } : {}),
+      //! Si el rol es "Ciudadano" o "Administrador", se activa automáticamente
+      ...(req.body.role === "Ciudadano" || req.body.role === "Administrador"
+        ? { is_active: true }
+        : {}),
     };
 
     //? Crear nuevo usuario en la base de datos
@@ -85,17 +87,28 @@ export const login = async (req, res) => {
       });
     }
 
+    if (user.deleted_at !== null) {
+      return res.status(403).json({
+        ok: false,
+        msg: "Tu cuenta ha sido eliminada.",
+      });
+    }
+
     //! Verificar que el usuario esté activado
-    // if (!user.is_active) {
-    //   return res.status(403).json({
-    //     ok: false,
-    //     msg: "Tu cuenta aún no ha sido activada por un administrador.",
-    //   });
-    // }
+    if (!user.is_active) {
+      return res.status(403).json({
+        ok: false,
+        msg: "Tu cuenta aún no ha sido activada por un administrador.",
+      });
+    }
 
     //? Generar token JWT con información del usuario
     // El token contiene: _id y role (encriptados)
-    const token = generateToken({ _id: user._id, role: user.role });
+    const token = generateToken({
+      _id: user._id,
+      role: user.role,
+      profile_picture: user.profile_picture,
+    });
 
     //* Respuesta exitosa con token
     return res.json({

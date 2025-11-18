@@ -40,7 +40,7 @@ const WorkerProgressHistory = () => {
       }
     };
     fetchProgressReports();
-  }, [getFetchData]);
+  }, []);
 
   //* ========================================
   //* FILTRADO: Buscar avances por título
@@ -86,9 +86,11 @@ const WorkerProgressHistory = () => {
               <div
                 key={idx}
                 className={`bg-white rounded-xl shadow-md p-4 border w-full hover:cursor-pointer transition-all duration-200
-                  ${selectedProgress?._id === progress._id
-                    ? "border-cyan-400 ring-2 ring-cyan-300"
-                    : "border-gray-200 hover:border-cyan-300 hover:shadow-lg"}
+                  ${
+                    selectedProgress?._id === progress._id
+                      ? "border-cyan-400 ring-2 ring-cyan-300"
+                      : "border-gray-200 hover:border-cyan-300 hover:shadow-lg"
+                  }
                 `}
                 onClick={() => setSelectedProgress(progress)}
               >
@@ -99,11 +101,13 @@ const WorkerProgressHistory = () => {
                   {/* //? Badge de estado con colores */}
                   <span
                     className={`px-3 py-1 rounded-full text-xs font-medium drop-shadow
-                      ${progress.status === "Finalizado"
-                        ? "bg-green-100 text-green-700"
-                        : progress.status === "En Progreso"
+                      ${
+                        progress.status === "Finalizado"
+                          ? "bg-green-100 text-green-700"
+                          : progress.status === "En Progreso"
                           ? "bg-cyan-100 text-cyan-700"
-                          : "bg-gray-100 text-gray-700"}
+                          : "bg-gray-100 text-gray-700"
+                      }
                     `}
                   >
                     {progress.status}
@@ -151,11 +155,13 @@ const WorkerProgressHistory = () => {
               <span className="font-semibold text-cyan-700">Estado:</span>
               <span
                 className={`ml-2 px-3 py-1 rounded-full text-white text-xs font-bold drop-shadow
-                  ${selectedProgress.status === "Finalizado"
-                    ? "bg-green-500"
-                    : selectedProgress.status === "En Progreso"
+                  ${
+                    selectedProgress.status === "Finalizado"
+                      ? "bg-green-500"
+                      : selectedProgress.status === "En Progreso"
                       ? "bg-cyan-500"
-                      : "bg-gray-500"}
+                      : "bg-gray-500"
+                  }
                 `}
               >
                 {selectedProgress.status}

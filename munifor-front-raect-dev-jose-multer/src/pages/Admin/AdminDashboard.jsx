@@ -77,7 +77,9 @@ const AdminDashboard = () => {
         <h1 className="text-4xl font-extrabold text-cyan-700 mb-2 drop-shadow">
           🛡️ Dashboard Administrador
         </h1>
-        <p className="text-cyan-600 text-lg">Panel de control y gestión completa del sistema municipal</p>
+        <p className="text-cyan-600 text-lg">
+          Panel de control y gestión completa del sistema municipal
+        </p>
       </div>
 
       <div className="flex flex-col gap-8">
@@ -128,8 +130,12 @@ const AdminDashboard = () => {
 
         {/* ====== SECCIÓN: Acciones rápidas (navegación a otras vistas) ====== */}
         <div className="mb-4 text-center">
-          <h2 className="text-3xl font-extrabold text-cyan-700 mb-2 drop-shadow">Acciones Rápidas</h2>
-          <p className="text-cyan-600 text-lg">Acceso directo a las funciones principales</p>
+          <h2 className="text-3xl font-extrabold text-cyan-700 mb-2 drop-shadow">
+            Acciones Rápidas
+          </h2>
+          <p className="text-cyan-600 text-lg">
+            Acceso directo a las funciones principales
+          </p>
         </div>
 
         {/*//* Grid de tarjetas clickeables que navegan a las principales funcionalidades */}
@@ -140,8 +146,12 @@ const AdminDashboard = () => {
             onClick={() => navigate("/admin/profilesearch")}
           >
             <div className="text-4xl mb-4 text-cyan-600">👥</div>
-            <h3 className="text-xl font-bold text-cyan-700 mb-2">Gestionar Usuarios</h3>
-            <p className="text-cyan-600 text-sm">Administrar cuentas de usuarios</p>
+            <h3 className="text-xl font-bold text-cyan-700 mb-2">
+              Gestionar Usuarios
+            </h3>
+            <p className="text-cyan-600 text-sm">
+              Administrar cuentas de usuarios
+            </p>
           </div>
 
           {/* Acción: Vista global del sistema */}
@@ -150,7 +160,9 @@ const AdminDashboard = () => {
             onClick={() => navigate("/admin/globalview")}
           >
             <div className="text-4xl mb-4 text-cyan-600">📋</div>
-            <h3 className="text-xl font-bold text-cyan-700 mb-2">Vista General</h3>
+            <h3 className="text-xl font-bold text-cyan-700 mb-2">
+              Vista General
+            </h3>
           </div>
 
           {/* Acción: Ver estadísticas y gráficos */}
@@ -159,8 +171,12 @@ const AdminDashboard = () => {
             onClick={() => navigate("/admin/statistics")}
           >
             <div className="text-4xl mb-4 text-cyan-600">📊</div>
-            <h3 className="text-xl font-bold text-cyan-700 mb-2">Estadísticas</h3>
-            <p className="text-cyan-600 text-sm">Análisis detallado del sistema</p>
+            <h3 className="text-xl font-bold text-cyan-700 mb-2">
+              Estadísticas
+            </h3>
+            <p className="text-cyan-600 text-sm">
+              Análisis detallado del sistema
+            </p>
           </div>
         </div>
       </div>

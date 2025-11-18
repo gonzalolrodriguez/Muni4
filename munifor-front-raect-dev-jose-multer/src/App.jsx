@@ -61,7 +61,6 @@ import OperatorStatistics from "./pages/Operator/OperatorStatistics";
 import OperatorProfile from "./pages/Operator/OperatorProfile";
 import OperatorCreateTask from "./pages/Operator/OperatorCreateTask";
 import OperatorCreateTeams from "./pages/Operator/OperatorCreateTeam";
-import OperatorNewReports from "./pages/Operator/OperatorNewReports";
 
 //* ========================================
 //* IMPORTACIONES: Páginas de Administrador
@@ -209,10 +208,6 @@ const App = () => {
             <Route
               path="/operator/create-team"
               element={<OperatorCreateTeams />}
-            />
-            <Route
-              path="/operator/new-reports"
-              element={<OperatorNewReports />}
             />
           </Route>
 

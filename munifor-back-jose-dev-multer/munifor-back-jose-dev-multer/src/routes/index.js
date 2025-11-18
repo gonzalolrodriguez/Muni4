@@ -1,3 +1,4 @@
+//? Rutas de vista global del admin
 //* ============================================
 //* ROUTER PRINCIPAL - AGRUPA TODAS LAS RUTAS
 //* ============================================
@@ -15,6 +16,7 @@ import userRoutes from "./user.routes.js"; // Rutas de usuarios
 import dashboardRouter from "./dashboard.routes.js"; // Rutas de dashboard
 import statisticsRoutes from "./statistics.routes.js"; // Rutas de estadísticas
 import mapRoutes from "./map.routes.js"; // Rutas de mapas
+import globalViewRouter from "./global_view.routes.js"; // Rutas de vista global del admin
 
 //! IMPORTS DE MIDDLEWARES
 import { authMiddleware } from "../middlewares/auth.middleware.js"; // Middleware de autenticación JWT
@@ -66,6 +68,9 @@ router.use(mapRoutes);
 
 //? Rutas de estadísticas (gráficos, métricas)
 router.use(statisticsRoutes);
+
+//? Rutas de vista global del admin
+router.use(globalViewRouter);
 
 //* EXPORTAR EL ROUTER PRINCIPAL
 export default router;

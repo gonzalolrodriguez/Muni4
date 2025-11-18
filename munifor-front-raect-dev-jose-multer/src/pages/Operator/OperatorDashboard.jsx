@@ -46,6 +46,7 @@ const OperatorDashboard = () => {
       try {
         //? Llama al endpoint para obtener estadísticas del operador
         const data = await getFetchData("/dashboard/operators");
+        console.log("hola");
         if (isMounted && data.ok) {
           //? Actualiza estado con contadores del backend
           setCounts(data.counts);
@@ -63,13 +64,17 @@ const OperatorDashboard = () => {
     return () => {
       isMounted = false;
     };
-  }, [getFetchData]);
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#eaf4fe] to-[#d2e7fa] p-8">
       <div className="mb-8 text-center">
-        <h1 className="text-4xl font-extrabold text-cyan-700 mb-2 drop-shadow">Dashboard Operador</h1>
-        <p className="text-cyan-600 text-lg">Panel de control y gestión de operaciones municipales</p>
+        <h1 className="text-4xl font-extrabold text-cyan-700 mb-2 drop-shadow">
+          Dashboard Operador
+        </h1>
+        <p className="text-cyan-600 text-lg">
+          Panel de control y gestión de operaciones municipales
+        </p>
       </div>
 
       <div className="flex flex-col gap-8">
@@ -85,10 +90,10 @@ const OperatorDashboard = () => {
           {/* TARJETA 1: Total de Nuevos Reportes */}
           <div
             className="bg-blue-100/70 backdrop-blur-md shadow-2xl rounded-2xl text-blue-700 p-6 flex flex-col items-center justify-center border border-blue-300 cursor-pointer transition-all"
-            onClick={() => navigate("/operator/reports")}
+            onClick={() => navigate("/operator/reports?status=Pendiente")}
           >
             <span className="text-3xl font-bold">{counts.totalNewReports}</span>
-            <span className="mt-2 font-semibold">Total Reportes</span>
+            <span className="mt-2 font-semibold">Nuevos Reportes</span>
           </div>
 
           {/* TARJETA 2: Reportes Rechazados */}
@@ -160,8 +165,12 @@ const OperatorDashboard = () => {
             onClick={() => navigate("/operator/reports")}
           >
             <div className="text-4xl mb-4 text-cyan-600">📋</div>
-            <h3 className="text-xl font-bold text-cyan-700 mb-2">Gestionar Reportes</h3>
-            <p className="text-cyan-600 text-sm">Ver y administrar todos los reportes</p>
+            <h3 className="text-xl font-bold text-cyan-700 mb-2">
+              Gestionar Reportes
+            </h3>
+            <p className="text-cyan-600 text-sm">
+              Ver y administrar todos los reportes
+            </p>
           </div>
 
           {/* ACCIÓN 2: Asignar Tareas */}
@@ -170,8 +179,12 @@ const OperatorDashboard = () => {
             onClick={() => navigate("/operator/create-task")}
           >
             <div className="text-4xl mb-4 text-cyan-600">👥</div>
-            <h3 className="text-xl font-bold text-cyan-700 mb-2">Asignar Tareas</h3>
-            <p className="text-cyan-600 text-sm">Asignar trabajos a cuadrillas</p>
+            <h3 className="text-xl font-bold text-cyan-700 mb-2">
+              Asignar Tareas
+            </h3>
+            <p className="text-cyan-600 text-sm">
+              Asignar trabajos a cuadrillas
+            </p>
           </div>
 
           {/* ACCIÓN 3: Ver Mapa */}
@@ -181,7 +194,9 @@ const OperatorDashboard = () => {
           >
             <div className="text-4xl mb-4 text-cyan-600">🗺️</div>
             <h3 className="text-xl font-bold text-cyan-700 mb-2">Ver Mapa</h3>
-            <p className="text-cyan-600 text-sm">Visualizar reportes en el mapa</p>
+            <p className="text-cyan-600 text-sm">
+              Visualizar reportes en el mapa
+            </p>
           </div>
 
           {/* ACCIÓN 4: Estadísticas */}
@@ -190,8 +205,12 @@ const OperatorDashboard = () => {
             onClick={() => navigate("/operator/statistics")}
           >
             <div className="text-4xl mb-4 text-cyan-600">📊</div>
-            <h3 className="text-xl font-bold text-cyan-700 mb-2">Estadísticas</h3>
-            <p className="text-cyan-600 text-sm">Análisis y reportes detallados</p>
+            <h3 className="text-xl font-bold text-cyan-700 mb-2">
+              Estadísticas
+            </h3>
+            <p className="text-cyan-600 text-sm">
+              Análisis y reportes detallados
+            </p>
           </div>
         </div>
       </div>

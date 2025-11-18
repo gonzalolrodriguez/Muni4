@@ -45,6 +45,8 @@ export const createReport = async (req, res) => {
       images, // Array de rutas de imágenes
     });
 
+    console.log("Se a credo exitosamente");
+
     //* Respuesta exitosa
     return res.status(201).json({
       ok: true,
@@ -63,7 +65,7 @@ export const createReport = async (req, res) => {
 // * Obtener reportes
 export const getAllReports = async (req, res) => {
   try {
-    const reports = await ReportModel.find();
+    const reports = await ReportModel.find().sort({ created_at: -1 }); // Ordenar por fecha de creación descendente
     return res.status(200).json({
       ok: true,
       reports,
@@ -96,7 +98,9 @@ export const getAllReportsForAuthor = async (req, res) => {
   try {
     // Usar el id del usuario logueado
     const authorId = req.user._id;
-    const reports = await ReportModel.find({ author: authorId });
+    const reports = await ReportModel.find({ author: authorId }).sort({
+      created_at: -1,
+    }); // Ordenar por fecha de creación descendente
     return res.status(200).json({
       ok: true,
       reports,
@@ -114,8 +118,11 @@ export const getReportsByOperator = async (req, res) => {
   try {
     const operatorId = req.user._id;
     const reports = await ReportModel.find({
-      assigned_operator: operatorId,
-    }).populate("author", "username");
+      $or: [{ assigned_operator: operatorId }, { status: "Pendiente" }],
+    })
+      .sort({ created_at: -1 }) // Ordenar por fecha de creación descendente
+      .populate("author", "username");
+
     return res.status(200).json({
       ok: true,
       reports,
@@ -130,10 +137,9 @@ export const getReportsByOperator = async (req, res) => {
 
 export const getNewReports = async (req, res) => {
   try {
-    const reports = await ReportModel.find({ status: "Pendiente" }).populate(
-      "author",
-      "username"
-    );
+    const reports = await ReportModel.find({ status: "Pendiente" })
+      .sort({ created_at: -1 }) // Ordenar por fecha de creación descendente
+      .populate("author", "username");
     return res.status(200).json({
       ok: true,
       reports,
@@ -149,7 +155,9 @@ export const getNewReports = async (req, res) => {
 // * Obtener reportes segun estado
 export const getReportsPending = async (req, res) => {
   try {
-    const reports = await ReportModel.find({ status: "Pendiente" });
+    const reports = await ReportModel.find({ status: "Pendiente" }).sort({
+      created_at: -1,
+    }); // Ordenar por fecha de creación descendente
     return res.status(200).json({
       ok: true,
       reports,
@@ -187,8 +195,10 @@ export const getReportsOperatorAccepted = async (req, res) => {
       status: "Aceptado",
       task_assigned: false,
       assigned_operator: operatorId,
-    });
-    const crews = await CrewModel.find({ deleted_at: null });
+    }).sort({ created_at: -1 }); // Ordenar por fecha de creación descendente
+    const crews = await CrewModel.find({ deleted_at: null }).sort({
+      createdAt: -1,
+    }); // Ordenar por fecha de creación descendente
     return res.status(200).json({
       ok: true,
       reports,

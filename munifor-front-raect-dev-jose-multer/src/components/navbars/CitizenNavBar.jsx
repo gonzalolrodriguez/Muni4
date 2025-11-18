@@ -18,55 +18,57 @@ const CitizenNavBar = () => {
     //* Navbar: Links a la izquierda, menú de usuario a la derecha
     <nav className="flex items-center justify-between px-8 py-4 bg-white/70 backdrop-blur-md shadow-lg rounded-b-2xl border-b-4 border-cyan-500">
       <div className="flex items-center gap-3">
-        <span className="text-2xl font-extrabold text-cyan-700 tracking-tight">MuniFor</span>
-        <span className="px-2 py-1 rounded bg-cyan-100 text-cyan-700 text-xs font-semibold">Ciudadano</span>
+        <span className="text-2xl font-extrabold text-cyan-700 tracking-tight">
+          MuniFor
+        </span>
+        <span className="px-2 py-1 rounded bg-cyan-100 text-cyan-700 text-xs font-semibold">
+          Ciudadano
+        </span>
       </div>
       <ul className="flex gap-6 text-base font-bold">
         <li>
-          <a
-            href="/citizen/dashboard"
+          <Link
+            to="/citizen/dashboard"
             className="hover:text-cyan-600 transition"
           >
             Inicio
-          </a>
+          </Link>
         </li>
         <li>
-          <a
-            href="/citizen/reports"
+          <Link
+            to="/citizen/reports"
             className="hover:text-cyan-600 transition"
           >
             Hacer Reporte
-          </a>
+          </Link>
         </li>
         <li>
-          <a
-            href="/citizen/reportstatus"
+          <Link
+            to="/citizen/reportstatus"
             className="hover:text-cyan-600 transition"
           >
             Mis Reportes
-          </a>
+          </Link>
         </li>
-        <li>
-          <a
-            href="/citizen/profile"
+        {/* <li>
+          <Link
+            to="/citizen/profile"
             className="hover:text-cyan-600 transition"
           >
             Mi Perfil
-          </a>
-        </li>
+          </Link>
+        </li> */}
         <li>
-          <a
-            href="/citizen/contact"
+          <Link
+            to="/citizen/contact"
             className="hover:text-cyan-600 transition"
           >
             Contacto
-          </a>
+          </Link>
         </li>
       </ul>
       <div className="flex items-center gap-4">
-        <span className="bg-cyan-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold">
-          C
-        </span>
+        <NavBarMenu profileType="citizen" />
       </div>
     </nav>
   );

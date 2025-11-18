@@ -26,7 +26,7 @@ const AdminMap = () => {
 
   return (
     <div className="w-full h-full relative">
-      <GlobalLeafletMap role={user?.role} />
+      <GlobalLeafletMap role={"Administrador"} />
     </div>
   );
 };

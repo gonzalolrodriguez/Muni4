@@ -20,8 +20,12 @@ const AdminNavBar = () => {
     //* Navbar: Links a la izquierda, menú de usuario a la derecha
     <nav className="flex items-center justify-between px-8 py-4 bg-white/70 backdrop-blur-md shadow-lg rounded-b-2xl border-b-4 border-pink-500">
       <div className="flex items-center gap-3">
-        <span className="text-2xl font-extrabold text-pink-600 tracking-tight">MuniFor</span>
-        <span className="px-2 py-1 rounded bg-pink-100 text-pink-700 text-xs font-semibold">Administrador</span>
+        <span className="text-2xl font-extrabold text-pink-600 tracking-tight">
+          MuniFor
+        </span>
+        <span className="px-2 py-1 rounded bg-pink-100 text-pink-700 text-xs font-semibold">
+          Administrador
+        </span>
       </div>
       <ul className="flex gap-6 text-base font-semibold">
         <li>
@@ -72,9 +76,7 @@ const AdminNavBar = () => {
         </li>
       </ul>
       <div className="flex items-center gap-4">
-        <span className="bg-pink-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold">
-          A
-        </span>
+        <NavBarMenu profileType="admin" />
       </div>
     </nav>
   );

@@ -62,7 +62,7 @@ const CreateTaskModal = ({
       reportSelected.length === 0
     ) {
       setError(
-        "Completa todos los campos y selecciona al menos un reporte y un crew."
+        "Completa todos los campos y selecciona al menos un reporte y una cuadrilla."
       );
       return;
     }
@@ -95,19 +95,19 @@ const CreateTaskModal = ({
   return (
     //* Backdrop: Click cierra el modal
     <div
-      className="fixed inset-0 flex items-center justify-center backdrop-blur-sm z-50 overflow-y-auto"
+      className="fixed inset-0 flex items-center justify-center backdrop-blur-sm z-50 p-4"
       onClick={onClose}
     >
       {/* //! Card principal con scroll vertical */}
       <div
-        className="bg-white rounded-2xl shadow-2xl w-full max-w-3xl flex flex-col items-center justify-center p-0 my-8"
+        className="bg-white rounded-2xl shadow-2xl w-full max-w-lg flex flex-col max-h-[90vh] overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         <form
-          className="w-full px-8 py-6 flex flex-col items-center"
+          className="w-full px-4 py-3 flex flex-col overflow-y-auto"
           onSubmit={handleSubmit}
         >
-          <h1 className="text-2xl font-bold text-gray-900 mb-4 text-center">
+          <h1 className="text-xl font-bold text-gray-900 mb-3 text-center">
             Crear tarea
           </h1>
 
@@ -117,7 +117,7 @@ const CreateTaskModal = ({
           {/* //? ======================================== */}
           {/* //? CAMPO: Título */}
           {/* //? ======================================== */}
-          <div className="mb-4 w-full">
+          <div className="mb-3 w-full">
             <label
               htmlFor="title"
               className="block text-sm font-semibold text-gray-700 mb-1"
@@ -136,7 +136,7 @@ const CreateTaskModal = ({
           {/* //? ======================================== */}
           {/* //? CAMPO: Tipo de tarea */}
           {/* //? ======================================== */}
-          <div className="mb-4 w-full">
+          <div className="mb-3 w-full">
             <label className="block text-sm font-semibold text-gray-700 mb-1">
               Tipo de tarea
             </label>
@@ -157,7 +157,7 @@ const CreateTaskModal = ({
           {/* //? ======================================== */}
           {/* //? CAMPO: Prioridad */}
           {/* //? ======================================== */}
-          <div className="mb-4 w-full">
+          <div className="mb-3 w-full">
             <label className="block text-sm font-semibold text-gray-700 mb-1">
               Prioridad
             </label>
@@ -178,12 +178,12 @@ const CreateTaskModal = ({
           {/* //? ======================================== */}
           {/* //! CAMPO: Ubicación (Mapa interactivo) */}
           {/* //? ======================================== */}
-          <div className="mb-4 w-full">
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
+          <div className="mb-3 w-full">
+            <label className="block text-sm font-semibold text-gray-700 mb-1">
               Ubicación de la tarea
             </label>
             {/* //! Mapa de Leaflet: Click en el mapa setea markerPosition */}
-            <div className="w-full h-96 border rounded-lg overflow-hidden">
+            <div className="w-full h-48 border rounded-lg overflow-hidden">
               <MapContainer
                 center={[-26.1849, -58.1756]} // Centro: Formosa, Argentina
                 zoom={15}
