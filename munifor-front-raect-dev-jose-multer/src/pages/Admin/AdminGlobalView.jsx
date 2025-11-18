@@ -41,7 +41,7 @@ const AdminGlobalView = () => {
   const [progress, setProgress] = useState([]);
 
   // Estados de UI
-  const [selectedType, setSelectedType] = useState("Reports"); //? Antes: "All"
+  const [selectedType, setSelectedType] = useState("Reporte"); //? Antes: "All"
   const [search, setSearch] = useState("");
   const [searchField, setSearchField] = useState("title");
   const [selectedDetail, setSelectedDetail] = useState(null);
@@ -55,6 +55,7 @@ const AdminGlobalView = () => {
     const fetchGlobalData = async () => {
       try {
         const response = await getFetchData("/admin/globalview");
+        console.log(response);
         if (response?.data) {
           setReports(response.data.reports || []);
           setTasks(response.data.tasks || []);
@@ -74,11 +75,20 @@ const AdminGlobalView = () => {
 
   // Opciones de búsqueda según el tipo seleccionado
   const fieldOptionsByType = {
-    // All: ["title", "name"], //? Comentado: opción "All" removida
-    Reports: ["title", "type", "status"],
-    Tasks: ["title", "status", "priority"],
-    Crews: ["name", "leader"],
-    Progress: ["title", "status"],
+    Reporte: ["title", "type_report", "status"],
+    Tarea: ["title", "status", "priority"],
+    Cuadrilla: ["name", "leader"],
+    Avance: ["title", "status"],
+  };
+
+  // Traducción de campos a español para el select
+  const fieldLabels = {
+    title: "Título",
+    type_report: "Tipo",
+    status: "Estado",
+    priority: "Prioridad",
+    name: "Nombre",
+    leader: "Líder",
   };
   // Función de filtro mejorada
   const filterBySearch = (arr, val, field) => {
@@ -156,13 +166,13 @@ const AdminGlobalView = () => {
    */
   const renderList = () => {
     switch (selectedType) {
-      case "Reports":
+      case "Reporte":
         return renderItems(filteredReports, "report");
-      case "Tasks":
+      case "Tarea":
         return renderItems(filteredTasks, "task");
-      case "Crews":
+      case "Cuadrilla":
         return renderItems(filteredCrews, "crew");
-      case "Progress":
+      case "Avance":
         return renderItems(filteredProgress, "progress");
       default:
         return renderItems(filteredReports, "report");
@@ -236,7 +246,7 @@ const AdminGlobalView = () => {
         <div className="flex gap-2 items-center justify-center flex-wrap">
           {/* Botón "All" comentado - Descomentar para mostrar todos los recursos */}
           {/* <button key="All" className={...} onClick={() => setSelectedType("All")}>All</button> */}
-          {["Reports", "Tasks", "Crews", "Progress"].map((t) => (
+          {["Reporte", "Tarea", "Cuadrilla", "Avance"].map((t) => (
             <button
               key={t}
               className={`px-4 py-2 rounded-xl font-bold shadow border transition-all duration-200 text-base tracking-tight drop-shadow ${
@@ -253,7 +263,7 @@ const AdminGlobalView = () => {
         <div className="flex gap-2 items-center justify-center flex-wrap">
           <input
             type="text"
-            placeholder={`Buscar por ${searchField || "campo"}...`}
+            placeholder={"Buscar..."}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="border border-cyan-300 rounded-xl px-4 py-3 w-64 shadow focus:outline-none focus:ring-2 focus:ring-cyan-400 text-cyan-700 bg-white/90"
@@ -265,7 +275,7 @@ const AdminGlobalView = () => {
           >
             {(fieldOptionsByType[selectedType] || []).map((opt) => (
               <option key={opt} value={opt}>
-                {opt}
+                {fieldLabels[opt] || opt}
               </option>
             ))}
           </select>
@@ -302,19 +312,46 @@ const AdminGlobalView = () => {
               />
             )}
             {selectedDetail.type === "task" && (
-              <TaskDetails
-                task={selectedDetail.data}
-                onClose={() => setSelectedDetail(null)}
-              />
+              <div>
+                <TaskDetails
+                  task={selectedDetail.data}
+                  onClose={() => setSelectedDetail(null)}
+                />
+                <button
+                  className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 w-full"
+                  onClick={() => setSelectedDetail(null)}
+                >
+                  Cerrar
+                </button>
+              </div>
             )}
             {selectedDetail.type === "crew" && (
-              <CrewDetails onClose={() => setSelectedDetail(null)} />
+              <div>
+                <CrewDetails
+                  crew={selectedDetail.data}
+                  onClose={() => setSelectedDetail(null)}
+                />
+                <button
+                  className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 w-full"
+                  onClick={() => setSelectedDetail(null)}
+                >
+                  Cerrar
+                </button>
+              </div>
             )}
             {selectedDetail.type === "progress" && (
-              <ProgressWorkerDetail
-                progress={selectedDetail.data}
-                onClose={() => setSelectedDetail(null)}
-              />
+              <div>
+                <ProgressWorkerDetail
+                  progress={selectedDetail.data}
+                  onClose={() => setSelectedDetail(null)}
+                />{" "}
+                <button
+                  className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 w-full"
+                  onClick={() => setSelectedDetail(null)}
+                >
+                  Cerrar
+                </button>
+              </div>
             )}
           </div>
         </div>

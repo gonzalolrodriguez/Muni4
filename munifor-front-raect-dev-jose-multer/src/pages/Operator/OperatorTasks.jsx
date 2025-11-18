@@ -88,7 +88,7 @@ const OperatorTasks = () => {
   //* Aplicar paginación (10 tareas por página)
   const { data: paginatedTasks, totalPages } = limitData(
     filteredTasks,
-    20,
+    15,
     currentPage
   );
 

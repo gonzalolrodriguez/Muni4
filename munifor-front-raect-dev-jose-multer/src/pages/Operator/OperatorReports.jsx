@@ -95,7 +95,7 @@ const OperatorReports = () => {
   //* Aplicar paginación (10 reportes por página)
   const { data: paginatedReports, totalPages } = limitData(
     filteredReports,
-    20,
+    15,
     currentPage
   );
 

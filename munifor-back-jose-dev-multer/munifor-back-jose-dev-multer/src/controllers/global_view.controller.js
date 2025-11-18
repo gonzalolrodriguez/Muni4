@@ -10,12 +10,23 @@ import ProgressReportModel from "../models/progress_report.model.js";
  */
 export const getGlobalView = async (req, res) => {
   try {
-    const reports = await ReportModel.find({}).sort({ created_at: -1 }); // Ordenar por fecha de creación descendente
-    const tasks = await TaskModel.find({}).sort({ created_at: -1 }); // Ordenar por fecha de creación descendente
-    const crews = await CrewModel.find({}).sort({ created_at: -1 }); // Ordenar por fecha de creación descendente
-    const progress = await ProgressReportModel.find({}).sort({
-      created_at: -1,
-    }); // Ordenar por fecha de creación descendente
+    const reports = await ReportModel.find({})
+      .sort({ created_at: -1 })
+      .populate("author", "username"); // Ordenar por fecha de creación descendente
+    const tasks = await TaskModel.find({})
+      .sort({ created_at: -1 })
+      .populate("crew", "name"); // Ordenar por fecha de creación descendente
+    const crews = await CrewModel.find({})
+      .sort({ created_at: -1 })
+      .populate("members", "username")
+      .populate("leader", "username"); // Ordenar por fecha de creación descendente
+    const progress = await ProgressReportModel.find({})
+      .sort({
+        created_at: -1,
+      })
+      .populate("worker", "username")
+      .populate("crew", "name")
+      .populate("task", "title"); // Ordenar por fecha de creación descendente
     return res.status(200).json({
       ok: true,
       data: {
