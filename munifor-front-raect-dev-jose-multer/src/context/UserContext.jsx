@@ -46,8 +46,12 @@ export const UserProvider = ({ children }) => {
         console.log(`Decoded token:`, decoded);
 
         //! Actualizar el estado con los datos del usuario
-        //* Solo guardamos _id y role (lo esencial)
-        setUser({ _id: decoded._id, role: decoded.role });
+        //* Solo guardamos _id, role y picture (lo esencial)
+        setUser({
+          _id: decoded._id,
+          role: decoded.role,
+          profile_picture: decoded.profile_picture,
+        });
       } catch (err) {
         //! Si el token es inválido o está corrupto
         //* Limpiar localStorage y dejar user en null

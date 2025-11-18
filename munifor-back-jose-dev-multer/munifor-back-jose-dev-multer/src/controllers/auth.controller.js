@@ -17,15 +17,27 @@ import UserModel from "../models/user.model.js";
  * - Otros roles requieren activación por administrador
  */
 export const register = async (req, res) => {
-  const { password } = req.body;
+  console.log("Body:", req.body);
+  console.log("File:", req.file);
+
+  const { password, profile } = req.body;
   try {
     //? Hashear la contraseña con bcrypt antes de guardarla
     const hashedPassword = await hashPassword(password);
 
+    //? Parsear el objeto profile si viene como string JSON
+    const profileData =
+      typeof profile === "string" ? JSON.parse(profile) : profile;
+
     //? Preparar datos del usuario
     const userData = {
       ...req.body, // Todos los campos del body
+      profile: profileData, // Profile parseado como objeto
       password: hashedPassword, // Reemplaza password plana con hasheada
+      //! Si se subió una imagen, agregar la ruta relativa al usuario
+      ...(req.file
+        ? { profile_picture: `uploads/profiles/${req.file.filename}` }
+        : {}),
       //! Si el rol es "Ciudadano" o "Administrador", se activa automáticamente
       ...(req.body.role === "Ciudadano" || req.body.role === "Administrador"
         ? { is_active: true }
@@ -42,10 +54,11 @@ export const register = async (req, res) => {
       user: newUser,
     });
   } catch (error) {
+    console.error("Error en registro:", error);
     //! Error en el servidor o datos duplicados (email/username)
     return res.status(500).json({
       ok: false,
-      msg: "Error interno del servidor",
+      msg: error.message || "Error interno del servidor",
     });
   }
 };

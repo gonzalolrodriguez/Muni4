@@ -15,6 +15,7 @@ import {
 
 //! IMPORTS DE MIDDLEWARES
 import { authMiddleware } from "../middlewares/auth.middleware.js";
+import { uploadProfilePicture } from "../config/multer.js";
 
 //* CREACIÓN DEL ROUTER
 const authRoutes = Router();
@@ -25,9 +26,11 @@ const authRoutes = Router();
 
 //? POST /api/auth/register - Registrar nuevo usuario
 // Público (no requiere autenticación)
+// Middleware: uploadProfilePicture procesa FormData y archivo de imagen
 // Body: { username, email, password, role, profile: {...} }
+// File: profile_picture (opcional)
 // Responde: { ok, msg, user }
-authRoutes.post("/auth/register", register);
+authRoutes.post("/auth/register", uploadProfilePicture, register);
 
 //? POST /api/auth/login - Iniciar sesión
 // Público (no requiere autenticación)

@@ -13,7 +13,7 @@
 //* Nota: usa Headless UI para componentes de menú con transiciones
 
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-import userImage from "../../assets/img/images.png";
+// import userImage from "../../assets/img/images.png";
 import { Link, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "../../context/UserContext";
@@ -38,7 +38,7 @@ const NavBarMenu = ({ profileType }) => {
   const config = avatarConfig[profileType] || avatarConfig.citizen;
 
   // Verificar si el usuario tiene imagen de perfil
-  const hasProfileImage = user?.profile_picture || user?.image;
+  const hasProfileImage = user?.profile_picture;
 
   return (
     //* Menu: Contenedor relativo para dropdown
