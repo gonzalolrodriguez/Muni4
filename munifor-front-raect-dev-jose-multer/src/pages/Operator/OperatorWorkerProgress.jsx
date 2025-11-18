@@ -61,13 +61,13 @@ const OperatorWorkerProgress = () => {
   const closeModal = () => setSelectedProgress(null);
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-blue-50 to-cyan-100">
       {/* ========================================
           SECCIÓN: HEADER CON BÚSQUEDA Y FILTROS
           ======================================== */}
       <div className="max-w-5xl mx-auto px-4 py-4 flex flex-col gap-2">
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-bold text-gray-700">
+          <h2 className="text-3xl font-extrabold text-cyan-700 mb-4 tracking-tight drop-shadow text-center w-full">
             Avances de Trabajadores
           </h2>
         </div>
@@ -79,7 +79,7 @@ const OperatorWorkerProgress = () => {
             placeholder="Buscar por título..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="border rounded px-3 py-2 w-full max-w-md focus:outline-none focus:ring focus:border-blue-300"
+            className="border rounded-xl px-3 py-2 w-full max-w-md focus:outline-none focus:ring-2 focus:ring-cyan-300 bg-white/70 backdrop-blur-md shadow"
           />
         </div>
 
@@ -88,7 +88,7 @@ const OperatorWorkerProgress = () => {
           {["Todos", "Pendiente", "En Progreso", "Finalizado"].map((opt) => (
             <button
               key={opt}
-              className={`px-3 py-1 rounded border font-medium transition-colors duration-150 ${
+              className={`px-3 py-1 rounded-xl border font-semibold transition-colors duration-150 ${
                 statusFilter === opt
                   ? "bg-blue-600 text-white" //* Estilo del filtro activo
                   : "bg-white text-blue-600 border-blue-600" //* Estilo del filtro inactivo
@@ -124,23 +124,23 @@ const OperatorWorkerProgress = () => {
           ).map((progress, idx) => (
             <div
               key={idx}
-              className="bg-white rounded-lg shadow p-3 flex justify-between items-center border border-gray-200 w-full max-w-2xl mx-auto min-h-14 hover:cursor-pointer"
+              className="bg-white/70 backdrop-blur-md rounded-2xl shadow-lg p-3 flex justify-between items-center border border-cyan-200 w-full max-w-2xl mx-auto min-h-14 hover:scale-[1.02] hover:shadow-2xl transition-all hover:cursor-pointer"
               onClick={() => setSelectedProgress(progress)}
             >
               <div>
-                <span className="block text-xl font-semibold text-gray-800">
+                <span className="block text-xl font-semibold text-cyan-900">
                   {progress.title}
                 </span>
-                <span className="block text-sm text-gray-500">
+                <span className="block text-sm text-cyan-600">
                   Trabajador: {progress.worker?.username || progress.worker}
                 </span>
-                <span className="block text-sm text-gray-500">
+                <span className="block text-sm text-cyan-600">
                   Equipo: {progress.crew?.name || progress.crew}
                 </span>
               </div>
               {/* Badge de estado con color según el estado */}
               <span
-                className={`px-5 py-2 rounded-full text-base font-medium ${
+                className={`px-5 py-2 rounded-full text-base font-semibold ${
                   progress.status === "Finalizado"
                     ? "bg-green-100 text-green-700"
                     : progress.status === "En Progreso"
@@ -166,7 +166,7 @@ const OperatorWorkerProgress = () => {
             onClick={closeModal}
           >
             <div
-              className="bg-white rounded-lg shadow-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+              className="bg-white/80 backdrop-blur-md rounded-2xl shadow-2xl p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-cyan-200"
               onClick={(e) => e.stopPropagation()}
             >
               <ProgressWorkerDetail
@@ -175,7 +175,7 @@ const OperatorWorkerProgress = () => {
               />
               {/* Botón cerrar */}
               <button
-                className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 w-full"
+                className="mt-4 px-4 py-2 bg-cyan-600 text-white rounded-xl font-semibold hover:bg-cyan-700 w-full transition"
                 onClick={closeModal}
               >
                 Cerrar

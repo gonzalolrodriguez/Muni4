@@ -144,12 +144,12 @@ const OperatorCreateTeams = () => {
   const filteredWorkers = filterBySearch(workers, search, "username");
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-blue-50 to-cyan-100">
       {/* ========================================
           SECCIÓN: HEADER
           ======================================== */}
       <div className="max-w-5xl mx-auto px-4 py-4 flex flex-col items-center">
-        <h2 className="text-xl font-bold text-gray-700">
+        <h2 className="text-3xl font-extrabold text-cyan-700 mb-6 tracking-tight drop-shadow text-center">
           Equipos y Trabajadores
         </h2>
       </div>
@@ -166,14 +166,14 @@ const OperatorCreateTeams = () => {
             * Muestra username y rol
         */}
         <div>
-          <h3 className="text-lg font-semibold text-blue-700 mb-4">
+          <h3 className="text-xl font-bold text-cyan-700 mb-4">
             Trabajadores disponibles
           </h3>
           {/* Input de búsqueda por username */}
           <input
             type="text"
             placeholder="Buscar trabajador..."
-            className="border rounded px-3 py-2 w-full max-w-md focus:outline-none focus:ring focus:border-blue-300 mb-4"
+            className="border rounded-xl px-3 py-2 w-full max-w-md focus:outline-none focus:ring-2 focus:ring-cyan-300 mb-4 bg-white/70 backdrop-blur-md shadow"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -182,7 +182,7 @@ const OperatorCreateTeams = () => {
             filteredWorkers.map((worker) => (
               <div
                 key={worker._id}
-                className={`bg-white rounded-lg shadow p-3 flex flex-col border w-full mb-3 min-h-14 hover:cursor-pointer ${
+                className={`bg-white/70 backdrop-blur-md rounded-2xl shadow-lg p-3 flex flex-col border border-cyan-200 w-full mb-3 min-h-14 hover:scale-[1.02] hover:shadow-2xl transition-all hover:cursor-pointer ${
                   members.includes(worker._id)
                     ? "border-blue-500 ring-2 ring-blue-300" //* Estilo cuando está seleccionado como miembro
                     : "border-gray-200" //* Estilo por defecto
@@ -191,16 +191,18 @@ const OperatorCreateTeams = () => {
                   handleMemberSelect(worker._id); //* Agregar/quitar como miembro
                 }}
               >
-                <span className="block text-base font-semibold text-gray-800">
+                <span className="block text-base font-semibold text-cyan-900">
                   {worker.username}
                 </span>
-                <span className="text-sm text-gray-500">
+                <span className="text-sm text-cyan-600">
                   {worker.role || "Sin rol"}
                 </span>
               </div>
             ))
           ) : (
-            <div className="py-2">No hay trabajadores disponibles</div>
+            <div className="py-2 text-cyan-600">
+              No hay trabajadores disponibles
+            </div>
           )}
         </div>
 
@@ -208,7 +210,7 @@ const OperatorCreateTeams = () => {
             COLUMNA DERECHA: FORMULARIO CREAR CUADRILLA
             ======================================== */}
         <div>
-          <h3 className="text-lg font-semibold text-indigo-700 mb-4">
+          <h3 className="text-xl font-bold text-cyan-700 mb-4">
             Crear nuevo equipo
           </h3>
 
@@ -216,12 +218,14 @@ const OperatorCreateTeams = () => {
               CAMPO: NOMBRE DEL EQUIPO
               ======================================== */}
           <div className="mb-6">
-            <label className="block font-medium mb-2">Nombre del equipo</label>
+            <label className="block font-semibold text-cyan-800 mb-2">
+              Nombre del equipo
+            </label>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="border rounded px-3 py-2 w-full max-w-md focus:outline-none focus:ring focus:border-blue-300"
+              className="border rounded-xl px-3 py-2 w-full max-w-md focus:outline-none focus:ring-2 focus:ring-cyan-300 bg-white/70 backdrop-blur-md shadow"
               placeholder="Ingrese el nombre del equipo"
               required
             />
@@ -237,12 +241,14 @@ const OperatorCreateTeams = () => {
               * Botón "Eliminar" para quitar líder
           */}
           <div className="mb-6">
-            <label className="block font-medium mb-2">Seleccione líder</label>
+            <label className="block font-semibold text-cyan-800 mb-2">
+              Seleccione líder
+            </label>
             <div className="flex items-center gap-2 mb-2">
               {/* Botón para seleccionar o eliminar líder */}
               <button
                 type="button"
-                className={`px-4 py-2 rounded font-medium transition-colors duration-150 ${
+                className={`px-4 py-2 rounded-xl font-semibold transition-colors duration-150 ${
                   leader ? "bg-red-600 text-white" : "bg-blue-600 text-white"
                 }`}
                 onClick={() =>
@@ -253,7 +259,7 @@ const OperatorCreateTeams = () => {
               </button>
               {/* Muestra nombre del líder si está seleccionado */}
               {leader && (
-                <span className="ml-2 font-semibold text-blue-700">
+                <span className="ml-2 font-semibold text-cyan-700">
                   {workers.find((w) => w._id === leader)?.username}
                 </span>
               )}
@@ -267,7 +273,7 @@ const OperatorCreateTeams = () => {
                     .map((worker) => (
                       <div
                         key={worker._id}
-                        className={`bg-white rounded-lg shadow p-3 flex flex-col border hover:cursor-pointer min-w-[140px] min-h-14 text-center transition-all
+                        className={`bg-white/70 backdrop-blur-md rounded-2xl shadow-lg p-3 flex flex-col border border-cyan-200 hover:scale-[1.02] hover:shadow-2xl transition-all hover:cursor-pointer min-w-[140px] min-h-14 text-center
                         ${
                           leader === worker._id
                             ? "border-red-600 ring-2 ring-red-400" //* Estilo cuando es el líder
@@ -276,10 +282,10 @@ const OperatorCreateTeams = () => {
                       `}
                         onClick={() => handleLeaderSelect(worker._id)}
                       >
-                        <span className="block text-base font-semibold text-gray-800">
+                        <span className="block text-base font-semibold text-cyan-900">
                           {worker.username}
                         </span>
-                        <span className="text-sm text-gray-500">
+                        <span className="text-sm text-cyan-600">
                           {worker.role || "Sin rol"}
                         </span>
                       </div>
@@ -300,14 +306,14 @@ const OperatorCreateTeams = () => {
               * Muestra badges con nombres de miembros seleccionados
           */}
           <div className="mb-6">
-            <label className="block font-medium mb-2">
+            <label className="block font-semibold text-cyan-800 mb-2">
               Seleccione miembros
             </label>
             <div className="flex items-center gap-2 mb-2">
               {/* Botón para toggle sección de selección */}
               <button
                 type="button"
-                className="px-4 py-2 rounded font-medium transition-colors duration-150 bg-blue-600 text-white"
+                className="px-4 py-2 rounded-xl font-semibold transition-colors duration-150 bg-cyan-600 text-white"
                 onClick={() => setSelectingMembers(!selectingMembers)}
               >
                 Seleccionar
@@ -318,7 +324,7 @@ const OperatorCreateTeams = () => {
                   {members.map((id) => (
                     <span
                       key={id}
-                      className="bg-blue-100 text-blue-700 px-2 py-1 rounded text-sm font-medium"
+                      className="bg-cyan-100 text-cyan-700 px-2 py-1 rounded text-sm font-medium"
                     >
                       {workers.find((w) => w._id === id)?.username}
                     </span>
@@ -335,7 +341,7 @@ const OperatorCreateTeams = () => {
                     .map((worker) => (
                       <div
                         key={worker._id}
-                        className={`bg-white rounded-lg shadow p-3 flex flex-col border hover:cursor-pointer min-w-[140px] min-h-14 text-center transition-all
+                        className={`bg-white/70 backdrop-blur-md rounded-2xl shadow-lg p-3 flex flex-col border border-cyan-200 hover:scale-[1.02] hover:shadow-2xl transition-all hover:cursor-pointer min-w-[140px] min-h-14 text-center
                         ${
                           members.includes(worker._id)
                             ? "border-blue-500 ring-2 ring-blue-300" //* Estilo cuando está seleccionado
@@ -344,10 +350,10 @@ const OperatorCreateTeams = () => {
                       `}
                         onClick={() => handleMemberSelect(worker._id)}
                       >
-                        <span className="block text-base font-semibold text-gray-800">
+                        <span className="block text-base font-semibold text-cyan-900">
                           {worker.username}
                         </span>
-                        <span className="text-sm text-gray-500">
+                        <span className="text-sm text-cyan-600">
                           {worker.role || "Sin rol"}
                         </span>
                       </div>
@@ -365,7 +371,7 @@ const OperatorCreateTeams = () => {
           <div className="flex justify-end">
             <button
               type="button"
-              className="px-4 py-2 rounded font-medium transition-colors duration-150 bg-blue-600 text-white"
+              className="px-4 py-2 rounded-xl font-semibold transition-colors duration-150 bg-cyan-600 text-white"
               onClick={handleSubmit}
             >
               Crear equipo

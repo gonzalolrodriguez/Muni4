@@ -58,14 +58,14 @@ const CitizenNavBar = () => {
             Mi Perfil
           </Link>
         </li> */}
-        <li>
+        {/* <li>
           <Link
             to="/citizen/contact"
             className="hover:text-cyan-600 transition"
           >
             Contacto
           </Link>
-        </li>
+        </li> */}
       </ul>
       <div className="flex items-center gap-4">
         <NavBarMenu profileType="citizen" />

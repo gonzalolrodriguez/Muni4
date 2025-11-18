@@ -75,7 +75,7 @@ const NavBarMenu = ({ profileType }) => {
             to={`/${profileType}/profile`}
             className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
           >
-            Your profile
+            Perfil
           </Link>
         </MenuItem>
         {/* //! Opción 2: Cerrar sesión (redirige a login) */}
@@ -85,7 +85,7 @@ const NavBarMenu = ({ profileType }) => {
             className="block w-full text-left px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
             type="button"
           >
-            Sign out
+            Cerrar sesión
           </button>
         </MenuItem>
       </MenuItems>
