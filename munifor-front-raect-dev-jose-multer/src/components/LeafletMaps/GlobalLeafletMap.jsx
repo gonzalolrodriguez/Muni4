@@ -45,7 +45,10 @@ const GlobalLeafletMap = ({ role }) => {
     progress: [],
   });
   //? Filtros aplicados (dataType, status, type, priority, timeRange)
-  const [filters, setFilters] = useState({ dataType: "report" });
+  const [filters, setFilters] = useState({
+    dataType: "report",
+    timeRange: "24h",
+  });
   //? Reporte/tarea/avance seleccionado para mostrar detalles
   const [selectedDetail, setselectedDetail] = useState(null);
 

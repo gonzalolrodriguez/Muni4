@@ -70,7 +70,7 @@ const useFilter = () => {
   //* @returns {Array} - Reportes filtrados
   const filterReportsByType = (reports, type) => {
     if (!type || type === "Todos") return reports;
-    return reports.filter((report) => report.report_type === type);
+    return reports.filter((report) => report.type_report === type);
   };
 
   //* ========================================

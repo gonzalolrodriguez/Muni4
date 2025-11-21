@@ -29,7 +29,7 @@ const statusButtons = [
 const Carousel = () => {
   const [current, setCurrent] = useState(0);
   // Estado para el botón seleccionado (opcional, si quieres que sean interactivos)
-  const [selected, setSelected] = useState(0);
+  const [, setSelected] = useState(0);
 
   const prev = () => setCurrent((c) => (c === 0 ? slides.length - 1 : c - 1));
   const next = () => setCurrent((c) => (c === slides.length - 1 ? 0 : c + 1));
@@ -58,19 +58,7 @@ const Carousel = () => {
         {statusButtons.map((btn, i) => (
           <button
             key={btn.label}
-            className={`px-4 py-2 rounded-full font-semibold shadow-md transition-all duration-200 border border-white/40 backdrop-blur-md bg-gradient-to-br ${
-              btn.color
-            } text-cyan-900/90 hover:scale-105 hover:shadow-lg hover:text-white hover:border-cyan-400 ${
-              selected === i ? "ring-2 ring-cyan-400" : ""
-            }`}
-            style={{
-              background:
-                selected === i
-                  ? "linear-gradient(135deg, rgba(0,212,255,0.25) 0%, rgba(255,255,255,0.25) 100%)"
-                  : undefined,
-              color: selected === i ? "#fff" : undefined,
-              fontWeight: selected === i ? 700 : 500,
-            }}
+            className={`px-4 py-2 rounded-full font-semibold shadow-md transition-all duration-200 border border-white/40 backdrop-blur-md bg-linear-to-br ${btn.color} text-cyan-900/90 hover:scale-105 hover:shadow-lg hover:text-white hover:border-cyan-400`}
           >
             {btn.label}
           </button>

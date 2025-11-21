@@ -5,7 +5,8 @@
   "main": "app.js",
   "type": "module",
   "scripts": {
-    "dev": "node --watch app.js"
+    "dev": "node --watch app.js",
+    "seed": "node script/generate-demo-data.js"
   },
   "repository": {
     "type": "git",
